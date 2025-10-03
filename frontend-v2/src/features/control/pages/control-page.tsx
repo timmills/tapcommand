@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useManagedDevices } from '@/features/devices/hooks/use-managed-devices';
 import { useDeviceTags } from '@/features/settings/hooks/use-device-tags';
 import { useAvailableChannels } from '@/features/devices/hooks/use-available-channels';
@@ -7,6 +8,7 @@ import { useQueueMetrics } from '@/features/devices/hooks/use-queue-metrics';
 import { sendDiagnosticSignal, sendBulkCommand } from '@/features/devices/api/devices-api';
 import type { ChannelOption, DeviceTag, ManagedDevice } from '@/types';
 import { formatRelativeTime } from '@/utils/datetime';
+import { ChannelSelectorModal } from '../components/channel-selector-modal';
 
 interface PortRow {
   id: string;
@@ -24,6 +26,7 @@ interface PortRow {
 }
 
 export const ControlPage = () => {
+  const navigate = useNavigate();
   const { data: controllers = [], isLoading } = useManagedDevices();
   const { data: tags = [] } = useDeviceTags();
   const { data: channels = [] } = useAvailableChannels();
@@ -34,6 +37,39 @@ export const ControlPage = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [nameFilter, setNameFilter] = useState('');
   const [locationFilter, setLocationFilter] = useState<string | null>(null);
+  const [collapsedLocations, setCollapsedLocations] = useState<Set<string>>(new Set());
+  const [showChannelModal, setShowChannelModal] = useState(false);
+
+  // Secret exit mechanism
+  const [holdProgress, setHoldProgress] = useState(0);
+  const holdTimerRef = useRef<number | null>(null);
+  const holdStartRef = useRef<number>(0);
+
+  const handlePressStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault(); // Prevent default touch behavior
+    holdStartRef.current = Date.now();
+    setHoldProgress(0);
+
+    holdTimerRef.current = window.setInterval(() => {
+      const elapsed = Date.now() - holdStartRef.current;
+      const progress = Math.min((elapsed / 5000) * 100, 100);
+      setHoldProgress(progress);
+
+      if (progress >= 100) {
+        if (holdTimerRef.current) clearInterval(holdTimerRef.current);
+        navigate('/controllers');
+      }
+    }, 50);
+  };
+
+  const handlePressEnd = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    if (holdTimerRef.current) {
+      clearInterval(holdTimerRef.current);
+      holdTimerRef.current = null;
+    }
+    setHoldProgress(0);
+  };
 
   const displayRows = useMemo(() => {
     const lowered = nameFilter.trim().toLowerCase();
@@ -103,106 +139,239 @@ export const ControlPage = () => {
   const selectedCount = selectedIds.size;
   const selectedRows = useMemo(() => rows.filter((row) => selectedIds.has(row.id)), [rows, selectedIds]);
 
+  // Group rows by location
+  const rowsByLocation = useMemo(() => {
+    const groups = new Map<string, PortRow[]>();
+    displayRows.forEach((row) => {
+      const location = row.location || 'Unassigned';
+      if (!groups.has(location)) {
+        groups.set(location, []);
+      }
+      groups.get(location)!.push(row);
+    });
+    return groups;
+  }, [displayRows]);
+
+  const toggleLocation = (location: string) => {
+    setCollapsedLocations((prev) => {
+      const next = new Set(prev);
+      if (next.has(location)) {
+        next.delete(location);
+      } else {
+        next.add(location);
+      }
+      return next;
+    });
+  };
+
+  const selectAllInLocation = (location: string) => {
+    const locationRows = rowsByLocation.get(location) || [];
+    const locationIds = locationRows.map((row) => row.id);
+    const allSelected = locationIds.every((id) => selectedIds.has(id));
+
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (allSelected) {
+        locationIds.forEach((id) => next.delete(id));
+      } else {
+        locationIds.forEach((id) => next.add(id));
+      }
+      return next;
+    });
+  };
+
   return (
-    <div className="space-y-6">
-      {queueMetrics && (queueMetrics.pending > 0 || queueMetrics.processing > 0 || queueMetrics.failed > 0) && (
-        <QueueStatusBar metrics={queueMetrics} />
-      )}
-
-      <section className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-50">Controllers</h2>
-          <p className="text-sm text-slate-400">Tap to select devices. Tag or location chips select related sets.</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <input
-            type="text"
-            value={nameFilter}
-            onChange={(event) => setNameFilter(event.target.value)}
-            placeholder="Search by device name…"
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 placeholder-slate-400 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
-          />
-          <select
-            value={locationFilter ?? ''}
-            onChange={(event) => setLocationFilter(event.target.value || null)}
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
-          >
-            <option value="">All locations</option>
-            {Array.from(new Set(rows.map((row) => row.location)))
-              .filter((location): location is string => Boolean(location))
-              .sort()
-              .map((location) => (
-                <option key={location} value={location}>
-                  {location}
-                </option>
-              ))}
-          </select>
-          <select
-            value=""
-            onChange={() => {}}
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-700 focus:border-brand-400 focus:outline-none focus:ring-1 focus:ring-brand-400"
-          >
-            <option value="">Channel selector (coming soon)</option>
-            {channels.map((channel) => (
-              <option key={channel.id} value={channel.id}>
-                {formatChannelLabel(channel)}
-              </option>
-            ))}
-          </select>
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-2 text-sm text-slate-300">
-            <input
-              type="checkbox"
-              checked={displayRows.length > 0 && displayRows.every((row) => selectedIds.has(row.id))}
-              onChange={toggleAll}
-              className="h-4 w-4 rounded border-slate-400 text-brand-500 focus:ring-brand-400"
-            />
-            Select all {displayRows.length}
-          </label>
-          <span className="text-sm text-slate-500">{selectedCount} selected</span>
-        </div>
-
-        {isLoading ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
-            Loading controllers…
-          </div>
-        ) : displayRows.length === 0 ? (
-          <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
-            No devices match the current filters.
-          </div>
-        ) : (
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {displayRows.map((row) => (
-              <ControlCard
-                key={row.id}
-                row={row}
-                selected={selectedIds.has(row.id)}
-                onToggle={() => toggleSelection(row.id)}
-                onTagSelect={(tagId) => quickSelectTag(tagId)}
-                onLocationSelect={(location) => quickSelectLocation(location)}
-              />
-            ))}
-          </div>
+    <>
+      <div className="space-y-6 pr-56">
+        {queueMetrics && (queueMetrics.pending > 0 || queueMetrics.processing > 0 || queueMetrics.failed > 0) && (
+          <QueueStatusBar metrics={queueMetrics} />
         )}
-      </section>
 
-      <ActionToolbar selectedRows={selectedRows} />
-    </div>
+        <section className="relative">
+          <h2
+            className="relative inline-block cursor-pointer select-none text-xl font-semibold text-slate-50 touch-none"
+            onMouseDown={handlePressStart}
+            onMouseUp={handlePressEnd}
+            onMouseLeave={handlePressEnd}
+            onTouchStart={handlePressStart}
+            onTouchEnd={handlePressEnd}
+            onTouchCancel={handlePressEnd}
+            onContextMenu={(e) => e.preventDefault()}
+          >
+            SmartVenue
+            {holdProgress > 0 && (
+              <div
+                className="absolute bottom-0 left-0 h-0.5 bg-slate-400 transition-all"
+                style={{ width: `${holdProgress}%` }}
+              />
+            )}
+          </h2>
+        </section>
+
+        <section className="space-y-4">
+          {isLoading ? (
+            <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
+              Loading controllers…
+            </div>
+          ) : displayRows.length === 0 ? (
+            <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
+              No devices match the current filters.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {Array.from(rowsByLocation.entries())
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([location, locationRows]) => {
+                  const isCollapsed = collapsedLocations.has(location);
+                  const onlineCount = locationRows.filter((r) => r.isOnline).length;
+                  const selectedInLocation = locationRows.filter((r) => selectedIds.has(r.id)).length;
+
+                  return (
+                    <div key={location} className="rounded-xl border border-slate-700 bg-slate-800 shadow-sm">
+                      <div className="flex items-center justify-between px-6 py-4">
+                        <button
+                          type="button"
+                          onClick={() => toggleLocation(location)}
+                          className="flex flex-1 items-center gap-3 text-left transition"
+                        >
+                          <svg
+                            className={`h-5 w-5 text-slate-400 transition-transform ${isCollapsed ? '' : 'rotate-90'}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                          <h3 className="text-lg font-semibold text-slate-100">{location}</h3>
+                          <span className="text-sm text-slate-400">
+                            {locationRows.length} device{locationRows.length === 1 ? '' : 's'}
+                          </span>
+                          <span className="text-sm text-slate-400">
+                            • {onlineCount} online
+                          </span>
+                          {selectedInLocation > 0 && (
+                            <span className="rounded-full bg-brand-100 px-2 py-1 text-xs font-medium text-brand-700">
+                              {selectedInLocation} selected
+                            </span>
+                          )}
+                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              const targets = locationRows.map((row) => ({
+                                hostname: row.hostname,
+                                port: row.portNumber,
+                              }));
+                              await sendBulkCommand({ targets, command: 'power_on', priority: 5 });
+                            }}
+                            className="min-h-[36px] rounded-md border border-green-700 bg-green-900/30 px-3 py-1.5 text-xs font-medium text-green-400 transition hover:bg-green-900/50"
+                          >
+                            Power On
+                          </button>
+                          <button
+                            type="button"
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              const targets = locationRows.map((row) => ({
+                                hostname: row.hostname,
+                                port: row.portNumber,
+                              }));
+                              await sendBulkCommand({ targets, command: 'power_off', priority: 5 });
+                            }}
+                            className="min-h-[36px] rounded-md border border-red-700 bg-red-900/30 px-3 py-1.5 text-xs font-medium text-red-400 transition hover:bg-red-900/50"
+                          >
+                            Power Off
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              selectAllInLocation(location);
+                            }}
+                            className="min-h-[36px] rounded-md border border-slate-600 bg-slate-700 px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-slate-600 hover:text-brand-400"
+                          >
+                            Select All
+                          </button>
+                        </div>
+                      </div>
+
+                      {!isCollapsed && (
+                        <div className="border-t border-slate-700 p-4">
+                          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                            {locationRows.map((row) => (
+                              <ControlCard
+                                key={row.id}
+                                row={row}
+                                channels={channels}
+                                selected={selectedIds.has(row.id)}
+                                onToggle={() => toggleSelection(row.id)}
+                                onTagSelect={(tagId) => quickSelectTag(tagId)}
+                                onLocationSelect={(location) => quickSelectLocation(location)}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+        </section>
+      </div>
+
+      <ActionToolbar
+        selectedRows={selectedRows}
+        totalRows={displayRows.length}
+        onOpenChannelModal={() => setShowChannelModal(true)}
+        toggleAll={toggleAll}
+        nameFilter={nameFilter}
+        onNameFilterChange={setNameFilter}
+      />
+
+      <ChannelSelectorModal
+        isOpen={showChannelModal}
+        onClose={() => setShowChannelModal(false)}
+        channels={channels}
+        controllers={controllers}
+        selectedDeviceCount={selectedCount}
+        onSelectChannel={async (channelLcn) => {
+          // Send bulk channel change command
+          try {
+            const targets = selectedRows.map((row) => ({
+              hostname: row.hostname,
+              port: row.portNumber,
+            }));
+
+            await sendBulkCommand({
+              targets,
+              command: 'channel',
+              channel: channelLcn,
+              priority: 5,
+            });
+
+            console.log(`Channel changed to ${channelLcn} for ${targets.length} devices`);
+          } catch (error) {
+            console.error('Failed to change channel:', error);
+          }
+        }}
+      />
+    </>
   );
 };
 
 const ControlCard = ({
   row,
+  channels,
   selected,
   onToggle,
   onTagSelect,
   onLocationSelect,
 }: {
   row: PortRow;
+  channels: ChannelOption[];
   selected: boolean;
   onToggle: () => void;
   onTagSelect: (tagId: number) => void;
@@ -213,79 +382,129 @@ const ControlCard = ({
   const lastChannel = getLastChannelForPort(portStatus, row.portNumber);
   const powerState = getPowerStateForPort(portStatus, row.portNumber);
 
+  // Look up channel name from LCN
+  const channelInfo = useMemo(() => {
+    if (!lastChannel) return null;
+
+    // Find channel by LCN or Foxtel number
+    const channel = channels.find(
+      (ch) => ch.lcn === lastChannel || ch.foxtel_number === lastChannel
+    );
+
+    if (!channel) return { lcn: lastChannel, name: null };
+
+    // Truncate long channel names (max 12 chars, add ellipsis)
+    const displayName = channel.channel_name.length > 12
+      ? channel.channel_name.substring(0, 12) + '...'
+      : channel.channel_name;
+
+    return { lcn: lastChannel, name: displayName };
+  }, [lastChannel, channels]);
+
   return (
-    <div
-      className={`rounded-2xl border px-4 py-4 shadow-lg transition ${
-        selected ? 'border-brand-400 bg-white' : 'border-slate-200 bg-white'
+    <button
+      type="button"
+      onClick={onToggle}
+      className={`flex w-full gap-3 rounded-2xl border-2 px-4 py-4 text-left shadow-lg transition active:scale-[0.98] ${
+        selected
+          ? 'border-brand-500 bg-brand-900 ring-2 ring-brand-700'
+          : 'border-slate-700 bg-slate-800 hover:border-brand-700 hover:shadow-xl'
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1">
+      {/* Main content area */}
+      <div className="flex-1">
+        {/* Header with power state and channel */}
+        <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-2">
-            {/* Power State Indicator */}
+            {/* Power State Indicator - larger and more prominent */}
             {powerState && (
               <div
-                className={`h-2.5 w-2.5 rounded-full ${
-                  powerState === 'on' ? 'bg-green-500' : 'bg-red-500'
+                className={`h-3.5 w-3.5 rounded-full ${
+                  powerState === 'on' ? 'bg-green-500 shadow-green-500/50 shadow-md' : 'bg-red-500 shadow-red-500/50 shadow-md'
                 }`}
                 title={`Power: ${powerState}`}
               />
             )}
-            <h3 className="text-xl font-semibold text-slate-900">{row.deviceName}</h3>
-            {lastChannel && (
-              <span className="rounded-md bg-brand-100 px-2 py-1 text-sm font-medium text-brand-700">
-                CH {lastChannel}
-              </span>
-            )}
+            <h3 className="text-xl font-semibold text-slate-100">{row.deviceName}</h3>
           </div>
-          {!lastChannel && (
-            <p className="mt-0.5 text-xs text-slate-400">No channel history</p>
+          {channelInfo && (
+            <span
+              className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white"
+              title={channelInfo.name ? `${channelInfo.lcn} - ${channelInfo.name}` : channelInfo.lcn}
+            >
+              {channelInfo.name || `CH ${channelInfo.lcn}`}
+            </span>
           )}
         </div>
-        <label className="inline-flex items-center gap-2 text-xs text-slate-500">
-          <input
-            type="checkbox"
-            checked={selected}
-            onChange={onToggle}
-            className="h-4 w-4 rounded border-slate-400 text-brand-500 focus:ring-brand-400"
-          />
-          Select
-        </label>
+
+        {/* Status info */}
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-400">
+          <span className={`font-medium ${row.isOnline ? 'text-green-400' : 'text-slate-500'}`}>
+            {row.isOnline ? '● Online' : '○ Offline'}
+          </span>
+          <span>•</span>
+          <span>Updated {formatRelativeTime(row.lastSeen)}</span>
+          {!channelInfo && (
+            <>
+              <span>•</span>
+              <span className="text-slate-500">No channel history</span>
+            </>
+          )}
+        </div>
+
+        {/* Selected indicator */}
+        {selected && (
+          <div className="mt-3 flex items-center gap-2 text-sm font-semibold text-brand-400">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Selected
+          </div>
+        )}
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-        <button
-          type="button"
-          onClick={() => onLocationSelect(row.location)}
-          className="rounded-full border border-slate-300 px-2 py-1 text-slate-600 transition hover:border-brand-400 hover:text-brand-500"
-        >
-          {row.location || 'Unassigned'}
-        </button>
-        <span>{row.isOnline ? 'Online' : 'Offline'}</span>
-        <span>Updated {formatRelativeTime(row.lastSeen)}</span>
-      </div>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        {row.tags.length ? (
-          row.tags.map((tag) => (
+      {/* Tags sidebar on right */}
+      {row.tags.length > 0 && (
+        <div className="flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
+          {row.tags.map((tag) => (
             <button
               key={tag.id}
               type="button"
-              onClick={() => onTagSelect(tag.id)}
-              className="rounded-full border border-brand-300 px-2 py-1 text-xs font-medium text-brand-500 transition hover:bg-brand-500/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTagSelect(tag.id);
+              }}
+              className="min-h-[36px] rounded-lg border-2 px-3 py-1.5 text-xs font-semibold transition hover:brightness-95 active:scale-95"
+              style={{
+                borderColor: tag.color || '#cbd5e1',
+                backgroundColor: tag.color ? `${tag.color}15` : '#f1f5f9',
+                color: tag.color || '#475569'
+              }}
             >
               {tag.name}
             </button>
-          ))
-        ) : (
-          <span className="text-xs text-slate-400">No tags</span>
-        )}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </button>
   );
 };
 
-const ActionToolbar = ({ selectedRows }: { selectedRows: PortRow[] }) => {
+const ActionToolbar = ({
+  selectedRows,
+  totalRows,
+  onOpenChannelModal,
+  toggleAll,
+  nameFilter,
+  onNameFilterChange,
+}: {
+  selectedRows: PortRow[];
+  totalRows: number;
+  onOpenChannelModal: () => void;
+  toggleAll: () => void;
+  nameFilter: string;
+  onNameFilterChange: (value: string) => void;
+}) => {
   const count = selectedRows.length;
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -372,42 +591,102 @@ const ActionToolbar = ({ selectedRows }: { selectedRows: PortRow[] }) => {
     }
   };
 
+  const allSelected = totalRows > 0 && selectedRows.length === totalRows;
+
   return (
-    <div className="sticky bottom-6 z-20 mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white px-6 py-4 shadow-xl shadow-slate-300/60">
-      <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
-        <span className="font-medium text-slate-900">{count} device{count === 1 ? '' : 's'} selected</span>
-        <div className="ml-auto flex flex-wrap gap-2">
+    <div className="fixed right-6 top-6 z-20 w-48 rounded-2xl border border-slate-700 bg-slate-800 shadow-xl">
+      {/* Header with Select All */}
+      <div className="border-b border-slate-700 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="font-semibold text-slate-100">
+              {count > 0 ? `${count} Selected` : 'Actions'}
+            </div>
+            <div className="text-xs text-slate-400">
+              {count > 0 ? `${count} device${count === 1 ? '' : 's'}` : 'Select devices'}
+            </div>
+          </div>
+          <label className="flex cursor-pointer items-center gap-2">
+            <span className="text-xs font-medium text-slate-300">All</span>
+            <input
+              type="checkbox"
+              checked={allSelected}
+              onChange={toggleAll}
+              className="h-4 w-4 rounded border-slate-600 bg-slate-700 text-brand-600 focus:ring-brand-500"
+            />
+          </label>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex flex-col gap-1 p-2">
+        <div className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Power</div>
+        <ActionButton
+          label="Power On"
+          onClick={() => sendBulkAction('power_on')}
+          disabled={count === 0 || isProcessing}
+        />
+        <ActionButton
+          label="Power Off"
+          onClick={() => sendBulkAction('power_off')}
+          disabled={count === 0 || isProcessing}
+        />
+        <ActionButton
+          label="Power Toggle"
+          onClick={() => sendBulkAction('power')}
+          disabled={count === 0 || isProcessing}
+        />
+
+        <div className="mt-2 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Channel</div>
+        <ActionButton
+          label="Select Channel"
+          onClick={onOpenChannelModal}
+          disabled={count === 0 || isProcessing}
+        />
+        <ActionButton
+          label="Default Channel"
+          onClick={handleDefaultChannel}
+          disabled={count === 0 || isProcessing}
+        />
+
+        <div className="mt-2 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Volume</div>
+        <ActionButton
+          label="Mute Toggle"
+          onClick={() => sendBulkAction('mute')}
+          disabled={count === 0 || isProcessing}
+        />
+        <ActionButton
+          label="Volume +"
+          onClick={() => sendBulkAction('volume_up')}
+          disabled={count === 0 || isProcessing}
+        />
+        <ActionButton
+          label="Volume –"
+          onClick={() => sendBulkAction('volume_down')}
+          disabled={count === 0 || isProcessing}
+        />
+
+        <div className="mt-2 border-t border-slate-700 pt-2">
           <ActionButton
-            label="Power Toggle"
-            onClick={() => sendBulkAction('power')}
-            disabled={count === 0 || isProcessing}
-          />
-          <ActionButton
-            label="Mute Toggle"
-            onClick={() => sendBulkAction('mute')}
-            disabled={count === 0 || isProcessing}
-          />
-          <ActionButton
-            label="Volume +"
-            onClick={() => sendBulkAction('volume_up')}
-            disabled={count === 0 || isProcessing}
-          />
-          <ActionButton
-            label="Volume –"
-            onClick={() => sendBulkAction('volume_down')}
-            disabled={count === 0 || isProcessing}
-          />
-          <ActionButton
-            label="Default Channel"
-            onClick={handleDefaultChannel}
-            disabled={count === 0 || isProcessing}
-          />
-          <ActionButton
-            label={isProcessing ? "Processing..." : "ID"}
+            label={isProcessing ? "Processing..." : "Identify (ID)"}
             onClick={handleIdentify}
             disabled={count === 0 || isProcessing}
           />
         </div>
+      </div>
+
+      {/* Filter at bottom */}
+      <div className="border-t border-slate-700 p-4">
+        <label className="text-xs font-medium text-slate-300">
+          Filter by name
+          <input
+            type="text"
+            value={nameFilter}
+            onChange={(e) => onNameFilterChange(e.target.value)}
+            placeholder="Search devices…"
+            className="mt-1.5 w-full rounded-lg border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-slate-100 placeholder-slate-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          />
+        </label>
       </div>
     </div>
   );
@@ -426,10 +705,10 @@ const ActionButton = ({
     type="button"
     onClick={onClick}
     disabled={disabled}
-    className={`rounded-full border border-slate-300 bg-white px-3 py-2 text-xs font-semibold uppercase tracking-wide transition ${
+    className={`w-full rounded-lg border border-slate-600 bg-slate-700 px-4 py-2.5 text-left text-sm font-medium transition min-h-[44px] ${
       disabled
-        ? 'text-slate-400 cursor-not-allowed'
-        : 'text-slate-600 hover:border-brand-300 hover:text-brand-500'
+        ? 'text-slate-500 cursor-not-allowed'
+        : 'text-slate-200 hover:border-brand-600 hover:bg-slate-600 hover:text-brand-400 active:scale-[0.98]'
     }`}
   >
     {label}

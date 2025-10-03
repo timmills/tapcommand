@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import type { DeviceTag, ManagedDevice } from '@/types';
 import { formatRelativeTime } from '@/utils/datetime';
 import { usePortStatus, getPowerStateForPort } from '../hooks/use-port-status';
@@ -21,6 +22,9 @@ interface ConnectedDevicesTableProps {
   onEditController?: (controller: ManagedDevice) => void;
 }
 
+type SortField = 'device' | 'controller' | 'location' | 'lastSeen';
+type SortDirection = 'asc' | 'desc';
+
 const buildConnectedDevices = (controllers: ManagedDevice[], tagMap: Map<number, DeviceTag>): ConnectedDevice[] => {
   return controllers.flatMap((controller) => {
     return controller.ir_ports
@@ -43,8 +47,45 @@ const buildConnectedDevices = (controllers: ManagedDevice[], tagMap: Map<number,
 };
 
 export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController }: ConnectedDevicesTableProps) => {
+  const [sortField, setSortField] = useState<SortField>('device');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
   const tagMap = new Map(tags.map((tag) => [tag.id, tag] as const));
   const connectedDevices = buildConnectedDevices(controllers, tagMap);
+
+  const sortedDevices = useMemo(() => {
+    const sorted = [...connectedDevices];
+    sorted.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case 'device':
+          comparison = a.deviceName.localeCompare(b.deviceName);
+          break;
+        case 'controller':
+          comparison = a.controllerName.localeCompare(b.controllerName);
+          break;
+        case 'location':
+          comparison = a.controllerLocation.localeCompare(b.controllerLocation);
+          break;
+        case 'lastSeen':
+          comparison = new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+          break;
+      }
+
+      return sortDirection === 'asc' ? comparison : -comparison;
+    });
+    return sorted;
+  }, [connectedDevices, sortField, sortDirection]);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   if (connectedDevices.length === 0) {
     return (
@@ -54,24 +95,50 @@ export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController
     );
   }
 
+  const SortableHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => {
+    const isActive = sortField === field;
+    return (
+      <th className="px-4 py-3 text-left">
+        <button
+          type="button"
+          onClick={() => handleSort(field)}
+          className="group flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 transition hover:text-slate-700"
+        >
+          {children}
+          <span className={`transition ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-50'}`}>
+            {isActive && sortDirection === 'asc' ? (
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+              </svg>
+            ) : (
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            )}
+          </span>
+        </button>
+      </th>
+    );
+  };
+
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <table className="min-w-full divide-y divide-slate-200">
         <thead className="bg-slate-50">
           <tr>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Device</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Controller</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Tags</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Location</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Last seen</th>
+            <SortableHeader field="device">Device</SortableHeader>
+            <SortableHeader field="controller">Controller</SortableHeader>
+            <SortableHeader field="location">Location</SortableHeader>
+            <SortableHeader field="lastSeen">Last seen</SortableHeader>
             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Power</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Tags</th>
             {onEditController ? (
               <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">Actions</th>
             ) : null}
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
-          {connectedDevices.map((device) => (
+          {sortedDevices.map((device) => (
             <tr key={device.id} className="hover:bg-slate-50/70">
               <td className="px-4 py-3 align-top">
                 <div className="text-sm font-medium text-slate-900">{device.deviceName}</div>
@@ -79,6 +146,11 @@ export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController
               <td className="px-4 py-3 align-top text-sm text-slate-600">
                 <div>{device.controllerName}</div>
                 <div className="text-xs text-slate-500">{device.controllerHostname}</div>
+              </td>
+              <td className="px-4 py-3 align-top text-sm text-slate-600">{device.controllerLocation}</td>
+              <td className="px-4 py-3 align-top text-sm text-slate-600">{formatRelativeTime(device.updatedAt)}</td>
+              <td className="px-4 py-3 align-top">
+                <PowerIndicator hostname={device.controllerHostname} port={device.portNumber} />
               </td>
               <td className="px-4 py-3 align-top">
                 <div className="flex flex-wrap gap-2">
@@ -93,14 +165,9 @@ export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController
                       </span>
                     ))
                   ) : (
-                    <span className="text-sm text-slate-500">Port {device.portNumber}</span>
+                    <span className="text-sm text-slate-400">—</span>
                   )}
                 </div>
-              </td>
-              <td className="px-4 py-3 align-top text-sm text-slate-600">{device.controllerLocation}</td>
-              <td className="px-4 py-3 align-top text-sm text-slate-600">{formatRelativeTime(device.updatedAt)}</td>
-              <td className="px-4 py-3 align-top">
-                <PowerIndicator hostname={device.controllerHostname} port={device.portNumber} />
               </td>
               {onEditController ? (
                 <td className="px-4 py-3 align-top text-right">

@@ -140,17 +140,22 @@ class CommandQueueService:
             )
 
         # Update port status if power command (exclude port 0 - diagnostic only)
-        if success and cmd.command == "power" and cmd.port != 0:
-            # Get current power state to toggle
-            current_status = db.query(PortStatus).filter(
-                and_(
-                    PortStatus.hostname == cmd.hostname,
-                    PortStatus.port == cmd.port
-                )
-            ).first()
+        if success and cmd.port != 0 and cmd.command in ("power", "power_on", "power_off"):
+            if cmd.command == "power_on":
+                new_state = 'on'
+            elif cmd.command == "power_off":
+                new_state = 'off'
+            else:  # cmd.command == "power" (toggle)
+                # Get current power state to toggle
+                current_status = db.query(PortStatus).filter(
+                    and_(
+                        PortStatus.hostname == cmd.hostname,
+                        PortStatus.port == cmd.port
+                    )
+                ).first()
 
-            # Toggle: if currently 'on' -> 'off', else -> 'on'
-            new_state = 'off' if (current_status and current_status.last_power_state == 'on') else 'on'
+                # Toggle: if currently 'on' -> 'off', else -> 'on'
+                new_state = 'off' if (current_status and current_status.last_power_state == 'on') else 'on'
 
             CommandQueueService.update_port_status(
                 db, cmd.hostname, cmd.port, power_state=new_state

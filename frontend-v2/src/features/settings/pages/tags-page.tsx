@@ -7,6 +7,56 @@ import {
 } from '../hooks/use-device-tags';
 import type { DeviceTag } from '@/types';
 
+// Predefined color palette - 32 contrasting colors
+const COLOR_PALETTE = [
+  '#ef4444', '#f97316', '#f59e0b', '#eab308', // Reds, Oranges, Yellows
+  '#84cc16', '#22c55e', '#10b981', '#14b8a6', // Limes, Greens, Teals
+  '#06b6d4', '#0ea5e9', '#3b82f6', '#6366f1', // Cyans, Blues, Indigos
+  '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', // Violets, Purples, Pinks
+  '#f43f5e', '#dc2626', '#ea580c', '#d97706', // Rose, Dark Red, Dark Orange
+  '#ca8a04', '#65a30d', '#16a34a', '#059669', // Dark Yellow, Dark Lime, Dark Green
+  '#0d9488', '#0891b2', '#0284c7', '#2563eb', // Dark Teal, Dark Cyan, Dark Blue
+  '#4f46e5', '#7c3aed', '#9333ea', '#c026d3', // Dark Indigo, Dark Violet, Dark Purple, Dark Pink
+];
+
+const ColorPicker = ({ value, onChange }: { value: string; onChange: (color: string) => void }) => {
+  return (
+    <div className="space-y-2">
+      <div className="grid grid-cols-8 gap-1.5">
+        {COLOR_PALETTE.map((color) => (
+          <button
+            key={color}
+            type="button"
+            onClick={() => onChange(color)}
+            className={`h-8 w-8 rounded-md border-2 transition hover:scale-110 ${
+              value === color ? 'border-slate-900 ring-2 ring-slate-400' : 'border-transparent'
+            }`}
+            style={{ backgroundColor: color }}
+            title={color}
+          />
+        ))}
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 rounded-md border border-slate-300 px-2 py-1 text-xs font-mono text-slate-900"
+          placeholder="#000000"
+          pattern="^#[0-9A-Fa-f]{6}$"
+        />
+        <input
+          type="color"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="h-8 w-12 cursor-pointer rounded-md border border-slate-300 bg-white"
+          title="Custom color picker"
+        />
+      </div>
+    </div>
+  );
+};
+
 export const TagsPage = () => {
   const { data: tags = [], isLoading, error } = useDeviceTags();
   const createMutation = useCreateDeviceTag();
@@ -127,15 +177,15 @@ export const TagsPage = () => {
               placeholder="e.g. Sports, Lounge TV"
             />
           </label>
-          <label className="flex flex-col text-xs font-medium text-slate-600">
+          <div className="flex flex-col text-xs font-medium text-slate-600 md:col-span-2">
             Color
-            <input
-              type="color"
-              value={createForm.color}
-              onChange={(event) => setCreateForm((prev) => ({ ...prev, color: event.target.value }))}
-              className="mt-1 h-10 w-full cursor-pointer rounded-md border border-slate-300 bg-white"
-            />
-          </label>
+            <div className="mt-1">
+              <ColorPicker
+                value={createForm.color}
+                onChange={(color) => setCreateForm((prev) => ({ ...prev, color }))}
+              />
+            </div>
+          </div>
           <label className="flex flex-col text-xs font-medium text-slate-600 md:col-span-1 md:col-start-1 md:row-start-2">
             Description
             <input
@@ -193,14 +243,11 @@ export const TagsPage = () => {
                               onChange={(event) => setEditForm((prev) => ({ ...prev, name: event.target.value }))}
                               className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                             />
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="color"
+                            <div className="min-w-[280px]">
+                              <ColorPicker
                                 value={editForm.color}
-                                onChange={(event) => setEditForm((prev) => ({ ...prev, color: event.target.value }))}
-                                className="h-9 w-16 cursor-pointer rounded-md border border-slate-300 bg-white"
+                                onChange={(color) => setEditForm((prev) => ({ ...prev, color }))}
                               />
-                              <span className="text-xs text-slate-500">Colour</span>
                             </div>
                           </div>
                         ) : (

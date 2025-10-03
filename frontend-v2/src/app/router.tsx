@@ -14,6 +14,8 @@ import { ControlPage } from '../features/control/pages/control-page';
 import { ControlLayout } from '../features/control/pages/control-layout';
 import { SchedulesPage } from '../features/scheduling/pages/schedules-page';
 import { QueueDiagnosticsPage } from '../features/diagnostics/pages/queue-diagnostics-page';
+import { UsersPage } from '../features/users/pages/users-page';
+import { LoginPage } from '../features/auth/pages/login-page';
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +35,7 @@ export const router = createBrowserRouter([
       { path: 'tags', element: <TagsPage /> },
       { path: 'queue-diagnostics', element: <QueueDiagnosticsPage /> },
       { path: 'settings', element: <SettingsPage /> },
+      { path: 'users', element: <UsersPage /> },
     ],
   },
   {
@@ -40,5 +43,6 @@ export const router = createBrowserRouter([
     element: <ControlLayout />,
     children: [{ index: true, element: <ControlPage /> }],
   },
+  { path: '/login', element: <LoginPage /> },
   { path: '*', element: <Navigate to="/" replace /> },
 ]);

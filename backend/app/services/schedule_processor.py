@@ -86,8 +86,14 @@ class ScheduleProcessor:
     def _add_schedule_to_processor(self, schedule: Schedule):
         """Add a single schedule to APScheduler"""
         try:
+            # Convert cron expression to APScheduler-compatible format
+            # APScheduler's from_crontab() has a bug where it misinterprets weekday ranges
+            # like "1-5" (Mon-Fri in standard cron becomes incorrect in APScheduler)
+            # We need to convert numeric weekdays to named ones: 1-5 -> mon-fri
+            cron_expr = self._convert_cron_for_apscheduler(schedule.cron_expression)
+
             # Create cron trigger
-            trigger = CronTrigger.from_crontab(schedule.cron_expression)
+            trigger = CronTrigger.from_crontab(cron_expr)
 
             # Add job to scheduler
             self.scheduler.add_job(
@@ -103,6 +109,60 @@ class ScheduleProcessor:
 
         except Exception as e:
             logger.error(f"Error adding schedule {schedule.id} to processor: {e}", exc_info=True)
+
+    def _convert_cron_for_apscheduler(self, cron_expr: str) -> str:
+        """
+        Convert standard cron expression to APScheduler-compatible format
+
+        Converts numeric weekday ranges to named days to avoid APScheduler bugs:
+        - 1-5 -> mon-fri (Monday-Friday)
+        - 0,6 -> sat,sun (Saturday,Sunday)
+        - etc.
+        """
+        # Map of numeric weekday ranges/values to APScheduler names
+        # Standard cron: 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+        weekday_map = {
+            '0': 'sun',
+            '1': 'mon',
+            '2': 'tue',
+            '3': 'wed',
+            '4': 'thu',
+            '5': 'fri',
+            '6': 'sat',
+            '7': 'sun',  # Alternate Sunday
+        }
+
+        # Common range conversions
+        range_map = {
+            '1-5': 'mon-fri',
+            '0-6': 'mon-sun',
+            '1-6': 'mon-sat',
+            '0,6': 'sat,sun',
+            '6,0': 'sat,sun',
+        }
+
+        parts = cron_expr.split()
+        if len(parts) != 5:
+            return cron_expr  # Not a standard 5-field cron, return as-is
+
+        minute, hour, day, month, weekday = parts
+
+        # Check for range patterns first
+        if weekday in range_map:
+            weekday = range_map[weekday]
+        elif weekday != '*':
+            # Handle individual weekday numbers or comma-separated lists
+            # e.g., "1,3,5" -> "mon,wed,fri"
+            converted_days = []
+            for part in weekday.split(','):
+                part = part.strip()
+                if part in weekday_map:
+                    converted_days.append(weekday_map[part])
+                else:
+                    converted_days.append(part)  # Keep non-numeric as-is
+            weekday = ','.join(converted_days)
+
+        return f"{minute} {hour} {day} {month} {weekday}"
 
     async def _execute_schedule(self, schedule_id: int):
         """Execute a scheduled task"""

@@ -63,6 +63,7 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [ports, setPorts] = useState<PortFormState[]>(() => mapPorts(device.ir_ports));
   const [apiKeyInput, setApiKeyInput] = useState(device.api_key ?? '');
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -77,6 +78,90 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
   const portCapabilities = useMemo(() => extractPortCapabilities(device.capabilities), [device.capabilities]);
   const brandSummary = useMemo(() => extractBrands(device.capabilities), [device.capabilities]);
   const tagOptions = tags ?? [];
+  // Calculate channel usage for categorization
+  const channelUsage = useMemo(() => {
+    const usage = new Map<string, number>();
+    (allDevices ?? []).forEach((controller) => {
+      controller.ir_ports.forEach((port) => {
+        if (port.default_channel) {
+          usage.set(port.default_channel, (usage.get(port.default_channel) || 0) + 1);
+        }
+      });
+    });
+    return usage;
+  }, [allDevices]);
+
+  // Categorized channel options for grouped dropdown
+  const categorizedChannelOptions = useMemo(() => {
+    const categories = {
+      'In Use': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'InHouse': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'Sports': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'News': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'FTA': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'Entertainment': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'Kids': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+      'Other': [] as Array<{ value: string; label: string; channel: ChannelOption }>,
+    };
+
+    (channels ?? []).forEach((channel) => {
+      const option = {
+        value: channel.foxtel_number || `${channel.id}`,
+        label: formatChannelLabel(channel),
+        channel,
+      };
+
+      // In Use
+      const lcn = channel.lcn?.split('/')[0].trim() || '';
+      if (channelUsage.has(lcn) || channelUsage.has(channel.foxtel_number || '')) {
+        categories['In Use'].push(option);
+      }
+
+      // InHouse
+      if (channel.platform === 'InHouse') {
+        categories['InHouse'].push(option);
+      }
+
+      // FTA
+      if (channel.platform === 'FTA') {
+        categories['FTA'].push(option);
+      }
+
+      // Foxtel categorization by number range
+      if (channel.foxtel_number) {
+        const foxtelNum = parseInt(channel.foxtel_number, 10);
+        if (foxtelNum >= 500 && foxtelNum < 600) {
+          categories['Sports'].push(option);
+        } else if (foxtelNum >= 600 && foxtelNum < 700) {
+          if (
+            channel.channel_name.toLowerCase().includes('news') ||
+            channel.channel_name.toLowerCase().includes('cnn') ||
+            channel.channel_name.toLowerCase().includes('bbc')
+          ) {
+            categories['News'].push(option);
+          } else {
+            categories['Entertainment'].push(option);
+          }
+        } else if (foxtelNum >= 700 && foxtelNum < 800) {
+          categories['Kids'].push(option);
+        } else {
+          categories['Entertainment'].push(option);
+        }
+      } else if (!channel.platform) {
+        categories['Other'].push(option);
+      }
+    });
+
+    // Sort In Use by usage count
+    categories['In Use'].sort((a, b) => {
+      const aLcn = a.channel.lcn?.split('/')[0].trim() || a.channel.foxtel_number || '';
+      const bLcn = b.channel.lcn?.split('/')[0].trim() || b.channel.foxtel_number || '';
+      return (channelUsage.get(bLcn) || 0) - (channelUsage.get(aLcn) || 0);
+    });
+
+    return categories;
+  }, [channels, channelUsage]);
+
   const channelSelectOptions = useMemo(
     () =>
       (channels ?? []).map((channel) => ({
@@ -245,18 +330,59 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
                 </label>
                 <label className="flex flex-col text-sm font-medium text-slate-700">
                   Location
-                  <input
-                    type="text"
-                    value={location}
-                    onChange={(event) => setLocation(event.target.value)}
-                    list="location-suggestions"
-                    className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  />
-                  <datalist id="location-suggestions">
-                    {existingLocations.map((loc) => (
-                      <option key={loc} value={loc} />
-                    ))}
-                  </datalist>
+                  <div className="relative mt-1">
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(event) => setLocation(event.target.value)}
+                      onFocus={() => setShowLocationDropdown(true)}
+                      onBlur={() => setTimeout(() => setShowLocationDropdown(false), 200)}
+                      placeholder="Select existing or enter new location"
+                      className="w-full rounded-md border border-slate-300 px-3 py-2 pr-8 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    />
+                    {existingLocations.length > 0 && (
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                        <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    )}
+
+                    {/* Dropdown with existing locations */}
+                    {showLocationDropdown && existingLocations.length > 0 && (
+                      <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 shadow-lg">
+                        {existingLocations
+                          .filter((loc) => {
+                            // Show all locations if input is empty or show filtered results
+                            if (!location.trim()) return true;
+                            return loc.toLowerCase().includes(location.toLowerCase());
+                          })
+                          .map((loc) => (
+                            <button
+                              key={loc}
+                              type="button"
+                              onClick={() => {
+                                setLocation(loc);
+                                setShowLocationDropdown(false);
+                              }}
+                              className="w-full px-3 py-2 text-left text-sm text-slate-900 hover:bg-brand-50 hover:text-brand-700"
+                            >
+                              {loc}
+                            </button>
+                          ))}
+                        {location.trim() && !existingLocations.some((loc) => loc.toLowerCase() === location.toLowerCase()) && (
+                          <div className="border-t border-slate-200 px-3 py-2 text-xs text-slate-500">
+                            Press Enter to create "{location}"
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {existingLocations.length > 0 && (
+                    <p className="mt-1 text-xs text-slate-500">
+                      {existingLocations.length} existing location{existingLocations.length === 1 ? '' : 's'}
+                    </p>
+                  )}
                 </label>
                 <label className="flex flex-col text-sm font-medium text-slate-700">
                   Notes
@@ -386,11 +512,21 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
                                 {needsFallbackOption ? (
                                   <option value={selectValue}>Current selection</option>
                                 ) : null}
-                                {channelSelectOptions.map((option) => (
-                                  <option key={option.value} value={option.value}>
-                                    {option.label}
-                                  </option>
-                                ))}
+
+                                {/* Grouped channel options */}
+                                {Object.entries(categorizedChannelOptions).map(([category, options]) => {
+                                  if (options.length === 0) return null;
+                                  return (
+                                    <optgroup key={category} label={category}>
+                                      {options.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                          {option.label}
+                                        </option>
+                                      ))}
+                                    </optgroup>
+                                  );
+                                })}
+
                                 <option value="__custom__">Custom value…</option>
                               </select>
                             </label>
