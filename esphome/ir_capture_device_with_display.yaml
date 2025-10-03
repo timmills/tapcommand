@@ -1,0 +1,178 @@
+substitutions:
+  device_name: ir-capture-display
+  friendly_name: IR Capture Device with Display
+
+esphome:
+  name: ${device_name}
+
+esp32:
+  board: esp32dev
+  variant: ESP32
+  framework:
+    type: arduino
+
+# Enable mDNS for easy discovery
+mdns:
+  disabled: false
+
+# WiFi configuration
+wifi:
+  id: wifi_component
+  networks:
+    - ssid: "TV"
+      password: "rdL1R7iDpXDx4O"
+      hidden: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "IR-Capture Display Fallback"
+    password: "qTBXKBSlXBtJYlfN"
+
+captive_portal:
+
+# Enable logging
+logger:
+  level: DEBUG
+  baud_rate: 115200
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "uuPgF8JOAV/ZhFbDV4iS4Kwr1MV5H97p6Nk+HnpE1+g="
+
+# Enable OTA updates
+ota:
+  - platform: esphome
+    password: "qTBXKBSlXBtJYlfN"
+
+# Web server for easy access
+web_server:
+  port: 80
+
+# I2C Bus for OLED Display
+# Display pins: GND, VDD, SCK (clock), SDA (data)
+# Using GPIO16/17 for I2C
+i2c:
+  sda: GPIO16  # SDA on GPIO16
+  scl: GPIO17  # SCL on GPIO17
+  scan: true   # Scan for I2C devices on boot
+  frequency: 100kHz  # Lower frequency for better compatibility
+
+# Font for display (smaller for 128x32 screen)
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 8
+  - file: "gfonts://Roboto"
+    id: font_medium
+    size: 10
+
+# SSD1306 OLED Display 128x32
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x32"  # Smaller 32-pixel height display
+    address: 0x3D            # Try alternate I2C address
+    id: oled_display
+    update_interval: 1s
+    lambda: |-
+      // Header (line 1)
+      it.print(0, 0, id(font_medium), "IR CAPTURE");
+
+      // WiFi/IP (line 2)
+      if (id(wifi_component).is_connected()) {
+        if (id(wifi_ip).has_state() && id(wifi_ip).state.length() > 0) {
+          it.printf(0, 12, id(font_small), "IP: %s", id(wifi_ip).state.c_str());
+        } else {
+          it.print(0, 12, id(font_small), "Connected");
+        }
+      } else {
+        it.print(0, 12, id(font_small), "Connecting...");
+      }
+
+      // Status (line 3)
+      it.print(0, 24, id(font_small), "Ready");
+
+# IR Receiver Configuration
+remote_receiver:
+  - pin:
+      number: GPIO4
+      inverted: false
+      mode:
+        input: true
+        pullup: false
+    dump: all    # Dump all received IR codes to logs
+    filter: 50us
+    idle: 10ms
+    tolerance: 25%
+    on_raw:
+      - lambda: |-
+          ESP_LOGI("ir_capture", "IR signal: %d values", x.size());
+
+          // Store the raw IR code as JSON string
+          std::string raw_data = "[";
+          for (size_t i = 0; i < x.size(); i++) {
+            if (i > 0) raw_data += ", ";
+            raw_data += std::to_string(x[i]);
+          }
+          raw_data += "]";
+          id(last_ir_code).publish_state(raw_data);
+
+          // Flash status LED
+          id(status_light).turn_on().perform();
+          delay(100);
+          id(status_light).turn_off().perform();
+
+# IR Transmitter Configuration (for testing captured codes)
+remote_transmitter:
+  pin: GPIO12  # IR transmitter data pin
+  carrier_duty_percent: 50%
+
+# Status LED - using light platform for lambda control
+light:
+  - platform: binary
+    id: status_light
+    name: "${friendly_name} Status LED"
+    output: status_led_output
+
+# Output for status LED
+output:
+  - platform: gpio
+    pin: GPIO2
+    id: status_led_output
+
+# Text sensor to show device status
+text_sensor:
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP Address"
+      id: wifi_ip
+    ssid:
+      name: "${friendly_name} SSID"
+    mac_address:
+      name: "${friendly_name} MAC Address"
+
+  # Template sensor to store last captured IR code
+  - platform: template
+    name: "${friendly_name} Last IR Code"
+    id: last_ir_code
+    icon: "mdi:remote"
+
+# Binary sensor for connection status
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+# Sensor for WiFi signal strength
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    id: wifi_signal_sensor
+    update_interval: 60s
+
+# Button to restart the device
+button:
+  - platform: restart
+    name: "${friendly_name} Restart"

@@ -1,0 +1,17 @@
+[Unit]
+Description=SmartVenue FastAPI Backend
+After=network.target
+
+[Service]
+Type=simple
+User=coastal
+WorkingDirectory=/home/coastal/smartvenue/backend
+ExecStart=/home/coastal/smartvenue/backend/run.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

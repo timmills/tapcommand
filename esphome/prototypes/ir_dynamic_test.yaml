@@ -1,0 +1,769 @@
+substitutions:
+  device_name: smartvenue-ir-prototype
+  friendly_name: SmartVenue IR Prototype
+  wifi_ssid: "TV"
+  wifi_password: "rdL1R7iDpXDx4O"
+  api_key: "uuPgF8JOAV/ZhFbDV4iS4Kwr1MV5H97p6Nk+HnpE0+g="
+  ota_password: "demo-ota"
+  web_username: admin
+  web_password: smartvenue
+
+esphome:
+  name: "${device_name}"
+  friendly_name: "${friendly_name}"
+  comment: "Prototype dynamic IR configuration"
+  project:
+    name: "smartvenue.dynamic_ir"
+    version: "0.1.0"
+  includes:
+    - ArduinoJson.h
+  on_boot:
+    priority: -10
+    then:
+      - logger.log: "Boot complete, publishing capabilities"
+      - script.execute: publish_capabilities
+      - lambda: |-
+          auto *web = esphome::web_server_base::global_web_server_base;
+          if (web == nullptr) {
+            ESP_LOGW("web_ui", "Web server base not initialised; skipping custom UI setup");
+            return;
+          }
+
+          auto *uptime_ptr = id(uptime_sensor);
+          auto *wifi_ptr = id(wifi_signal_sensor);
+          auto *cap_ptr = id(ir_capabilities_payload);
+          auto *publish_ptr = id(publish_capabilities);
+          std::string api_key = "${api_key}";
+          std::string ota_password = "${ota_password}";
+          auto *dispatch_power_ptr = id(dispatch_power);
+
+          auto make_status_html = [uptime_ptr, wifi_ptr, cap_ptr, api_key, ota_password]() -> std::string {
+            std::string html;
+            html.reserve(4000);
+
+            std::string friendly(App.get_friendly_name());
+            std::string hostname(App.get_name());
+
+            std::string uptime_text = "Calculating...";
+            if (uptime_ptr->has_state()) {
+              uint32_t uptime_seconds = static_cast<uint32_t>(uptime_ptr->state);
+              uint32_t days = uptime_seconds / 86400;
+              uint32_t hours = (uptime_seconds % 86400) / 3600;
+              uint32_t minutes = (uptime_seconds % 3600) / 60;
+              uint32_t seconds = uptime_seconds % 60;
+              char buf[64];
+              snprintf(buf, sizeof(buf), "%ud %02uh %02um %02us", days, hours, minutes, seconds);
+              uptime_text = buf;
+            }
+
+            std::string wifi_text = "N/A";
+            if (wifi_ptr->has_state()) {
+              float wifi_state = wifi_ptr->state;
+              if (wifi_state == wifi_state) {
+                char buf[32];
+                snprintf(buf, sizeof(buf), "%.1f dBm", wifi_state);
+                wifi_text = buf;
+              }
+            }
+
+            std::string capabilities = cap_ptr->state;
+            std::string pretty_capabilities;
+            if (!capabilities.empty()) {
+              bool parsed = esphome::json::parse_json(capabilities, [&](JsonObject root) -> bool {
+                ArduinoJson::serializeJsonPretty(root, pretty_capabilities);
+                return true;
+              });
+              if (!parsed) {
+                pretty_capabilities = capabilities;
+              }
+            }
+
+            html += "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">";
+            html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
+            html += "<title>" + friendly + " · SmartVenue IR</title>";
+            html += "<style>body{font-family:'Segoe UI',Roboto,Arial,sans-serif;margin:0;padding:2.5rem;background:#0b172a;color:#f5f8ff;}";
+            html += "h1,h2{margin:0;font-weight:600;}h1{font-size:2rem;margin-bottom:0.75rem;}h2{font-size:1.2rem;margin-bottom:0.75rem;}";
+            html += ".layout{display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem;}@media(min-width:900px){.layout{grid-template-columns:repeat(2,minmax(0,1fr));}}";
+            html += ".card{background:#16213d;border-radius:14px;padding:1.75rem;box-shadow:0 12px 32px rgba(2,10,40,0.35);}";
+            html += ".card.card-wide{grid-column:1;}@media(min-width:900px){.card.card-wide{grid-column:1 / span 2;}}";
+            html += "table{width:100%;border-collapse:collapse;margin-top:0.75rem;}th,td{padding:0.6rem 0.75rem;text-align:left;}";
+            html += "thead th{text-transform:uppercase;font-size:0.75rem;letter-spacing:0.08em;color:#93c4ff;border-bottom:1px solid rgba(255,255,255,0.08);}";
+            html += "tbody tr:nth-child(even){background:rgba(255,255,255,0.03);}tbody td{vertical-align:top;}ul{margin:0.4rem 0 0 1.25rem;}";
+            html += "pre,code{background:#0c192f;border-radius:10px;padding:1rem;font-size:0.85rem;overflow-x:auto;margin:0;}";
+            html += ".meta span{display:inline-block;margin-right:1.25rem;font-size:0.95rem;color:#d5e6ff;}";
+            html += ".button{display:inline-block;margin-top:1rem;padding:0.6rem 1rem;border-radius:30px;background:#2563ff;color:#fff;text-decoration:none;font-weight:600;}";
+            html += ".button.small{padding:0.45rem 0.85rem;font-size:0.85rem;margin-right:0.6rem;}";
+            html += ".actions{margin-top:1rem;}";
+            html += "footer{margin-top:2rem;font-size:0.8rem;color:#7b8fb8;text-align:center;}</style></head><body>";
+
+            html += "<div class=\"layout\">";
+
+            html += "<div class=\"card\"><h1>" + friendly + "</h1>";
+            html += "<div class=\"meta\"><span><strong>Hostname:</strong> " + hostname + "</span>";
+            html += "<span><strong>Uptime:</strong> " + uptime_text + "</span>";
+            html += "<span><strong>WiFi:</strong> " + wifi_text + "</span></div>";
+            html += "<p style=\"margin-top:0.75rem;line-height:1.5;max-width:540px;\">This prototype exposes SmartVenue dynamic IR capabilities for dual-port operation. Use the summary below to verify which library is mapped to each port before importing into the Configure Ports workflow.</p>";
+            html += "<a class=\"button\" href=\"/report\">Publish Capabilities</a></div>";
+
+            html += "<div class=\"card\"><h2>Port Overview &amp; OTA</h2><table><thead><tr><th>Port</th><th>Brand</th><th>Functions</th></tr></thead><tbody>";
+            html += "<tr><td>1</td><td>Samsung Native</td><td><ul><li>Power</li><li>Mute</li><li>Volume Up / Down</li><li>Channel Up / Down</li><li>Digits 0–9</li><li>Smart Channel Sequencing</li></ul></td></tr>";
+            html += "<tr><td>2</td><td>Prototype NEC / Raw</td><td><ul><li>Power (raw pulse)</li><li>Mute</li><li>Volume Up / Down</li><li>Channel Up / Down</li><li>Digits 0–9 (mixed NEC + raw)</li></ul></td></tr>";
+            html += "</tbody></table><div class=\"actions\"><a class=\"button small\" href=\"/test/port1/power\">Test Port 1 Power</a><a class=\"button small\" href=\"/test/port2/power\">Test Port 2 Power</a></div>";
+            html += "<div style=\"margin-top:1.25rem;line-height:1.6;\"><strong>ESPHome API Key:</strong> <code>" + api_key + "</code><br>";
+            html += "<strong>OTA Password:</strong> <code>" + ota_password + "</code></div></div>";
+
+            html += "<div class=\"card card-wide\"><h2>Capabilities Payload</h2>";
+            if (pretty_capabilities.empty()) {
+              html += "<p>No capabilities have been reported yet. Press <em>Publish Capabilities</em> above to trigger the report_capabilities service.</p>";
+            } else {
+              html += "<pre style=\"max-height:26rem;overflow:auto;margin-top:1rem;\">" + pretty_capabilities + "</pre>";
+            }
+            html += "</div>";
+
+            html += "</div>";
+
+            html += "<footer>SmartVenue Dynamic IR Prototype &middot; Firmware " + std::string(ESPHOME_VERSION) + "</footer>";
+            html += "</body></html>";
+            return html;
+          };
+
+          auto *root_handler = new AsyncCallbackWebHandler();
+          root_handler->setUri("/");
+          root_handler->onRequest([make_status_html](AsyncWebServerRequest *request) {
+            std::string html = make_status_html();
+            request->send(200, "text/html", html.c_str());
+          });
+          web->add_handler(root_handler);
+
+          auto *report_handler = new AsyncCallbackWebHandler();
+          report_handler->setUri("/report");
+          report_handler->onRequest([publish_ptr](AsyncWebServerRequest *request) {
+            publish_ptr->execute();
+            std::string html = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"refresh\" content=\"2;url=/\"><title>Publishing Capabilities…</title><style>body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#0b172a;color:#f5f8ff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}div{background:#16213d;padding:2rem 2.5rem;border-radius:14px;box-shadow:0 12px 32px rgba(2,10,40,0.35);text-align:center;}h1{margin:0 0 0.5rem;font-size:1.5rem;}p{margin:0;font-size:0.95rem;color:#cfe0ff;}</style></head><body><div><h1>Capabilities queued</h1><p>Publishing latest IR capabilities…</p></div></body></html>";
+            request->send(200, "text/html", html.c_str());
+          });
+          web->add_handler(report_handler);
+
+          auto *port1_test_handler = new AsyncCallbackWebHandler();
+          port1_test_handler->setUri("/test/port1/power");
+          port1_test_handler->onRequest([dispatch_power_ptr](AsyncWebServerRequest *request) {
+            dispatch_power_ptr->execute(1);
+            std::string html = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"refresh\" content=\"2;url=/\"><title>Port 1 Power Sent</title><style>body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#0b172a;color:#f5f8ff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}div{background:#16213d;padding:2rem 2.5rem;border-radius:14px;box-shadow:0 12px 32px rgba(2,10,40,0.35);text-align:center;}h1{margin:0 0 0.5rem;font-size:1.5rem;}p{margin:0;font-size:0.95rem;color:#cfe0ff;}</style></head><body><div><h1>Port 1 Power</h1><p>Samsung power command queued.</p></div></body></html>";
+            request->send(200, "text/html", html.c_str());
+          });
+          web->add_handler(port1_test_handler);
+
+          auto *port2_test_handler = new AsyncCallbackWebHandler();
+          port2_test_handler->setUri("/test/port2/power");
+          port2_test_handler->onRequest([dispatch_power_ptr](AsyncWebServerRequest *request) {
+            dispatch_power_ptr->execute(2);
+            std::string html = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"refresh\" content=\"2;url=/\"><title>Port 2 Power Sent</title><style>body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:#0b172a;color:#f5f8ff;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}div{background:#16213d;padding:2rem 2.5rem;border-radius:14px;box-shadow:0 12px 32px rgba(2,10,40,0.35);text-align:center;}h1{margin:0 0 0.5rem;font-size:1.5rem;}p{margin:0;font-size:0.95rem;color:#cfe0ff;}</style></head><body><div><h1>Port 2 Power</h1><p>Prototype power command queued.</p></div></body></html>";
+            request->send(200, "text/html", html.c_str());
+          });
+          web->add_handler(port2_test_handler);
+
+esp8266:
+  board: d1_mini
+  restore_from_flash: true
+
+logger:
+  level: DEBUG
+  hardware_uart: UART0
+  baud_rate: 115200
+  tx_buffer_size: 256
+
+api:
+  encryption:
+    key: "${api_key}"
+  services:
+    - service: report_capabilities
+      then:
+        - script.execute: publish_capabilities
+    - service: tv_power
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_power
+            target_port: !lambda 'return port;'
+    - service: tv_mute
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_mute
+            target_port: !lambda 'return port;'
+    - service: tv_volume_up
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_volume_up
+            target_port: !lambda 'return port;'
+    - service: tv_volume_down
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_volume_down
+            target_port: !lambda 'return port;'
+    - service: tv_channel_up
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_channel_up
+            target_port: !lambda 'return port;'
+    - service: tv_channel_down
+      variables:
+        port: int
+      then:
+        - script.execute:
+            id: dispatch_channel_down
+            target_port: !lambda 'return port;'
+    - service: tv_number
+      variables:
+        port: int
+        digit: int
+      then:
+        - script.execute:
+            id: dispatch_digit
+            target_port: !lambda 'return port;'
+            digit: !lambda 'return digit;'
+    - service: tv_channel
+      variables:
+        port: int
+        channel: int
+      then:
+        - script.execute:
+            id: smart_channel
+            target_port: !lambda 'return port;'
+            channel: !lambda 'return channel;'
+
+wifi:
+  networks:
+    - ssid: "${wifi_ssid}"
+      password: "${wifi_password}"
+      hidden: true
+  fast_connect: true
+  ap:
+    ssid: "${friendly_name} Setup"
+    password: "12345678"
+    ap_timeout: 1min
+
+ota:
+  - platform: esphome
+    password: "${ota_password}"
+
+captive_portal:
+
+mdns:
+
+web_server:
+  port: 80
+  include_internal: true
+  auth:
+    username: "${web_username}"
+    password: "${web_password}"
+
+# debug:
+#   update_interval: 5s
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: true
+
+remote_transmitter:
+  id: ir_transmitter
+  pin: GPIO14
+  carrier_duty_percent: 50%
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: port1_enable
+  - platform: gpio
+    pin: GPIO13
+    id: port2_enable
+
+script:
+  - id: publish_capabilities
+    mode: queued
+    then:
+      - lambda: |-
+          std::string payload = "{\"device_id\":\"" + std::string(App.get_name()) + "\"";
+          payload += ",\"project\":\"smartvenue.dynamic_ir\"";
+          payload += ",\"firmware_version\":\"0.1.0\"";
+          payload += ",\"ports\":[";
+          payload += "{\"port\":1,\"brand\":\"Samsung\",\"commands\":[\"power\",\"mute\",\"volume_up\",\"volume_down\",\"channel_up\",\"channel_down\",\"digit_0\",\"digit_1\",\"digit_2\",\"digit_3\",\"digit_4\",\"digit_5\",\"digit_6\",\"digit_7\",\"digit_8\",\"digit_9\"]}";
+          payload += ",{\"port\":2,\"brand\":\"Prototype NEC/Raw\",\"commands\":[\"power\",\"mute\",\"volume_up\",\"volume_down\",\"channel_up\",\"channel_down\",\"digit_0\",\"digit_1\",\"digit_2\",\"digit_3\",\"digit_4\",\"digit_5\",\"digit_6\",\"digit_7\",\"digit_8\",\"digit_9\"]}]";
+          payload += ",\"metadata\":{\"ip\":\"" + std::string(WiFi.localIP().toString().c_str()) + "\",";
+          payload += "\"mac\":\"" + std::string(WiFi.macAddress().c_str()) + "\",";
+          payload += "\"hostname\":\"" + std::string(App.get_name()) + "\",";
+          payload += "\"reported_at_ms\":" + std::to_string(millis()) + "}}";
+          id(ir_capabilities_payload).publish_state(payload);
+          ESP_LOGD("capabilities", "Published: %s", payload.c_str());
+  - id: activate_port
+    parameters:
+      target_port: int
+    then:
+      - output.turn_off: port1_enable
+      - output.turn_off: port2_enable
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - output.turn_on: port1_enable
+      - if:
+          condition:
+            lambda: 'return target_port == 2;'
+          then:
+            - output.turn_on: port2_enable
+      - delay: 10ms
+
+  - id: deactivate_ports
+    then:
+      - output.turn_off: port1_enable
+      - output.turn_off: port2_enable
+
+  - id: dispatch_power
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_power
+          else:
+            - script.execute: send_port2_power
+      - script.execute: deactivate_ports
+
+  - id: dispatch_mute
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_mute
+          else:
+            - script.execute: send_port2_mute
+      - script.execute: deactivate_ports
+
+  - id: dispatch_volume_up
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_volume_up
+          else:
+            - script.execute: send_port2_volume_up
+      - script.execute: deactivate_ports
+
+  - id: dispatch_volume_down
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_volume_down
+          else:
+            - script.execute: send_port2_volume_down
+      - script.execute: deactivate_ports
+
+  - id: dispatch_channel_up
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_channel_up
+          else:
+            - script.execute: send_port2_channel_up
+      - script.execute: deactivate_ports
+
+  - id: dispatch_channel_down
+    parameters:
+      target_port: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute: send_port1_channel_down
+          else:
+            - script.execute: send_port2_channel_down
+      - script.execute: deactivate_ports
+
+  - id: dispatch_digit
+    parameters:
+      target_port: int
+      digit: int
+    then:
+      - script.execute:
+          id: activate_port
+          target_port: !lambda 'return target_port;'
+      - if:
+          condition:
+            lambda: 'return target_port == 1;'
+          then:
+            - script.execute:
+                id: send_port1_digit
+                digit: !lambda 'return digit;'
+          else:
+            - script.execute:
+                id: send_port2_digit
+                digit: !lambda 'return digit;'
+      - script.execute: deactivate_ports
+
+  - id: smart_channel
+    parameters:
+      target_port: int
+      channel: int
+    then:
+      - lambda: |-
+          id(target_port_store) = target_port;
+          id(channel_digits) = std::to_string(channel);
+          id(digit_index) = 0;
+      - script.execute: send_next_channel_digit
+
+  - id: send_next_channel_digit
+    mode: restart
+    then:
+      - lambda: |-
+          if (id(digit_index) >= id(channel_digits).length()) {
+            ESP_LOGI("smart_channel", "Channel sequence complete");
+            return;
+          }
+          int digit = id(channel_digits)[id(digit_index)] - '0';
+          int port = id(target_port_store);
+          if (port != 1 && port != 2) {
+            ESP_LOGW("smart_channel", "Unsupported port %d", port);
+            return;
+          }
+          id(digit_index) += 1;
+          if (port == 1) {
+            id(dispatch_digit).execute(1, digit);
+          } else {
+            id(dispatch_digit).execute(2, digit);
+          }
+      - if:
+          condition:
+            lambda: 'return id(digit_index) < id(channel_digits).length();'
+          then:
+            - delay: 300ms
+            - script.execute: send_next_channel_digit
+
+  - id: send_port1_power
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E040BF
+  - id: send_port1_mute
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E0F00F
+  - id: send_port1_volume_up
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E0E01F
+  - id: send_port1_volume_down
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E0D02F
+  - id: send_port1_channel_up
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E048B7
+  - id: send_port1_channel_down
+    then:
+      - remote_transmitter.transmit_samsung:
+          transmitter_id: ir_transmitter
+          data: 0xE0E008F7
+  - id: send_port1_digit
+    parameters:
+      digit: int
+    then:
+      - if:
+          condition:
+            lambda: 'return digit == 0;'
+          then:
+            - remote_transmitter.transmit_samsung:
+                transmitter_id: ir_transmitter
+                data: 0xE0E08877
+          else:
+            - if:
+                condition:
+                  lambda: 'return digit == 1;'
+                then:
+                  - remote_transmitter.transmit_samsung:
+                      transmitter_id: ir_transmitter
+                      data: 0xE0E020DF
+                else:
+                  - if:
+                      condition:
+                        lambda: 'return digit == 2;'
+                      then:
+                        - remote_transmitter.transmit_samsung:
+                            transmitter_id: ir_transmitter
+                            data: 0xE0E0A05F
+                      else:
+                        - if:
+                            condition:
+                              lambda: 'return digit == 3;'
+                            then:
+                              - remote_transmitter.transmit_samsung:
+                                  transmitter_id: ir_transmitter
+                                  data: 0xE0E0609F
+                            else:
+                              - if:
+                                  condition:
+                                    lambda: 'return digit == 4;'
+                                  then:
+                                    - remote_transmitter.transmit_samsung:
+                                        transmitter_id: ir_transmitter
+                                        data: 0xE0E010EF
+                                  else:
+                                    - if:
+                                        condition:
+                                          lambda: 'return digit == 5;'
+                                        then:
+                                          - remote_transmitter.transmit_samsung:
+                                              transmitter_id: ir_transmitter
+                                              data: 0xE0E0906F
+                                        else:
+                                          - if:
+                                              condition:
+                                                lambda: 'return digit == 6;'
+                                              then:
+                                                - remote_transmitter.transmit_samsung:
+                                                    transmitter_id: ir_transmitter
+                                                    data: 0xE0E050AF
+                                              else:
+                                                - if:
+                                                    condition:
+                                                      lambda: 'return digit == 7;'
+                                                    then:
+                                                      - remote_transmitter.transmit_samsung:
+                                                          transmitter_id: ir_transmitter
+                                                          data: 0xE0E030CF
+                                                    else:
+                                                      - if:
+                                                          condition:
+                                                            lambda: 'return digit == 8;'
+                                                          then:
+                                                            - remote_transmitter.transmit_samsung:
+                                                                transmitter_id: ir_transmitter
+                                                                data: 0xE0E0B04F
+                                                          else:
+                                                            - if:
+                                                                condition:
+                                                                  lambda: 'return digit == 9;'
+                                                                then:
+                                                                  - remote_transmitter.transmit_samsung:
+                                                                      transmitter_id: ir_transmitter
+                                                                      data: 0xE0E0708F
+                                                                else:
+                                                                  - logger.log:
+                                                                      level: WARN
+                                                                      format: "Port 1 digit %d unsupported"
+                                                                      args: ['digit']
+
+  - id: send_port2_power
+    then:
+      - remote_transmitter.transmit_raw:
+          transmitter_id: ir_transmitter
+          carrier_frequency: 38kHz
+          code: [8940, -4553, 603, -461, 577, -491, 577, -1608, 578, -1674, 577, -1672, 577, -1641, 601, -1618, 602, -499, 601, -1652, 599, -1619, 599, -533, 599, -504, 598, -470, 598, -470, 598, -440, 599, -1588, 598, -504, 598, -534, 598, -502, 598, -504, 598, -502, 598, -502, 598, -505, 597, -1620, 598, -1590, 598, -1652, 598, -1621, 597, -1590, 598, -1620, 598, -1557, 597, -1590, 598, -502, 598]
+  - id: send_port2_mute
+    then:
+      - remote_transmitter.transmit_nec:
+          transmitter_id: ir_transmitter
+          address: 0x38
+          command: 0x18
+  - id: send_port2_volume_up
+    then:
+      - remote_transmitter.transmit_nec:
+          transmitter_id: ir_transmitter
+          address: 0x38
+          command: 0x0E
+  - id: send_port2_volume_down
+    then:
+      - remote_transmitter.transmit_nec:
+          transmitter_id: ir_transmitter
+          address: 0x38
+          command: 0x0F
+  - id: send_port2_channel_up
+    then:
+      - remote_transmitter.transmit_nec:
+          transmitter_id: ir_transmitter
+          address: 0x38
+          command: 0x0A
+  - id: send_port2_channel_down
+    then:
+      - remote_transmitter.transmit_raw:
+          transmitter_id: ir_transmitter
+          carrier_frequency: 38kHz
+          code: [8932, -4619, 571, -562, 572, -528, 572, -1614, 572, -1648, 571, -1678, 597, -1621, 597, -1624, 595, -505, 595, -1561, 594, -1592, 594, -538, 594, -509, 594, -475, 593, -508, 593, -542, 593, -1689, 593, -1595, 593, -476, 592, -508, 593, -1627, 593, -1625, 593, -1625, 593, -509, 594, -1593, 593, -541, 593, -1657, 593, -1593, 593, -509, 593, -444, 592, -444, 593, -1596, 592, -508, 592]
+  - id: send_port2_digit
+    parameters:
+      digit: int
+    then:
+      - if:
+          condition:
+            lambda: 'return digit == 0;'
+          then:
+            - remote_transmitter.transmit_raw:
+                transmitter_id: ir_transmitter
+                carrier_frequency: 38kHz
+                code: [8874, -4560, 565, -537, 566, -567, 566, -1621, 566, -1655, 566, -1653, 566, -1685, 566, -1687, 590, -543, 590, -1631, 590, -1630, 589, -544, 589, -482, 589, -512, 589, -513, 588, -547, 588, -1631, 588, -1569, 588, -1695, 588, -513, 588, -515, 588, -1599, 588, -481, 588, -547, 588, -1631, 588, -483, 588, -513, 588, -1664, 588, -1665, 588, -513, 588, -1632, 587, -1666, 588, -545, 588]
+          else:
+            - if:
+                condition:
+                  lambda: 'return digit == 1;'
+                then:
+                  - remote_transmitter.transmit_nec:
+                      transmitter_id: ir_transmitter
+                      address: 0x7C
+                      command: 0x94
+                else:
+                  - if:
+                      condition:
+                        lambda: 'return digit == 2;'
+                      then:
+                        - remote_transmitter.transmit_nec:
+                            transmitter_id: ir_transmitter
+                            address: 0x7C
+                            command: 0x95
+                      else:
+                        - if:
+                            condition:
+                              lambda: 'return digit == 3;'
+                            then:
+                              - remote_transmitter.transmit_nec:
+                                  transmitter_id: ir_transmitter
+                                  address: 0x7C
+                                  command: 0x96
+                            else:
+                              - if:
+                                  condition:
+                                    lambda: 'return digit == 4;'
+                                  then:
+                                    - remote_transmitter.transmit_raw:
+                                        transmitter_id: ir_transmitter
+                                        carrier_frequency: 38kHz
+                                        code: [8808, -4652, 575, -496, 575, -525, 576, -1612, 600, -1557, 601, -1650, 601, -1589, 599, -1652, 598, -503, 598, -1592, 597, -1655, 596, -505, 596, -443, 596, -409, 596, -443, 596, -537, 596, -1624, 596, -1562, 596, -1624, 595, -1528, 596, -475, 596, -1624, 596, -475, 596, -473, 596, -1560, 596, -507, 596, -473, 596, -506, 596, -1562, 596, -537, 596, -1626, 595, -1592, 596, -474, 595]
+                                  else:
+                                    - if:
+                                        condition:
+                                          lambda: 'return digit == 5;'
+                                        then:
+                                          - remote_transmitter.transmit_nec:
+                                              transmitter_id: ir_transmitter
+                                              address: 0x7C
+                                              command: 0x98
+                                        else:
+                                          - if:
+                                              condition:
+                                                lambda: 'return digit == 6;'
+                                              then:
+                                                - remote_transmitter.transmit_raw:
+                                                    transmitter_id: ir_transmitter
+                                                    carrier_frequency: 38kHz
+                                                    code: [8946, -4483, 608, -462, 580, -489, 609, -1643, 608, -1579, 581, -1608, 605, -1582, 632, -1590, 604, -497, 630, -1622, 602, -1524, 628, -441, 628, -442, 600, -438, 601, -436, 628, -476, 600, -1587, 600, -1619, 600, -470, 601, -436, 601, -1619, 600, -1621, 600, -501, 600, -534, 601, -1619, 600, -501, 600, -1557, 600, -1587, 599, -469, 626, -476, 627, -1593, 599, -1589, 600, -501, 600]
+                                              else:
+                                                - if:
+                                                    condition:
+                                                      lambda: 'return digit == 7;'
+                                                    then:
+                                                      - remote_transmitter.transmit_nec:
+                                                          transmitter_id: ir_transmitter
+                                                          address: 0x7C
+                                                          command: 0x9A
+                                                    else:
+                                                      - if:
+                                                          condition:
+                                                            lambda: 'return digit == 8;'
+                                                          then:
+                                                            - remote_transmitter.transmit_nec:
+                                                                transmitter_id: ir_transmitter
+                                                                address: 0x7C
+                                                                command: 0x9B
+                                                          else:
+                                                            - if:
+                                                                condition:
+                                                                  lambda: 'return digit == 9;'
+                                                                then:
+                                                                  - remote_transmitter.transmit_raw:
+                                                                      transmitter_id: ir_transmitter
+                                                                      carrier_frequency: 38kHz
+                                                                      code: [8938, -4585, 575, -494, 575, -525, 576, -1677, 601, -1586, 601, -1618, 600, -1653, 599, -1620, 598, -537, 598, -1654, 597, -1623, 597, -442, 597, -440, 597, -505, 596, -507, 597, -504, 597, -1593, 596, -505, 596, -537, 596, -1657, 596, -1591, 596, -1623, 596, -507, 596, -505, 596, -1562, 595, -1591, 596, -1655, 596, -475, 596, -473, 596, -537, 596, -1657, 597, -1591, 596, -507, 596]
+                                                                else:
+                                                                  - logger.log:
+                                                                      level: WARN
+                                                                      format: "Port 2 digit %d unsupported"
+                                                                      args: ['digit']
+
+globals:
+  - id: channel_digits
+    type: std::string
+    initial_value: '""'
+    restore_value: false
+  - id: digit_index
+    type: int
+    initial_value: '0'
+    restore_value: false
+  - id: target_port_store
+    type: int
+    initial_value: '1'
+    restore_value: false
+
+text_sensor:
+  - platform: template
+    id: ir_capabilities_payload
+    name: "IR Capabilities Payload"
+    entity_category: diagnostic
+    update_interval: never
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    id: wifi_signal_sensor
+    update_interval: 60s
+  - platform: uptime
+    name: "Device Uptime"
+    id: uptime_sensor
+    update_interval: 60s
+    internal: true

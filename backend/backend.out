@@ -1,0 +1,1298 @@
+INFO:     Will watch for changes in these directories: ['/home/coastal/smartvenue/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [487229] using WatchFiles
+INFO:     Started server process [487263]
+INFO:     Waiting for application startup.
+2025-10-03 14:20:09,954 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:20:09,958 - app.main - INFO - Database tables created
+2025-10-03 14:20:09,971 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:20:09,971 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:20:09,972 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:20:09,972 - app.main - INFO - Device discovery started
+2025-10-03 14:20:09,972 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:20:09,973 - app.main - INFO - Device health monitoring started
+2025-10-03 14:20:09,973 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:20:09,973 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:20:09,973 - app.main - INFO - Command queue processor started
+2025-10-03 14:20:09,973 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:20:09,973 - app.main - INFO - History cleanup service started
+2025-10-03 14:20:09,973 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:20:09,974 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:20:09,976 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:20:09,976 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:20:09,976 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:20:09,976 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:20:09,977 - app.main - INFO - Schedule processor started
+2025-10-03 14:20:09,977 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:20:09,982 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:20:09,983 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:20:09,983 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.7 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     100.98.57.42:64507 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64507 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64507 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61361 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61361 - "GET /api/v1/ir-capture/sessions HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64507 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/settings/channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60773 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59668 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33390 - "GET /api/v1/schedules HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:33394 - "GET /api/v1/schedules HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:48250 - "GET /api/v1/schedules HTTP/1.1" 307 Temporary Redirect
+INFO:     127.0.0.1:48260 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54522 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55189 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57586 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53658 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52820 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/routers/commands.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-10-03 14:22:04,780 - app.main - INFO - Shutting down SmartVenue backend...
+2025-10-03 14:22:04,780 - app.services.schedule_processor - INFO - Stopping schedule processor...
+2025-10-03 14:22:04,780 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
+2025-10-03 14:22:04,780 - app.main - INFO - Schedule processor stopped
+2025-10-03 14:22:04,780 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2025-10-03 14:22:04,781 - app.services.history_cleanup - INFO - History cleanup loop cancelled
+2025-10-03 14:22:04,781 - app.services.history_cleanup - INFO - History cleanup service stopped
+2025-10-03 14:22:04,781 - app.main - INFO - History cleanup service stopped
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Stopping queue processor...
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 0 cancelled
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 0 stopped
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 1 cancelled
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 1 stopped
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 2 cancelled
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - Worker 2 stopped
+2025-10-03 14:22:04,781 - app.services.queue_processor - INFO - ✓ Queue processor stopped
+2025-10-03 14:22:04,781 - app.main - INFO - Command queue processor stopped
+2025-10-03 14:22:04,781 - app.services.device_health - INFO - Stopping device health monitoring service
+2025-10-03 14:22:04,781 - app.main - INFO - Device health monitoring stopped
+2025-10-03 14:22:04,781 - app.services.discovery - INFO - Stopping device discovery...
+2025-10-03 14:22:04,781 - app.services.discovery - INFO - Device discovery stopped
+2025-10-03 14:22:04,781 - app.main - INFO - Device discovery stopped
+INFO:     Application shutdown complete.
+INFO:     Finished server process [487263]
+INFO:     Started server process [487635]
+INFO:     Waiting for application startup.
+2025-10-03 14:22:06,075 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:22:06,079 - app.main - INFO - Database tables created
+2025-10-03 14:22:06,090 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:22:06,090 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:22:06,091 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:22:06,091 - app.main - INFO - Device discovery started
+2025-10-03 14:22:06,091 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:22:06,091 - app.main - INFO - Device health monitoring started
+2025-10-03 14:22:06,091 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:22:06,091 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:22:06,091 - app.main - INFO - Command queue processor started
+2025-10-03 14:22:06,091 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:22:06,091 - app.main - INFO - History cleanup service started
+2025-10-03 14:22:06,091 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:22:06,092 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:22:06,094 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:22:06,094 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:22:06,094 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:22:06,094 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:22:06,094 - app.main - INFO - Schedule processor started
+2025-10-03 14:22:06,095 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:22:06,099 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:22:06,100 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:22:06,100 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.6 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     127.0.0.1:58974 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64408 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63708 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63708 - "GET /api/v1/ir-capture/sessions HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63708 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64408 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54403 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/settings/channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60778 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64317 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63070 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62618 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53051 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52782 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51697 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64171 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59498 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60996 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59592 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64637 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59615 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56086 - "GET /api/v1/commands/queue/all?limit=10 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62153 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63968 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56177 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60771 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51466 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62710 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/routers/commands.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-10-03 14:26:51,065 - app.main - INFO - Shutting down SmartVenue backend...
+2025-10-03 14:26:51,065 - app.services.schedule_processor - INFO - Stopping schedule processor...
+2025-10-03 14:26:51,065 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
+2025-10-03 14:26:51,065 - app.main - INFO - Schedule processor stopped
+2025-10-03 14:26:51,065 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2025-10-03 14:26:51,065 - app.services.history_cleanup - INFO - History cleanup loop cancelled
+2025-10-03 14:26:51,065 - app.services.history_cleanup - INFO - History cleanup service stopped
+2025-10-03 14:26:51,065 - app.main - INFO - History cleanup service stopped
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Stopping queue processor...
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 0 cancelled
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 0 stopped
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 1 cancelled
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 1 stopped
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 2 cancelled
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - Worker 2 stopped
+2025-10-03 14:26:51,065 - app.services.queue_processor - INFO - ✓ Queue processor stopped
+2025-10-03 14:26:51,065 - app.main - INFO - Command queue processor stopped
+2025-10-03 14:26:51,065 - app.services.device_health - INFO - Stopping device health monitoring service
+2025-10-03 14:26:51,065 - app.main - INFO - Device health monitoring stopped
+2025-10-03 14:26:51,065 - app.services.discovery - INFO - Stopping device discovery...
+2025-10-03 14:26:51,066 - app.services.discovery - INFO - Device discovery stopped
+2025-10-03 14:26:51,066 - app.main - INFO - Device discovery stopped
+INFO:     Application shutdown complete.
+INFO:     Finished server process [487635]
+INFO:     Started server process [488044]
+INFO:     Waiting for application startup.
+2025-10-03 14:26:52,365 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:26:52,369 - app.main - INFO - Database tables created
+2025-10-03 14:26:52,380 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:26:52,380 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:26:52,381 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:26:52,381 - app.main - INFO - Device discovery started
+2025-10-03 14:26:52,381 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:26:52,381 - app.main - INFO - Device health monitoring started
+2025-10-03 14:26:52,381 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:26:52,381 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:26:52,381 - app.main - INFO - Command queue processor started
+2025-10-03 14:26:52,381 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:26:52,381 - app.main - INFO - History cleanup service started
+2025-10-03 14:26:52,381 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:26:52,382 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:26:52,384 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:26:52,384 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:26:52,384 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:26:52,384 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:26:52,384 - app.main - INFO - Schedule processor started
+2025-10-03 14:26:52,384 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:26:52,389 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:26:52,389 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:26:52,390 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.6 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     100.98.57.42:64414 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59947 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49954 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58113 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57400 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58082 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62335 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61589 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53563 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59298 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58561 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55405 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52394 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51462 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51719 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51850 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:36562 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56163 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56781 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56061 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56419 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55320 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52271 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57015 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58566 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63724 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51440 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53802 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54770 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49250 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53722 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62293 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59607 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:31:52,385 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 14:31:52,385 - app.services.device_health - INFO - Checking health of 3 managed devices
+2025-10-03 14:31:54,797 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:31:55,490 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:31:55,490 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 14:31:55,491 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:31:55,491 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+2025-10-03 14:31:58,562 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:31:58,562 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+INFO:     100.98.57.42:57589 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:01,634 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:32:01,634 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:32:04,706 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:32:04,706 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:32:07,778 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:32:07,778 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:32:10,850 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:32:10,850 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+INFO:     100.98.57.42:61989 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:13,922 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:32:13,922 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:32:16,994 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:32:16,994 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:32:17,081 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:32:17,081 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:32:20,130 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:32:20,130 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+INFO:     100.98.57.42:59351 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:23,202 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:32:23,203 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:32:26,274 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:32:26,274 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:61009 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:36,274 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:32:36,274 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:32:36,275 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:32:36,275 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:32:39,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:32:39,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+INFO:     100.98.57.42:64706 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:42,402 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:32:42,402 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:32:45,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:32:45,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:32:48,037 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 14:32:48,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:32:48,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+INFO:     100.98.57.42:56939 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:32:51,618 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:32:51,618 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:32:54,690 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:32:54,690 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:32:54,691 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:32:54,691 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:32:57,762 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 14:32:57,762 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:55518 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:33:07,763 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+2025-10-03 14:33:07,763 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 14:33:07,763 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 14:33:07,763 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 14:33:07,767 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:64594 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54435 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53654 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64292 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:07,768 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 14:38:07,769 - app.services.device_health - INFO - Checking health of 3 managed devices
+2025-10-03 14:38:10,515 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:38:10,850 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:38:10,850 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 14:38:10,851 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:38:10,851 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+INFO:     100.98.57.42:54888 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:13,922 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:38:13,922 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:38:16,994 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:38:16,994 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:38:20,066 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:38:20,066 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+INFO:     100.98.57.42:64682 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:23,138 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:38:23,138 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:38:26,210 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:38:26,210 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:38:29,282 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:38:29,282 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+INFO:     100.98.57.42:51328 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:32,354 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:38:32,354 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:38:32,383 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:38:33,407 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:38:35,490 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:38:35,490 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:38:38,562 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:38:38,562 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+INFO:     100.98.57.42:60899 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:41,634 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:38:41,634 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:60899 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:51,635 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:38:51,635 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:38:51,635 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:38:51,636 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:38:54,690 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:38:54,690 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:38:56,849 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 14:38:57,762 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:38:57,762 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:39:00,834 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:39:00,834 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+INFO:     100.98.57.42:63613 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:39:03,906 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:39:03,906 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:39:06,978 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:39:06,978 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:39:10,050 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:39:10,050 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:39:10,051 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:39:10,051 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:39:13,122 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 14:39:13,122 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54267 - "OPTIONS /api/v1/commands/bulk HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54267 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:39:14,383 - app.services.queue_processor - INFO - Worker 0 executing command 33: mute on ir-dc4516 port 1 (attempt 1)
+2025-10-03 14:39:14,385 - app.services.esphome_client - ERROR - Error calling service 'tv_mute' on ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 14:39:14,388 - app.services.queue_processor - WARNING - ✗ Worker 0 failed command 33: Command execution failed (attempt 1)
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:39:16,396 - app.services.queue_processor - INFO - Worker 0 executing command 33: mute on ir-dc4516 port 1 (attempt 2)
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:39:18,784 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:39:18,917 - app.services.esphome_client - INFO - Called service 'tv_mute' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:39:18,922 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 33 in 2520ms
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:39:23,122 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 14:39:23,123 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:39:23,302 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 14:39:23,308 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54267 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59244 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52222 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54793 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64915 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:41:55,119 - app.services.queue_processor - INFO - Worker 1 executing command 34: mute on ir-dc4516 port 1 (attempt 1)
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:41:57,531 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:41:57,668 - app.services.esphome_client - INFO - Called service 'tv_mute' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:41:57,672 - app.services.queue_processor - INFO - ✓ Worker 1 completed command 34 in 2548ms
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55620 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/routers/commands.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-10-03 14:42:12,865 - app.main - INFO - Shutting down SmartVenue backend...
+2025-10-03 14:42:12,865 - app.services.schedule_processor - INFO - Stopping schedule processor...
+2025-10-03 14:42:12,865 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
+2025-10-03 14:42:12,865 - app.main - INFO - Schedule processor stopped
+2025-10-03 14:42:12,865 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2025-10-03 14:42:12,865 - app.services.history_cleanup - INFO - History cleanup loop cancelled
+2025-10-03 14:42:12,865 - app.services.history_cleanup - INFO - History cleanup service stopped
+2025-10-03 14:42:12,865 - app.main - INFO - History cleanup service stopped
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Stopping queue processor...
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 0 cancelled
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 0 stopped
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 1 cancelled
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 1 stopped
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 2 cancelled
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - Worker 2 stopped
+2025-10-03 14:42:12,865 - app.services.queue_processor - INFO - ✓ Queue processor stopped
+2025-10-03 14:42:12,865 - app.main - INFO - Command queue processor stopped
+2025-10-03 14:42:12,865 - app.services.device_health - INFO - Stopping device health monitoring service
+2025-10-03 14:42:12,865 - app.main - INFO - Device health monitoring stopped
+2025-10-03 14:42:12,865 - app.services.discovery - INFO - Stopping device discovery...
+2025-10-03 14:42:12,866 - app.services.discovery - INFO - Device discovery stopped
+2025-10-03 14:42:12,866 - app.main - INFO - Device discovery stopped
+INFO:     Application shutdown complete.
+INFO:     Finished server process [488044]
+INFO:     Started server process [488378]
+INFO:     Waiting for application startup.
+2025-10-03 14:42:14,146 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:42:14,150 - app.main - INFO - Database tables created
+2025-10-03 14:42:14,161 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:42:14,161 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:42:14,162 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:42:14,162 - app.main - INFO - Device discovery started
+2025-10-03 14:42:14,162 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:42:14,162 - app.main - INFO - Device health monitoring started
+2025-10-03 14:42:14,162 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:42:14,162 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:42:14,162 - app.main - INFO - Command queue processor started
+2025-10-03 14:42:14,162 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:42:14,162 - app.main - INFO - History cleanup service started
+2025-10-03 14:42:14,162 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:42:14,163 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:42:14,165 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:42:14,165 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:42:14,165 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:42:14,165 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:42:14,165 - app.main - INFO - Schedule processor started
+2025-10-03 14:42:14,165 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:42:14,170 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:42:14,171 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:42:14,171 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.3 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     100.98.57.42:54283 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54283 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54283 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54283 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/routers/commands.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-10-03 14:42:23,187 - app.main - INFO - Shutting down SmartVenue backend...
+2025-10-03 14:42:23,187 - app.services.schedule_processor - INFO - Stopping schedule processor...
+2025-10-03 14:42:23,187 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
+2025-10-03 14:42:23,187 - app.main - INFO - Schedule processor stopped
+2025-10-03 14:42:23,187 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2025-10-03 14:42:23,188 - app.services.history_cleanup - INFO - History cleanup loop cancelled
+2025-10-03 14:42:23,188 - app.services.history_cleanup - INFO - History cleanup service stopped
+2025-10-03 14:42:23,188 - app.main - INFO - History cleanup service stopped
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Stopping queue processor...
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 0 cancelled
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 0 stopped
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 1 cancelled
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 1 stopped
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 2 cancelled
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - Worker 2 stopped
+2025-10-03 14:42:23,188 - app.services.queue_processor - INFO - ✓ Queue processor stopped
+2025-10-03 14:42:23,188 - app.main - INFO - Command queue processor stopped
+2025-10-03 14:42:23,188 - app.services.device_health - INFO - Stopping device health monitoring service
+2025-10-03 14:42:23,188 - app.main - INFO - Device health monitoring stopped
+2025-10-03 14:42:23,188 - app.services.discovery - INFO - Stopping device discovery...
+2025-10-03 14:42:23,188 - app.services.discovery - INFO - Device discovery stopped
+2025-10-03 14:42:23,188 - app.main - INFO - Device discovery stopped
+INFO:     Application shutdown complete.
+INFO:     Finished server process [488378]
+INFO:     Started server process [488396]
+INFO:     Waiting for application startup.
+2025-10-03 14:42:24,463 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:42:24,466 - app.main - INFO - Database tables created
+2025-10-03 14:42:24,477 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:42:24,477 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:42:24,478 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:42:24,478 - app.main - INFO - Device discovery started
+2025-10-03 14:42:24,478 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:42:24,478 - app.main - INFO - Device health monitoring started
+2025-10-03 14:42:24,479 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:42:24,479 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:42:24,479 - app.main - INFO - Command queue processor started
+2025-10-03 14:42:24,479 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:42:24,479 - app.main - INFO - History cleanup service started
+2025-10-03 14:42:24,479 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:42:24,480 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:42:24,482 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:42:24,482 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:42:24,482 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:42:24,482 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:42:24,482 - app.main - INFO - Schedule processor started
+2025-10-03 14:42:24,482 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:42:24,487 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:42:24,487 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:42:24,488 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.3 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     100.98.57.42:52876 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50530 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50530 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50530 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50530 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61445 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59626 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56960 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61471 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63919 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54673 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:45:53,750 - app.services.queue_processor - INFO - Worker 0 executing command 35: mute on ir-dc4516 port 1 (attempt 1)
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:45:56,443 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:45:56,576 - app.services.esphome_client - INFO - Called service 'tv_mute' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:45:56,581 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 35 in 2815ms
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63075 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'app/routers/commands.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2025-10-03 14:46:26,678 - app.main - INFO - Shutting down SmartVenue backend...
+2025-10-03 14:46:26,678 - app.services.schedule_processor - INFO - Stopping schedule processor...
+2025-10-03 14:46:26,678 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
+2025-10-03 14:46:26,678 - app.main - INFO - Schedule processor stopped
+2025-10-03 14:46:26,678 - apscheduler.scheduler - INFO - Scheduler has been shut down
+2025-10-03 14:46:26,678 - app.services.history_cleanup - INFO - History cleanup loop cancelled
+2025-10-03 14:46:26,678 - app.services.history_cleanup - INFO - History cleanup service stopped
+2025-10-03 14:46:26,678 - app.main - INFO - History cleanup service stopped
+2025-10-03 14:46:26,678 - app.services.queue_processor - INFO - Stopping queue processor...
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 0 cancelled
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 0 stopped
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 1 cancelled
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 1 stopped
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 2 cancelled
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - Worker 2 stopped
+2025-10-03 14:46:26,679 - app.services.queue_processor - INFO - ✓ Queue processor stopped
+2025-10-03 14:46:26,679 - app.main - INFO - Command queue processor stopped
+2025-10-03 14:46:26,679 - app.services.device_health - INFO - Stopping device health monitoring service
+2025-10-03 14:46:26,679 - app.main - INFO - Device health monitoring stopped
+2025-10-03 14:46:26,679 - app.services.discovery - INFO - Stopping device discovery...
+2025-10-03 14:46:26,679 - app.services.discovery - INFO - Device discovery stopped
+2025-10-03 14:46:26,679 - app.main - INFO - Device discovery stopped
+INFO:     Application shutdown complete.
+INFO:     Finished server process [488396]
+INFO:     Started server process [488453]
+INFO:     Waiting for application startup.
+2025-10-03 14:46:27,959 - app.main - INFO - Starting SmartVenue backend...
+2025-10-03 14:46:27,963 - app.main - INFO - Database tables created
+2025-10-03 14:46:27,973 - app.main - INFO - Database initialized with seed data
+2025-10-03 14:46:27,974 - app.services.discovery - INFO - Starting ESPHome device discovery...
+2025-10-03 14:46:27,975 - app.services.discovery - INFO - Device discovery started
+2025-10-03 14:46:27,975 - app.main - INFO - Device discovery started
+2025-10-03 14:46:27,975 - app.services.device_health - INFO - Starting device health monitoring service
+2025-10-03 14:46:27,975 - app.main - INFO - Device health monitoring started
+2025-10-03 14:46:27,975 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
+2025-10-03 14:46:27,975 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
+2025-10-03 14:46:27,975 - app.main - INFO - Command queue processor started
+2025-10-03 14:46:27,975 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
+2025-10-03 14:46:27,975 - app.main - INFO - History cleanup service started
+2025-10-03 14:46:27,975 - app.services.schedule_processor - INFO - Starting schedule processor...
+2025-10-03 14:46:27,976 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
+2025-10-03 14:46:27,977 - app.services.schedule_processor - INFO - Loading 0 active schedules...
+2025-10-03 14:46:27,978 - app.services.schedule_processor - INFO - ✅ Loaded 0 schedules
+2025-10-03 14:46:27,978 - apscheduler.scheduler - INFO - Scheduler started
+2025-10-03 14:46:27,978 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
+2025-10-03 14:46:27,978 - app.main - INFO - Schedule processor started
+2025-10-03 14:46:27,978 - app.services.queue_processor - INFO - Worker 0 started
+2025-10-03 14:46:27,983 - app.services.queue_processor - INFO - Worker 1 started
+2025-10-03 14:46:27,983 - app.services.queue_processor - INFO - Worker 2 started
+2025-10-03 14:46:27,984 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-04 03:00:00 (in 12.2 hours)
+INFO:     Application startup complete.
+Template seeding complete; using dynamic IR library system.
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:46:30,494 - app.services.queue_processor - INFO - Worker 0 executing command 36: mute on ir-dc4516 port 1 (attempt 1)
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-03 14:46:33,224 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:46:33,374 - app.services.esphome_client - INFO - Called service 'tv_mute' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:46:33,379 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 36 in 2871ms
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:46:37,522 - app.services.queue_processor - INFO - Worker 1 executing command 37: volume_down on ir-dc4516 port 1 (attempt 1)
+2025-10-03 14:46:37,667 - app.services.esphome_client - INFO - Called service 'tv_volume_down' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:46:37,671 - app.services.queue_processor - INFO - ✓ Worker 1 completed command 37 in 144ms
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:46:39,892 - app.services.queue_processor - INFO - Worker 0 executing command 38: volume_down on ir-dc4516 port 1 (attempt 1)
+2025-10-03 14:46:40,018 - app.services.esphome_client - INFO - Called service 'tv_volume_down' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:46:40,022 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 38 in 125ms
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:46:58,547 - app.services.queue_processor - INFO - Worker 0 executing command 39: volume_up on ir-dc4516 port 1 (attempt 1)
+2025-10-03 14:46:58,667 - app.services.esphome_client - INFO - Called service 'tv_volume_up' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:46:58,671 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 39 in 120ms
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "POST /api/v1/commands/bulk HTTP/1.1" 200 OK
+2025-10-03 14:46:59,698 - app.services.queue_processor - INFO - Worker 1 executing command 40: volume_up on ir-dc4516 port 1 (attempt 1)
+2025-10-03 14:46:59,828 - app.services.esphome_client - INFO - Called service 'tv_volume_up' on ir-dc4516 with data: {'port': 1}
+2025-10-03 14:46:59,832 - app.services.queue_processor - INFO - ✓ Worker 1 completed command 40 in 129ms
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58673 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65169 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50362 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61423 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53643 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52816 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53643 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53457 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53114 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55571 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55293 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56148 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55525 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58338 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:49:41,782 - apscheduler.scheduler - INFO - Added job "Morning" to job store "default"
+2025-10-03 14:49:41,782 - app.services.schedule_processor - INFO - Added new schedule: Morning (ID: 1)
+INFO:     127.0.0.1:36050 - "POST /api/v1/schedules/ HTTP/1.1" 201 Created
+INFO:     127.0.0.1:36056 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52361 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62413 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56492 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51226 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58152 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61682 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64617 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60362 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62573 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57339 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56546 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:51:27,979 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 14:51:27,980 - app.services.device_health - INFO - Checking health of 3 managed devices
+2025-10-03 14:51:31,042 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:51:31,043 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 14:51:31,043 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:51:31,043 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+2025-10-03 14:51:34,114 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:51:34,114 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:51:37,186 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:51:37,186 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+INFO:     100.98.57.42:60353 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:51:40,258 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:51:40,259 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:51:43,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:51:43,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:51:46,402 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:51:46,402 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+INFO:     100.98.57.42:62041 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:51:49,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:51:49,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:51:52,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:51:52,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:51:52,660 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:51:52,661 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:51:55,746 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:51:55,746 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+INFO:     100.98.57.42:59754 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:51:58,818 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:51:58,818 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:52:01,890 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:52:01,890 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:52019 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:52:11,890 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:52:11,890 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:52:11,891 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:52:11,891 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:52:14,946 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:52:14,946 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+INFO:     100.98.57.42:64805 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:52:18,018 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:52:18,018 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:52:21,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:52:21,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:52:24,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:52:24,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:52:27,234 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:52:27,234 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+INFO:     100.98.57.42:58055 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:52:30,306 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:52:30,306 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:52:30,307 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:52:30,307 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:52:33,229 - aioesphomeapi.connection - WARNING - ir @ 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 14:52:33,378 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 14:52:33,378 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:50795 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:52:43,379 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+2025-10-03 14:52:43,379 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 14:52:43,379 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 14:52:43,379 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 14:52:43,382 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:49952 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50363 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57892 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53524 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61543 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50929 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59435 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62836 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49480 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52751 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55911 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53273 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59923 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59923 - "GET /api/v1/ir-libraries/filters HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50561 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56150 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49262 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62776 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56341 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56092 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50716 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58789 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65190 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53525 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52823 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59871 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60885 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50363 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52719 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61507 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56215 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55170 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:57:43,383 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 14:57:43,383 - app.services.device_health - INFO - Checking health of 3 managed devices
+2025-10-03 14:57:46,056 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 14:57:46,466 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:57:46,466 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 14:57:46,467 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:57:46,467 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+INFO:     100.98.57.42:55670 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:57:49,538 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:57:49,538 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 14:57:52,610 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:57:52,610 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 14:57:55,682 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:57:55,682 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 14:57:58,754 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 14:57:58,754 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+INFO:     100.98.57.42:63833 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:01,826 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:58:01,826 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 14:58:04,898 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:58:04,898 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 14:58:07,970 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:58:07,970 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 14:58:08,062 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 14:58:08,062 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+INFO:     100.98.57.42:53397 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:11,170 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:58:11,170 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 14:58:14,242 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:58:14,243 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 14:58:17,314 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 14:58:17,314 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:61595 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:27,315 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:58:27,315 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 14:58:27,315 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 14:58:27,315 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+INFO:     100.98.57.42:60224 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:30,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:58:30,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 14:58:32,827 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 14:58:33,442 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:58:33,442 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 14:58:36,514 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 14:58:36,514 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+INFO:     100.98.57.42:56782 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:39,586 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:58:39,586 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 14:58:42,658 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:58:42,658 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 14:58:45,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:58:45,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 14:58:45,731 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:58:45,731 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 14:58:48,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 14:58:48,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:56433 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 14:58:58,803 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+2025-10-03 14:58:58,803 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 14:58:58,804 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 14:58:58,804 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 14:58:58,807 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:64809 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58396 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53157 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58707 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61363 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57888 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63796 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59815 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54877 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55599 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53360 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53372 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54194 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64867 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56032 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49245 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53377 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52343 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65311 - "GET /api/v1/ir-libraries/filters HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52051 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56072 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52051 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60876 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56119 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63552 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63552 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58379 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59788 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51404 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62965 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51009 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62371 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56293 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56293 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57183 - "GET /api/v1/settings/channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56293 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52658 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49242 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64232 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64232 - "GET /api/v1/ir-capture/sessions HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64232 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64232 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50&protocol=samsung_esp HTTP/1.1" 200 OK
+2025-10-03 15:03:58,807 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 15:03:58,807 - app.services.device_health - INFO - Checking health of 3 managed devices
+INFO:     100.98.57.42:59288 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:01,479 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 15:04:01,890 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:04:01,890 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 15:04:01,891 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:04:01,891 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+2025-10-03 15:04:04,962 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 15:04:04,962 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 15:04:08,034 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 15:04:08,035 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+INFO:     100.98.57.42:61357 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:11,106 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 15:04:11,106 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 15:04:14,178 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 15:04:14,178 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 15:04:17,250 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 15:04:17,250 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 15:04:20,322 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 15:04:20,322 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+INFO:     100.98.57.42:63959 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:23,394 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 15:04:23,394 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 15:04:23,464 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 15:04:23,464 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 15:04:26,530 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 15:04:26,531 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 15:04:29,602 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 15:04:29,603 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+INFO:     100.98.57.42:59202 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:32,674 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:04:32,674 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:57856 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:42,675 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 15:04:42,675 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 15:04:42,675 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 15:04:42,675 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 15:04:45,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 15:04:45,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 15:04:48,011 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 15:04:48,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 15:04:48,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+INFO:     100.98.57.42:59594 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:04:51,874 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 15:04:51,874 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 15:04:54,946 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 15:04:54,946 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 15:04:58,018 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 15:04:58,018 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+INFO:     100.98.57.42:50540 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:05:01,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 15:05:01,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 15:05:01,091 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 15:05:01,091 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 15:05:04,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 15:05:04,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:55582 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:05:14,163 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+2025-10-03 15:05:14,163 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 15:05:14,164 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 15:05:14,164 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 15:05:14,167 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:58223 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61444 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61028 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50&brand=Generic+Samsung&protocol=samsung_esp HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61028 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61028 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50&brand=Samsung&protocol=samsung_esp HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61028 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50&brand=Samsung HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61028 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50740 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50363 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53669 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61372 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62046 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54168 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61721 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58650 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/ir-libraries/filters HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62839 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62839 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62839 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62839 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55661 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62839 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55661 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63162 - "GET /api/v1/ir-libraries/commands?page=1&page_size=50&brand=Samsung HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52358 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53149 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64946 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61287 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62933 - "GET /api/v1/settings/channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62933 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62933 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62933 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53752 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61484 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49952 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52083 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50647 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63164 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56249 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54640 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60364 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56037 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60084 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54939 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54939 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:10:14,167 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-03 15:10:14,168 - app.services.device_health - INFO - Checking health of 3 managed devices
+INFO:     100.98.57.42:54939 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+2025-10-03 15:10:16,906 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-03 15:10:17,250 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:10:17,250 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dcf89f
+2025-10-03 15:10:17,251 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:10:17,251 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dca172
+2025-10-03 15:10:20,322 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+2025-10-03 15:10:20,322 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.135', 6053): [Errno 113] Connect call failed ('192.168.101.135', 6053)
+INFO:     100.98.57.42:57080 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:10:23,395 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 15:10:23,395 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-03 15:10:26,466 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 15:10:26,466 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-03 15:10:29,538 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-03 15:10:29,539 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+INFO:     100.98.57.42:65297 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:10:32,610 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 15:10:32,611 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-03 15:10:35,682 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 15:10:35,683 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-03 15:10:38,754 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 15:10:38,754 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-03 15:10:38,866 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 15:10:38,866 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-03 15:10:41,954 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-03 15:10:41,954 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+INFO:     100.98.57.42:60407 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:10:45,026 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 15:10:45,027 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-03 15:10:48,098 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-03 15:10:48,098 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+INFO:     100.98.57.42:52155 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52155 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+2025-10-03 15:10:58,098 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while finishing connection: Finishing connection cancelled
+2025-10-03 15:10:58,099 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while finishing connection: Finishing connection cancelled
+2025-10-03 15:10:58,099 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 15:10:58,099 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: Connection lost
+2025-10-03 15:11:01,154 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-03 15:11:01,154 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+INFO:     100.98.57.42:54248 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:11:03,787 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-03 15:11:04,226 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 15:11:04,226 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-03 15:11:07,298 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 15:11:07,299 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-03 15:11:10,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-03 15:11:10,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+INFO:     100.98.57.42:58219 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:11:13,442 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 15:11:13,442 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-03 15:11:16,514 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 15:11:16,515 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-03 15:11:16,515 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 15:11:16,515 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-03 15:11:19,586 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-03 15:11:19,587 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+INFO:     100.98.57.42:65279 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+2025-10-03 15:11:29,587 - app.services.esphome_client - ERROR - Failed to connect to ir-dcf89f: Error while starting connection: Starting connection cancelled
+2025-10-03 15:11:29,587 - app.services.esphome_client - ERROR - Failed to connect to ir-dca172: Error while starting connection: Starting connection cancelled
+2025-10-03 15:11:29,588 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Not connected to ir @ 192.168.101.146!
+2025-10-03 15:11:29,588 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-03 15:11:29,590 - app.services.device_health - INFO - Health check complete: 1/3 devices online
+INFO:     100.98.57.42:62677 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62677 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62677 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64996 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55535 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52319 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63538 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60602 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60602 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60602 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60517 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50361 - "GET /api/v1/settings/channel-locations HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/channels?availability=Regional+NSW+%E2%80%93+Far+South+Coast:+Batemans+Bay,+Moruya,+Narooma,+Bermagui,+Bega,+Merimbula,+Eden,+Pambula HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44388 - "GET /api/v1/schedules/ HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50759 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50759 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/ir-dcf89f/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57434 - "GET /api/v1/commands/ir-dca172/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50705 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK

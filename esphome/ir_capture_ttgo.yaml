@@ -1,0 +1,207 @@
+substitutions:
+  device_name: ir-capture-ttgo
+  friendly_name: IR Capture TTGO
+
+esphome:
+  name: ${device_name}
+
+esp32:
+  board: esp32dev
+  variant: ESP32
+  framework:
+    type: arduino
+
+# Enable mDNS for easy discovery
+mdns:
+  disabled: false
+
+# WiFi configuration
+wifi:
+  id: wifi_component
+  networks:
+    - ssid: "TV"
+      password: "rdL1R7iDpXDx4O"
+      hidden: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "IR-Capture-TTGO Fallback"
+    password: "qTBXKBSlXBtJYlfN"
+
+captive_portal:
+
+# Enable logging
+logger:
+  level: DEBUG
+  baud_rate: 115200
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "uuPgF8JOAV/ZhFbDV4iS4Kwr1MV5H97p6Nk+HnpE1+g="
+
+# Enable OTA updates
+ota:
+  - platform: esphome
+    password: "qTBXKBSlXBtJYlfN"
+
+# Web server for easy access
+web_server:
+  port: 80
+
+# SPI for TTGO T-Display TFT
+spi:
+  clk_pin: GPIO18
+  mosi_pin: GPIO19
+
+# Font for display
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 12
+  - file: "gfonts://Roboto"
+    id: font_medium
+    size: 16
+  - file: "gfonts://Roboto@700"
+    id: font_large
+    size: 20
+
+# Color definitions
+color:
+  - id: my_red
+    red: 100%
+    green: 0%
+    blue: 0%
+  - id: my_green
+    red: 0%
+    green: 100%
+    blue: 0%
+  - id: my_blue
+    red: 0%
+    green: 0%
+    blue: 100%
+  - id: my_white
+    red: 100%
+    green: 100%
+    blue: 100%
+  - id: my_black
+    red: 0%
+    green: 0%
+    blue: 0%
+
+# TTGO T-Display ST7789V 135x240 TFT
+display:
+  - platform: st7789v
+    model: TTGO TDisplay 135x240
+    cs_pin: GPIO5
+    dc_pin: GPIO16
+    reset_pin: GPIO23
+    backlight_pin: GPIO4
+    rotation: 270  # Landscape mode
+    update_interval: 1s
+    lambda: |-
+      // Clear screen with black background
+      it.fill(id(my_black));
+
+      // Header
+      it.filled_rectangle(0, 0, 240, 30, id(my_blue));
+      it.print(120, 5, id(font_large), id(my_white), TextAlign::TOP_CENTER, "IR CAPTURE");
+
+      // WiFi Status
+      if (id(wifi_component).is_connected()) {
+        it.print(5, 40, id(font_medium), id(my_green), "WiFi: Connected");
+        if (id(wifi_ip).has_state() && id(wifi_ip).state.length() > 0) {
+          it.printf(5, 60, id(font_small), id(my_white), "IP: %s", id(wifi_ip).state.c_str());
+        }
+      } else {
+        it.print(5, 40, id(font_medium), id(my_red), "WiFi: Connecting...");
+      }
+
+      // IR Status
+      it.print(5, 85, id(font_medium), id(my_white), "IR Receiver: Ready");
+      it.print(5, 105, id(font_small), id(my_white), "Point remote & press");
+
+# IR Receiver Configuration
+remote_receiver:
+  - pin:
+      number: GPIO13  # Use GPIO13 for IR receiver on TTGO
+      inverted: true   # VS1838B is active-low
+      mode:
+        input: true
+        pullup: true   # Enable internal pull-up
+    dump: all
+    filter: 50us
+    idle: 10ms
+    tolerance: 25%
+    on_raw:
+      - lambda: |-
+          ESP_LOGI("ir_capture", "IR signal received: %d values", x.size());
+
+          // Store the raw IR code as JSON string
+          std::string raw_data = "[";
+          for (size_t i = 0; i < x.size(); i++) {
+            if (i > 0) raw_data += ", ";
+            raw_data += std::to_string(x[i]);
+          }
+          raw_data += "]";
+          id(last_ir_code).publish_state(raw_data);
+
+# IR Transmitter Configuration
+remote_transmitter:
+  pin: GPIO12
+  carrier_duty_percent: 50%
+
+# Text sensor to show device status
+text_sensor:
+  - platform: version
+    name: "${friendly_name} ESPHome Version"
+
+  - platform: wifi_info
+    ip_address:
+      name: "${friendly_name} IP Address"
+      id: wifi_ip
+    ssid:
+      name: "${friendly_name} SSID"
+    mac_address:
+      name: "${friendly_name} MAC Address"
+
+  # Template sensor to store last captured IR code
+  - platform: template
+    name: "${friendly_name} Last IR Code"
+    id: last_ir_code
+    icon: "mdi:remote"
+
+# Binary sensor for connection status
+binary_sensor:
+  - platform: status
+    name: "${friendly_name} Status"
+
+  # TTGO has two buttons
+  - platform: gpio
+    pin:
+      number: GPIO0
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    name: "${friendly_name} Button 1"
+
+  - platform: gpio
+    pin:
+      number: GPIO35
+      inverted: true
+      mode:
+        input: true
+    name: "${friendly_name} Button 2"
+
+# Sensor for WiFi signal strength
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} WiFi Signal"
+    id: wifi_signal_sensor
+    update_interval: 60s
+
+# Button to restart the device
+button:
+  - platform: restart
+    name: "${friendly_name} Restart"

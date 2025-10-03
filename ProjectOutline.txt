@@ -1,0 +1,49 @@
+I'm building SmartVenue, a commercial hospitality display management system. I need you to help me develop the complete software stack for controlling multiple IR blaster devices in pubs/restaurants.
+SYSTEM ARCHITECTURE:
+
+Raspberry Pi 4 control hub with touchscreen interface
+Multiple ESP8266-based IR blasters (5 outputs each) running ESPHome firmware
+Each blaster controls TVs/Foxtel boxes via IR commands
+Local SQLite database for configuration and scheduling
+Tailscale VPN for remote management across multiple venues
+FastAPI backend with React/Vue frontend
+RESTful API for device communication
+
+CURRENT STATUS:
+
+ESPHome firmware complete and working (supports Samsung/LG/Foxtel protocols)
+Development environment: Ubuntu headless box with VS Code Remote-SSH
+Network: Hidden "TV" WiFi, devices use MAC-based identification
+Each IR blaster exposes ESPHome API on port 6053 with encryption key
+
+DEVELOPMENT PRIORITIES:
+
+Device discovery and registration system (mDNS discovery of ESPHome devices)
+FastAPI backend with SQLite database (devices, schedules, logs tables)
+Web interface for device management and control
+Real-time command sending to IR blasters
+Scheduling system for automated channel changes
+Multi-site management capabilities
+
+KEY FEATURES NEEDED:
+
+Auto-discover IR blasters on network via mDNS
+Send commands like: Box 2 Power, Channel "2-501" (box 2, channel 501), Mute Box 3
+Schedule events: "Every Saturday 3pm, set all TVs to Sky Sports 1"
+Bulk operations: "Mute all displays", "Power off all boxes"
+Device status monitoring and health checks
+Simple touchscreen interface for staff
+Remote configuration deployment via Tailscale
+
+TECHNICAL CONSTRAINTS:
+
+Python 3.11+ with FastAPI, SQLAlchemy, ESPHome API client
+Responsive web UI (mobile-friendly for staff)
+Local operation during internet outages
+Must handle 10-20 IR blasters per venue
+Commercial reliability requirements
+
+BUSINESS CONTEXT:
+Replaces 75+ minutes daily of staff manually walking between displays. Target: <5 minutes via centralized control. ROI: $11,400+ annual savings per venue.
+Please start by creating the project structure, database schema, and basic FastAPI backend with device discovery. Focus on MVP functionality first - we can iterate rapidly. Provide complete working code with error handling and documentation.
+What's the best approach to begin development, and can you create the foundational backend architecture?

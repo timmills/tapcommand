@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  min-height: 100vh;
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
