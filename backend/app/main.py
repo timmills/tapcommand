@@ -18,6 +18,8 @@ from .routers.ir_libraries import router as ir_libraries_router
 from .routers.commands import router as commands_router
 from .routers.ir_capture import router as ir_capture_router
 from .routers.schedules import router as schedules_router
+from .routers.auth import router as auth_router
+from .routers.users import router as users_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
 from .services.queue_processor import start_queue_processor, stop_queue_processor
@@ -171,6 +173,18 @@ app.include_router(
     schedules_router,
     prefix=f"{settings.API_V1_STR}/schedules",
     tags=["schedules"]
+)
+
+# Include authentication router (standalone - does not enforce auth on other endpoints)
+app.include_router(
+    auth_router,
+    prefix=f"{settings.API_V1_STR}"
+)
+
+# Include user management router (standalone - does not enforce auth on other endpoints)
+app.include_router(
+    users_router,
+    prefix=f"{settings.API_V1_STR}"
 )
 
 # Mount static files for channel icons
