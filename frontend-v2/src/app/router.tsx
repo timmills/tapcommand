@@ -16,6 +16,7 @@ import { SchedulesPage } from '../features/scheduling/pages/schedules-page';
 import { QueueDiagnosticsPage } from '../features/diagnostics/pages/queue-diagnostics-page';
 import { UsersPage } from '../features/users/pages/users-page';
 import { LoginPage } from '../features/auth/pages/login-page';
+import { NetworkControllersPage } from '../features/network-controllers/pages/network-controllers-page';
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="controllers" replace /> },
       { path: 'controllers', element: <ControllersPage /> },
+      { path: 'network-controllers', element: <NetworkControllersPage /> },
       { path: 'connected-devices', element: <ConnectedDevicesPage /> },
       { path: 'devices', element: <Navigate to="../controllers" replace /> },
       { path: 'discovery', element: <DiscoveryPage /> },

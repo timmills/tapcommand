@@ -10,9 +10,9 @@ export const TemplatesPage = () => {
     <section className="space-y-6">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">ESPHome templates</h2>
+          <h2 className="text-lg font-semibold text-slate-900">IR Controller Builder</h2>
           <p className="text-sm text-slate-500">
-            Browse and manage SmartVenue YAML templates before compiling new firmware builds.
+            Browse and manage SmartVenue IR controller templates before compiling new firmware builds.
           </p>
         </div>
       </header>

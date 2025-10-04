@@ -439,6 +439,8 @@ async def get_all_queue_data(
     - limit: Maximum number of records to return (default 1000)
     """
     from ..models.command_queue import CommandQueue
+    from ..models.device_management import IRPort
+    from ..models.device import Channel
     from sqlalchemy import desc
 
     # Get device locations for enrichment
@@ -447,6 +449,25 @@ async def get_all_queue_data(
 
     managed_devices = db.query(ManagedDevice).all()
     managed_map = {md.hostname: md for md in managed_devices}
+
+    # Get IR ports for port name lookup
+    ir_ports = db.query(IRPort).all()
+    # Create map: (device_id, port_number) -> port_name
+    port_map = {}
+    for ir_port in ir_ports:
+        key = (ir_port.device_id, ir_port.port_number)
+        port_map[key] = ir_port.connected_device_name
+
+    # Get channels for channel name lookup
+    channels = db.query(Channel).all()
+    # Create map: lcn/foxtel_number -> channel_name
+    channel_map = {}
+    for ch in channels:
+        # Map both LCN and Foxtel number to channel name
+        if ch.lcn:
+            channel_map[str(ch.lcn)] = ch.channel_name
+        if ch.foxtel_number:
+            channel_map[str(ch.foxtel_number)] = ch.channel_name
 
     # Query command_queue
     query = db.query(CommandQueue)
@@ -472,6 +493,18 @@ async def get_all_queue_data(
     results = []
     for cmd in commands:
         managed = managed_map.get(cmd.hostname)
+
+        # Look up port name
+        port_name = None
+        if managed and cmd.port:
+            port_key = (managed.id, cmd.port)
+            port_name = port_map.get(port_key)
+
+        # Look up channel name
+        channel_name = None
+        if cmd.channel:
+            channel_name = channel_map.get(cmd.channel)
+
         results.append({
             "id": cmd.id,
             "source": "queue",
@@ -480,7 +513,9 @@ async def get_all_queue_data(
             "location": managed.location if managed else None,
             "command": cmd.command,
             "port": cmd.port,
+            "port_name": port_name,
             "channel": cmd.channel,
+            "channel_name": channel_name,
             "digit": cmd.digit,
             "command_class": cmd.command_class,
             "batch_id": cmd.batch_id,

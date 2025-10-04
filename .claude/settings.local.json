@@ -101,7 +101,17 @@
       "WebFetch(domain:files.remotecentral.com)",
       "Bash(git rev-list:*)",
       "Bash(git cat-file:*)",
-      "Read(///**)"
+      "Read(///**)",
+      "Bash(journalctl:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pwdx:*)",
+      "Bash(for db in /home/coastal/smartvenue/smartvenue.db /home/coastal/smartvenue/backend/smartvenue.db /home/coastal/smartvenue/data/smartvenue.db)",
+      "Bash(do echo \"=== $db ===\")",
+      "Bash(done)",
+      "Bash(nc:*)",
+      "Bash(pgrep:*)",
+      "Bash(command:*)",
+      "Bash(bash:*)"
     ],
     "deny": [],
     "ask": []

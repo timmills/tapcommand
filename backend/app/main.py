@@ -20,6 +20,8 @@ from .routers.ir_capture import router as ir_capture_router
 from .routers.schedules import router as schedules_router
 from .routers.auth import router as auth_router
 from .routers.users import router as users_router
+from .routers.network_tv import router as network_tv_router
+from .routers.network_discovery import router as network_discovery_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
 from .services.queue_processor import start_queue_processor, stop_queue_processor
@@ -185,6 +187,16 @@ app.include_router(
 app.include_router(
     users_router,
     prefix=f"{settings.API_V1_STR}"
+)
+
+# Include network TV control router
+app.include_router(
+    network_tv_router
+)
+
+# Include network discovery router
+app.include_router(
+    network_discovery_router
 )
 
 # Mount static files for channel icons

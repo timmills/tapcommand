@@ -11,7 +11,9 @@ interface QueueCommand {
   location: string | null;
   command: string;
   port: number;
+  port_name: string | null;
   channel: string | null;
+  channel_name: string | null;
   digit: number | null;
   command_class: string | null;
   batch_id: string | null;
@@ -68,7 +70,7 @@ export const QueueDiagnosticsPage = () => {
 
   const uniqueLocations = useMemo(() => {
     if (!data?.commands) return [];
-    return Array.from(new Set(data.commands.map(c => c.location).filter(Boolean))).sort();
+    return Array.from(new Set(data.commands.map(c => c.location).filter((loc): loc is string => Boolean(loc)))).sort();
   }, [data]);
 
   const uniqueCommands = useMemo(() => {
@@ -151,7 +153,7 @@ export const QueueDiagnosticsPage = () => {
   };
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 max-w-full">
       <header className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Queue Diagnostics</h2>
@@ -285,7 +287,7 @@ export const QueueDiagnosticsPage = () => {
       ) : (
         <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-slate-200" style={{ minWidth: '1400px' }}>
+            <table className="min-w-full divide-y divide-slate-200" style={{ minWidth: '1800px' }}>
               <thead className="bg-slate-50">
                 <tr>
                   <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -296,6 +298,9 @@ export const QueueDiagnosticsPage = () => {
                     onClick={() => handleSort('created_at')}
                   >
                     Created {getSortIcon('created_at')}
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Port Name
                   </th>
                   <th
                     className="cursor-pointer px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hover:bg-slate-100"
@@ -313,13 +318,13 @@ export const QueueDiagnosticsPage = () => {
                     Command {getSortIcon('command')}
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Port
-                  </th>
-                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Channel
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Class
+                    Routing
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    User
                   </th>
                   <th
                     className="cursor-pointer px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 hover:bg-slate-100"
@@ -343,7 +348,16 @@ export const QueueDiagnosticsPage = () => {
                     Time (ms)
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    Routing
+                    Class
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Batch ID
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    User IP
+                  </th>
+                  <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    Port
                   </th>
                   <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
                     Error
@@ -353,7 +367,7 @@ export const QueueDiagnosticsPage = () => {
               <tbody className="divide-y divide-slate-100">
                 {filteredAndSortedCommands.length === 0 ? (
                   <tr>
-                    <td colSpan={15} className="px-3 py-8 text-center text-sm text-slate-500">
+                    <td colSpan={18} className="px-3 py-8 text-center text-sm text-slate-500">
                       No commands found
                     </td>
                   </tr>
@@ -364,15 +378,40 @@ export const QueueDiagnosticsPage = () => {
                       <td className="px-3 py-2 text-xs text-slate-600">
                         {formatRelativeTime(command.created_at)}
                       </td>
+                      <td className="px-3 py-2 text-xs text-slate-600">{command.port_name || '—'}</td>
                       <td className="px-3 py-2 text-xs">
                         <div className="font-medium text-slate-900">{command.device_name}</div>
                         <div className="text-slate-500">{command.hostname}</div>
                       </td>
                       <td className="px-3 py-2 text-xs text-slate-600">{command.location || '—'}</td>
                       <td className="px-3 py-2 text-xs font-medium text-slate-900">{command.command}</td>
-                      <td className="px-3 py-2 text-xs text-slate-600">{command.port}</td>
-                      <td className="px-3 py-2 text-xs text-slate-600">{command.channel || '—'}</td>
-                      <td className="px-3 py-2 text-xs text-slate-600">{command.command_class || '—'}</td>
+                      <td className="px-3 py-2 text-xs text-slate-600">
+                        {command.channel ? (
+                          <span>
+                            {command.channel_name ? (
+                              <>
+                                <span className="font-semibold">{command.channel_name}</span>
+                                {' '}
+                                <span className="text-slate-500">({command.channel})</span>
+                              </>
+                            ) : (
+                              command.channel
+                            )}
+                          </span>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-xs text-slate-600">
+                        {command.routing_method ? (
+                          <span className="inline-flex rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                            {command.routing_method}
+                          </span>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-xs text-slate-600">{command.created_by || '—'}</td>
                       <td className="px-3 py-2">
                         <span
                           className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${getStatusBadgeClass(
@@ -400,7 +439,18 @@ export const QueueDiagnosticsPage = () => {
                       <td className="px-3 py-2 text-xs text-slate-600">
                         {command.execution_time_ms ?? '—'}
                       </td>
-                      <td className="px-3 py-2 text-xs text-slate-600">{command.routing_method || '—'}</td>
+                      <td className="px-3 py-2 text-xs text-slate-600">{command.command_class || '—'}</td>
+                      <td className="px-3 py-2 text-xs text-slate-600">
+                        {command.batch_id ? (
+                          <span className="font-mono text-xs" title={command.batch_id}>
+                            {command.batch_id.length > 20 ? `${command.batch_id.substring(0, 20)}...` : command.batch_id}
+                          </span>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
+                      <td className="px-3 py-2 text-xs text-slate-600">{command.user_ip || '—'}</td>
+                      <td className="px-3 py-2 text-xs text-slate-600">{command.port}</td>
                       <td className="px-3 py-2 text-xs text-slate-600">
                         {command.error_message ? (
                           <span className="max-w-xs truncate text-red-600" title={command.error_message}>
