@@ -29,6 +29,7 @@ from .services.device_health import health_checker
 from .services.queue_processor import start_queue_processor, stop_queue_processor
 from .services.history_cleanup import start_history_cleanup, stop_history_cleanup
 from .services.schedule_processor import start_schedule_processor, stop_schedule_processor
+from .services.device_status_checker import status_checker
 
 # Configure logging
 logging.basicConfig(
@@ -76,10 +77,16 @@ async def lifespan(app: FastAPI):
     await start_schedule_processor()
     logger.info("Schedule processor started")
 
+    # Start device status monitoring
+    await status_checker.start_status_monitoring()
+    logger.info("Device status monitoring started")
+
     yield
 
     # Shutdown
     logger.info("Shutting down SmartVenue backend...")
+    await status_checker.stop_status_monitoring()
+    logger.info("Device status monitoring stopped")
     await stop_schedule_processor()
     logger.info("Schedule processor stopped")
     await stop_history_cleanup()
