@@ -23,6 +23,7 @@ from .routers.users import router as users_router
 from .routers.network_tv import router as network_tv_router
 from .routers.network_discovery import router as network_discovery_router
 from .routers.virtual_controllers import router as virtual_controllers_router
+from .routers.device_status import router as device_status_router
 from .commands.api import router as unified_commands_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
@@ -216,6 +217,11 @@ app.include_router(
 # Include unified commands router (NEW - routes all commands through queue)
 app.include_router(
     unified_commands_router
+)
+
+# Include device status router
+app.include_router(
+    device_status_router
 )
 
 # Mount static files for channel icons
