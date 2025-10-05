@@ -111,7 +111,8 @@
       "Bash(nc:*)",
       "Bash(pgrep:*)",
       "Bash(command:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []
