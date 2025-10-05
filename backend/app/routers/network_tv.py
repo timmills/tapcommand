@@ -137,9 +137,10 @@ async def discover_tvs(db: Session = Depends(get_db)):
     # Exclude types we don't want to show (PCs, ESPs, etc.)
     excluded_types = ['esphome_ir_controller', 'pc_workstation']
 
-    # Get ALL non-adopted devices from TV vendors
+    # Get ALL non-adopted, non-hidden devices from TV vendors
     query = db.query(NetworkScanCache).filter(
-        NetworkScanCache.is_adopted == False
+        NetworkScanCache.is_adopted == False,
+        NetworkScanCache.is_hidden == False
     )
 
     # Exclude unwanted device types
@@ -335,9 +336,19 @@ async def test_tv(ip: str, db: Session = Depends(get_db)):
 async def adopt_device(ip: str, db: Session = Depends(get_db)):
     """
     Adopt a device from the network scan cache
-    Marks it as adopted so it won't show in discovery list
+
+    This endpoint:
+    1. Creates a Virtual Controller for the TV
+    2. Maps the TV to port 1 of that Virtual Controller
+    3. Marks the device as adopted in the scan cache
+
+    Returns the created Virtual Controller and device mapping details
     """
+    from ..models.virtual_controller import VirtualController, VirtualDevice
+    import re
+
     try:
+        # Get device from scan cache
         device = db.query(NetworkScanCache).filter_by(ip_address=ip).first()
 
         if not device:
@@ -346,19 +357,145 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
         if device.is_adopted:
             raise HTTPException(status_code=400, detail=f"Device {ip} is already adopted")
 
-        # Mark as adopted
+        # Get TV info (protocol, port, etc.)
+        tv_info = get_tv_from_scan_cache(ip, db)
+        if not tv_info:
+            raise HTTPException(status_code=400, detail=f"Could not determine device protocol for {ip}")
+
+        # Generate controller ID from MAC address (nw-{last_6_chars_of_mac})
+        # Format: nw-b85a97 (from E4:E0:C5:B8:5A:97)
+        mac_suffix = device.mac_address.replace(':', '').lower()[-6:] if device.mac_address else ip.split('.')[-1]
+        controller_id = f"nw-{mac_suffix}"
+
+        # Make sure controller_id is unique
+        existing = db.query(VirtualController).filter_by(controller_id=controller_id).first()
+        counter = 1
+        base_controller_id = controller_id
+        while existing:
+            controller_id = f"{base_controller_id}-{counter}"
+            existing = db.query(VirtualController).filter_by(controller_id=controller_id).first()
+            counter += 1
+
+        # Create controller name
+        controller_name = f"{tv_info['name']} Controller"
+
+        # Determine controller type
+        controller_type = "network_tv"
+        if device.device_type_guess in ["roku", "apple_tv", "chromecast", "fire_tv"]:
+            controller_type = "streaming_device"
+
+        # Determine brand from vendor for IR-like capabilities
+        brand = "Unknown"
+        if device.vendor:
+            vendor_lower = device.vendor.lower()
+            if "samsung" in vendor_lower:
+                brand = "Samsung"
+            elif "lg" in vendor_lower:
+                brand = "LG"
+            elif "sony" in vendor_lower:
+                brand = "Sony"
+            elif "panasonic" in vendor_lower:
+                brand = "Panasonic"
+            elif "philips" in vendor_lower:
+                brand = "Philips"
+            elif "toshiba" in vendor_lower:
+                brand = "Toshiba"
+            elif "vizio" in vendor_lower:
+                brand = "Vizio"
+            elif "tcl" in vendor_lower:
+                brand = "TCL"
+            elif "hisense" in vendor_lower:
+                brand = "Hisense"
+
+        # Create Virtual Controller with IR-like capabilities
+        virtual_controller = VirtualController(
+            controller_name=controller_name,
+            controller_id=controller_id,
+            controller_type=controller_type,
+            protocol=tv_info['protocol'],
+            total_ports=1,  # Virtual controllers have 1 port (the TV itself)
+            is_active=True,
+            is_online=(tv_info.get('port') is not None),
+            capabilities={
+                "power": True,
+                "volume": tv_info['protocol'] != "unknown",
+                "channels": tv_info['protocol'] != "unknown",
+                "source_select": tv_info['protocol'] != "unknown",
+                "ports": [{
+                    "port": 1,
+                    "brand": brand,
+                    "description": f"{brand} Network TV"
+                }]
+            }
+        )
+        db.add(virtual_controller)
+        db.flush()  # Get the controller ID
+
+        # Create Virtual Device on port 1
+        port_id = f"{controller_id}-1"
+
+        virtual_device = VirtualDevice(
+            controller_id=virtual_controller.id,
+            port_number=1,
+            port_id=port_id,
+            device_name=tv_info['name'],
+            device_type=tv_info['device_type'],
+            ip_address=ip,
+            mac_address=device.mac_address,
+            port=tv_info.get('port'),
+            protocol=tv_info['protocol'],
+            connection_config={
+                "ip": ip,
+                "port": tv_info.get('port'),
+                "protocol": tv_info['protocol'],
+                "vendor": device.vendor,
+                "model": tv_info.get('model', 'Unknown')
+            },
+            is_active=True,
+            is_online=(tv_info.get('port') is not None),
+            capabilities={
+                "power": True,
+                "volume": True,
+                "channels": True,
+                "source_select": True
+            }
+        )
+        db.add(virtual_device)
+
+        # Mark device as adopted in scan cache
         device.is_adopted = True
+
         db.commit()
 
         return {
             "success": True,
-            "message": f"Device {ip} ({device.vendor or 'Unknown'}) has been adopted",
-            "device": {
+            "message": f"Device {ip} ({device.vendor or 'Unknown'}) has been adopted and mapped to Virtual Controller",
+            "virtual_controller": {
+                "id": virtual_controller.id,
+                "controller_id": controller_id,
+                "controller_name": controller_name,
+                "controller_type": controller_type,
+                "protocol": tv_info['protocol'],
+                "total_ports": 5,
+                "is_online": virtual_controller.is_online
+            },
+            "virtual_device": {
+                "id": virtual_device.id,
+                "port_number": 1,
+                "port_id": port_id,
+                "device_name": tv_info['name'],
+                "ip_address": ip,
+                "mac_address": device.mac_address,
+                "protocol": tv_info['protocol'],
+                "device_type": tv_info['device_type']
+            },
+            "scan_cache_device": {
                 "ip": device.ip_address,
                 "mac": device.mac_address,
                 "vendor": device.vendor,
                 "hostname": device.hostname,
-                "device_type": device.device_type_guess
+                "device_type": device.device_type_guess,
+                "is_adopted": True
             }
         }
 
@@ -372,14 +509,47 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
 @router.delete("/adopt/{ip}")
 async def unadopt_device(ip: str, db: Session = Depends(get_db)):
     """
-    Un-adopt a device (mark as not adopted)
+    Un-adopt a device
+
+    This endpoint:
+    1. Finds and deletes the Virtual Controller for this device
+    2. Deletes the Virtual Device mapping (cascade delete)
+    3. Marks the device as not adopted in scan cache
+
     Makes it show up in discovery list again
     """
+    from ..models.virtual_controller import VirtualController, VirtualDevice
+
     try:
         device = db.query(NetworkScanCache).filter_by(ip_address=ip).first()
 
         if not device:
             raise HTTPException(status_code=404, detail=f"Device {ip} not found in scan cache")
+
+        # Find and delete Virtual Device and its Controller
+        virtual_device = db.query(VirtualDevice).filter_by(ip_address=ip).first()
+
+        deleted_controller = None
+        deleted_device = None
+
+        if virtual_device:
+            # Get controller info before deletion
+            virtual_controller = db.query(VirtualController).filter_by(id=virtual_device.controller_id).first()
+
+            if virtual_controller:
+                deleted_controller = {
+                    "id": virtual_controller.id,
+                    "controller_id": virtual_controller.controller_id,
+                    "controller_name": virtual_controller.controller_name
+                }
+                # Delete controller (will cascade delete virtual_device)
+                db.delete(virtual_controller)
+
+            deleted_device = {
+                "id": virtual_device.id,
+                "port_number": virtual_device.port_number,
+                "device_name": virtual_device.device_name
+            }
 
         # Mark as not adopted
         device.is_adopted = False
@@ -387,7 +557,13 @@ async def unadopt_device(ip: str, db: Session = Depends(get_db)):
 
         return {
             "success": True,
-            "message": f"Device {ip} has been un-adopted"
+            "message": f"Device {ip} has been un-adopted and Virtual Controller removed",
+            "deleted_virtual_controller": deleted_controller,
+            "deleted_virtual_device": deleted_device,
+            "scan_cache_device": {
+                "ip": device.ip_address,
+                "is_adopted": False
+            }
         }
 
     except HTTPException:
@@ -395,3 +571,117 @@ async def unadopt_device(ip: str, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Failed to un-adopt device: {str(e)}")
+
+
+@router.post("/hide/{mac_address}")
+async def hide_device(mac_address: str, db: Session = Depends(get_db)):
+    """
+    Hide a device by MAC address
+
+    Hidden devices will not appear in the discovery list.
+    The device can be unhidden later from the hidden devices list.
+    """
+    try:
+        # Normalize MAC address format (uppercase with colons)
+        mac = mac_address.upper().replace('-', ':')
+
+        device = db.query(NetworkScanCache).filter_by(mac_address=mac).first()
+
+        if not device:
+            raise HTTPException(status_code=404, detail=f"Device with MAC {mac_address} not found in scan cache")
+
+        if device.is_hidden:
+            raise HTTPException(status_code=400, detail=f"Device {mac_address} is already hidden")
+
+        device.is_hidden = True
+        db.commit()
+
+        return {
+            "success": True,
+            "message": f"Device {device.vendor or 'Unknown'} ({mac}) has been hidden from discovery",
+            "device": {
+                "ip": device.ip_address,
+                "mac": device.mac_address,
+                "vendor": device.vendor,
+                "hostname": device.hostname,
+                "is_hidden": True
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to hide device: {str(e)}")
+
+
+@router.delete("/hide/{mac_address}")
+async def unhide_device(mac_address: str, db: Session = Depends(get_db)):
+    """
+    Unhide a device by MAC address
+
+    Device will reappear in the discovery list on next scan.
+    """
+    try:
+        # Normalize MAC address format (uppercase with colons)
+        mac = mac_address.upper().replace('-', ':')
+
+        device = db.query(NetworkScanCache).filter_by(mac_address=mac).first()
+
+        if not device:
+            raise HTTPException(status_code=404, detail=f"Device with MAC {mac_address} not found in scan cache")
+
+        if not device.is_hidden:
+            raise HTTPException(status_code=400, detail=f"Device {mac_address} is not hidden")
+
+        device.is_hidden = False
+        db.commit()
+
+        return {
+            "success": True,
+            "message": f"Device {device.vendor or 'Unknown'} ({mac}) has been unhidden",
+            "device": {
+                "ip": device.ip_address,
+                "mac": device.mac_address,
+                "vendor": device.vendor,
+                "hostname": device.hostname,
+                "is_hidden": False
+            }
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to unhide device: {str(e)}")
+
+
+@router.get("/hidden", response_model=List[TVInfo])
+async def list_hidden_devices(db: Session = Depends(get_db)):
+    """
+    List all hidden devices
+
+    Returns all devices that have been hidden from discovery.
+    """
+    hidden_devices = db.query(NetworkScanCache).filter(
+        NetworkScanCache.is_hidden == True
+    ).all()
+
+    result = []
+    for device in hidden_devices:
+        tv_info = get_tv_from_scan_cache(device.ip_address, db)
+
+        if tv_info:
+            result.append(TVInfo(
+                ip=tv_info["ip"],
+                name=tv_info["name"],
+                model=tv_info["model"],
+                mac=tv_info["mac"],
+                protocol=tv_info["protocol"],
+                status="hidden",
+                device_type=tv_info["device_type"],
+                vendor=tv_info["vendor"],
+                ports=[tv_info["port"]] if tv_info["port"] else []
+            ))
+
+    return result

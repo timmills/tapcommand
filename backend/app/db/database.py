@@ -33,6 +33,7 @@ def create_tables():
     from ..models.command_queue import Base as CommandQueueBase
     from ..models.ir_capture import Base as IRCaptureBase
     from ..models.network_discovery import Base as NetworkDiscoveryBase
+    from ..models.virtual_controller import Base as VirtualControllerBase
 
     DeviceBase.metadata.create_all(bind=engine)
     ManagementBase.metadata.create_all(bind=engine)
@@ -40,6 +41,7 @@ def create_tables():
     CommandQueueBase.metadata.create_all(bind=engine)  # Command queue system
     IRCaptureBase.metadata.create_all(bind=engine)  # IR capture system
     NetworkDiscoveryBase.metadata.create_all(bind=engine)  # Network discovery system
+    VirtualControllerBase.metadata.create_all(bind=engine)  # Virtual controller system
     Base.metadata.create_all(bind=engine)  # This creates the ApplicationSetting table
 
     _ensure_ir_library_hidden_column(engine)

@@ -288,11 +288,112 @@ async def sync_discovered_devices(db: Session = Depends(get_db)):
 
 
 # Managed devices endpoints
+def _virtual_controller_to_managed_response(vc, db: Session) -> ManagedDeviceResponse:
+    """Transform a Virtual Controller into ManagedDeviceResponse format"""
+    from ..models.virtual_controller import VirtualController, VirtualDevice
+
+    # Get virtual devices for this controller
+    virtual_devices = db.query(VirtualDevice).filter_by(controller_id=vc.id).all()
+
+    # Transform virtual_devices into IRPortResponse format
+    # Virtual Controllers only have the ports defined in their capabilities
+    ir_ports_data = []
+    for vd in virtual_devices:
+        ir_port = IRPortResponse(
+            id=vd.id,
+            port_number=vd.port_number,
+            port_id=vd.port_id,
+            gpio_pin=None,  # Network TVs don't have GPIO
+            connected_device_name=vd.device_name,
+            is_active=vd.is_active,
+            cable_length=None,
+            installation_notes=vd.installation_notes,
+            tag_ids=vd.tag_ids if vd.tag_ids else None,
+            default_channel=vd.default_channel,
+            device_number=vd.port_number - 1,  # 0-indexed
+            created_at=vd.created_at,
+            updated_at=vd.updated_at
+        )
+        ir_ports_data.append(ir_port)
+
+    # For Virtual Controllers, only fill ports that are in capabilities.ports
+    # (typically just port 1 for the TV itself)
+    ports_in_capabilities = set()
+    if isinstance(vc.capabilities, dict) and "ports" in vc.capabilities:
+        for port_def in vc.capabilities["ports"]:
+            if isinstance(port_def, dict) and "port" in port_def:
+                ports_in_capabilities.add(port_def["port"])
+
+    # Fill only the ports defined in capabilities
+    for port_num in ports_in_capabilities:
+        if not any(p.port_number == port_num for p in ir_ports_data):
+            ir_ports_data.append(IRPortResponse(
+                id=-(vc.id * 100 + port_num),  # Negative ID to avoid conflicts
+                port_number=port_num,
+                port_id=f"{vc.controller_id}-{port_num}",
+                gpio_pin=None,
+                connected_device_name=None,
+                is_active=False,
+                cable_length=None,
+                installation_notes=None,
+                tag_ids=None,
+                default_channel=None,
+                device_number=port_num - 1,
+                created_at=vc.created_at,
+                updated_at=vc.updated_at
+            ))
+
+    # Sort by port number
+    ir_ports_data.sort(key=lambda x: x.port_number)
+
+    # Get first device's MAC or use controller ID
+    mac_address = virtual_devices[0].mac_address if virtual_devices else vc.controller_id
+
+    # Use capabilities from Virtual Controller (already has ports array with brand info)
+    capabilities = vc.capabilities.copy() if isinstance(vc.capabilities, dict) else {}
+
+    # Ensure ports array exists (for older VCs that don't have it)
+    if "ports" not in capabilities:
+        capabilities["ports"] = [{"port": i} for i in range(1, vc.total_ports + 1)]
+
+    return ManagedDeviceResponse(
+        id=-(vc.id + 10000),  # Negative ID to differentiate from IR controllers
+        hostname=vc.controller_id,  # Use controller_id as hostname
+        mac_address=mac_address,
+        current_ip_address=virtual_devices[0].ip_address if virtual_devices else "0.0.0.0",
+        device_name=vc.controller_name,
+        api_key=None,
+        venue_name=vc.venue_name,
+        location=vc.location,
+        total_ir_ports=vc.total_ports,
+        firmware_version=vc.protocol,  # Use protocol as firmware version
+        device_type="network_tv",
+        is_online=vc.is_online,
+        last_seen=vc.last_seen or vc.updated_at,
+        last_ip_address=virtual_devices[0].ip_address if virtual_devices else None,
+        notes=vc.notes,
+        created_at=vc.created_at,
+        updated_at=vc.updated_at,
+        ir_ports=ir_ports_data,
+        capabilities=capabilities
+    )
+
+
 @router.get("/managed", response_model=List[ManagedDeviceResponse])
 async def get_managed_devices(db: Session = Depends(get_db)):
-    """Get all managed devices"""
-    devices = db.query(ManagedDevice).all()
-    return [_managed_device_to_response(device, db) for device in devices]
+    """Get all managed devices (IR controllers + Virtual Controllers)"""
+    from ..models.virtual_controller import VirtualController
+
+    # Get IR controllers
+    ir_devices = db.query(ManagedDevice).all()
+    ir_responses = [_managed_device_to_response(device, db) for device in ir_devices]
+
+    # Get Virtual Controllers
+    virtual_controllers = db.query(VirtualController).all()
+    vc_responses = [_virtual_controller_to_managed_response(vc, db) for vc in virtual_controllers]
+
+    # Combine and return
+    return ir_responses + vc_responses
 
 
 @router.get("/managed/{device_id}", response_model=ManagedDeviceResponse)
@@ -482,7 +583,69 @@ async def update_managed_device(
     device_request: ManagedDeviceRequest,
     db: Session = Depends(get_db)
 ):
-    """Update a managed device"""
+    """Update a managed device (IR Controller or Virtual Controller)"""
+    from ..models.virtual_controller import VirtualController, VirtualDevice
+
+    # Check if this is a Virtual Controller (negative ID)
+    if device_id < 0:
+        # Extract real Virtual Controller ID
+        vc_id = abs(device_id) - 10000
+        vc = db.query(VirtualController).filter(VirtualController.id == vc_id).first()
+        if not vc:
+            raise HTTPException(status_code=404, detail="Virtual Controller not found")
+
+        # Update Virtual Controller fields
+        if device_request.device_name is not None:
+            vc.controller_name = device_request.device_name
+        if device_request.venue_name is not None:
+            vc.venue_name = device_request.venue_name
+        if device_request.location is not None:
+            vc.location = device_request.location
+        if device_request.notes is not None:
+            vc.notes = device_request.notes
+
+        # Update Virtual Devices (ports) if provided
+        if device_request.ir_ports:
+            for port_req in device_request.ir_ports:
+                # Find or create virtual device for this port
+                vd = db.query(VirtualDevice).filter(
+                    VirtualDevice.controller_id == vc.id,
+                    VirtualDevice.port_number == port_req.port_number
+                ).first()
+
+                if vd:
+                    # Update existing virtual device
+                    if port_req.connected_device_name:
+                        vd.device_name = port_req.connected_device_name
+                    vd.is_active = port_req.is_active
+                    vd.installation_notes = port_req.installation_notes
+                    vd.tag_ids = _normalize_tag_ids(port_req.tag_ids)
+                    vd.default_channel = _normalize_default_channel(port_req.default_channel)
+                elif port_req.connected_device_name and port_req.is_active:
+                    # Only create new virtual device if it has a name and is active
+                    # Get first virtual device to copy network details
+                    first_vd = db.query(VirtualDevice).filter(VirtualDevice.controller_id == vc.id).first()
+                    if first_vd:
+                        new_vd = VirtualDevice(
+                            controller_id=vc.id,
+                            port_number=port_req.port_number,
+                            port_id=f"{vc.controller_id}-{port_req.port_number}",
+                            device_name=port_req.connected_device_name,
+                            ip_address=first_vd.ip_address,
+                            mac_address=first_vd.mac_address,
+                            is_active=port_req.is_active,
+                            installation_notes=port_req.installation_notes,
+                            tag_ids=_normalize_tag_ids(port_req.tag_ids),
+                            default_channel=_normalize_default_channel(port_req.default_channel)
+                        )
+                        db.add(new_vd)
+
+        _refresh_tag_usage_counts(db)
+        db.commit()
+        db.refresh(vc)
+        return _virtual_controller_to_managed_response(vc, db)
+
+    # Handle IR Controllers (positive ID)
     device = db.query(ManagedDevice).filter(ManagedDevice.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")

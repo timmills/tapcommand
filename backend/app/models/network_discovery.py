@@ -49,6 +49,7 @@ class NetworkScanCache(Base):
     # Adoption status
     is_adopted = Column(Boolean, default=False)  # Whether it's in devices table
     adopted_hostname = Column(String, nullable=True)  # Link to devices.hostname
+    is_hidden = Column(Boolean, default=False)  # User manually hidden from discovery
 
     # Scan metadata
     scan_id = Column(String, nullable=True, index=True)  # UUID for batch scans

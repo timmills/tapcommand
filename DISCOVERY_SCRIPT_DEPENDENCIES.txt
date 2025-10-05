@@ -1,0 +1,142 @@
+SmartVenue TV Discovery Script - Dependencies & Features
+=========================================================
+
+REQUIRED DEPENDENCIES:
+---------------------
+1. nmap (network scanner)
+   Install: sudo apt-get install nmap -y
+
+2. Python 3.8+
+   Check: python3 --version
+
+3. Python packages:
+   - requests (HTTP library)
+   - tabulate (table formatting)
+   Install: pip3 install requests tabulate
+
+
+KEY FEATURES:
+------------
+✓ Network scanning (nmap ping sweep)
+✓ MAC address vendor lookup (built-in database for Samsung, LG, Sony, Philips, etc.)
+✓ PORT SCANNING - YES! Probes these ports on potential TVs:
+
+  Samsung:
+    - 55000 (Legacy protocol)
+    - 8001, 8002 (Modern WebSocket)
+
+  LG:
+    - 3000, 3001 (WebOS)
+
+  Sony:
+    - 80 (IRCC HTTP control)
+    - 10000 (Alternative Sony port)
+
+  Philips:
+    - 1925, 1926 (JointSpace API)
+
+  Roku:
+    - 8060 (External Control Protocol)
+
+✓ Protocol detection (based on which ports are open)
+✓ Device info gathering (Samsung Modern TVs via REST API)
+✓ JSON report output (for automation)
+✓ CSV report output (for spreadsheets)
+✓ Console table output (human-readable)
+
+
+WHAT THE SCRIPT DOES:
+--------------------
+1. Scans network with nmap (finds all online hosts)
+2. Reads ARP cache (gets MAC addresses)
+3. Identifies TV brands (MAC vendor lookup)
+4. PORT SCANS each potential TV (checks control ports)
+5. Detects protocols (based on open ports)
+6. Queries Samsung Modern TVs (if port 8001 open)
+7. Generates comprehensive report
+
+
+REPORT INCLUDES:
+---------------
+For each discovered TV:
+- IP address
+- MAC address
+- Vendor/Brand
+- Model (if detectable)
+- Hostname (if resolvable)
+- OPEN PORTS (list of control ports found)
+- PROTOCOLS (detected based on open ports)
+- Latency (ping response time)
+- Firmware version (Samsung Modern only)
+
+
+EXAMPLE PORT SCAN RESULTS:
+-------------------------
+Device: 192.168.1.50 (Samsung)
+  MAC: E4:E0:C5:B8:5A:97
+  Open Ports: [55000]
+  Protocols: ["Samsung Legacy"]
+  → Can be controlled via port 55000
+
+Device: 192.168.1.52 (Samsung)
+  MAC: 01:23:45:67:89:AB
+  Open Ports: [8001]
+  Protocols: ["Samsung Modern (WebSocket)"]
+  Model: QA55Q7FAM
+  → Can be controlled via WebSocket port 8001
+
+Device: 192.168.1.100 (LG)
+  MAC: B8:38:61:XX:XX:XX
+  Open Ports: [3000]
+  Protocols: ["LG WebOS"]
+  → Can be controlled via WebOS port 3000
+
+
+INSTALLATION QUICK START:
+-------------------------
+# On venue laptop (before going onsite):
+
+sudo apt-get install nmap -y
+pip3 install requests tabulate
+
+# OR use virtual environment (recommended):
+python3 -m venv venue_venv
+source venue_venv/bin/activate
+pip install requests tabulate
+
+# Copy venue_tv_discovery.py to laptop/USB
+chmod +x venue_tv_discovery.py
+
+# Test it works:
+./venue_tv_discovery.py --help
+
+
+ONSITE USAGE:
+------------
+# Connect to venue network, then:
+python3 venue_tv_discovery.py 192.168.1
+
+# Or specify the subnet you see on venue network:
+python3 venue_tv_discovery.py 10.0.50
+
+
+FILES CREATED:
+-------------
+tv_discovery_report_YYYYMMDD_HHMMSS.json
+tv_discovery_report_YYYYMMDD_HHMMSS.csv
+
+
+NOTES:
+-----
+- Port scanning is automatic for all detected TV vendors
+- Only scans relevant ports (not full port scan)
+- Timeout per port: 0.5-1.0 seconds
+- Non-invasive (read-only, no TV changes)
+- Safe to run on production networks
+- Scan time: ~1-2 minutes typical venue
+
+
+SCRIPT LOCATION:
+---------------
+/home/coastal/smartvenue/venue_tv_discovery.py
+/home/coastal/smartvenue/VENUE_DISCOVERY_README.md (full guide)

@@ -753,9 +753,73 @@ def log_network_command(hostname, command, result):
 
 ---
 
+## Onsite Discovery Tool
+
+### Standalone Script for Venue Surveys
+
+**Location:** `/venue_tv_discovery_nmap_optional.py`
+
+A standalone Python script for onsite venue surveys to discover network-controllable TVs without requiring SmartVenue backend.
+
+**Features:**
+- ✅ Scans for **all TV brands** (Samsung, LG, Sony, Philips, Roku, Apple TV, Vizio, Panasonic, TCL, Hisense, Sharp)
+- ✅ **Port scanning** included (detects protocols automatically)
+- ✅ Works **with or without nmap** (falls back to async ping)
+- ✅ Generates **JSON + CSV reports** for import
+- ✅ **Tested and working** (October 4, 2025)
+
+**Usage:**
+```bash
+# Install dependencies
+pip3 install requests tabulate
+sudo apt-get install nmap -y  # Optional but recommended
+
+# Run scan
+python3 venue_tv_discovery_nmap_optional.py 192.168.101
+
+# Scan specific range
+python3 venue_tv_discovery_nmap_optional.py 192.168.1 --range 1-100
+```
+
+**Output:**
+- `tv_discovery_report_YYYYMMDD_HHMMSS.json` - Full device details
+- `tv_discovery_report_YYYYMMDD_HHMMSS.csv` - Spreadsheet format
+
+**Report Contents:**
+- IP address
+- MAC address
+- Vendor/Brand
+- **Open ports** (control ports detected)
+- **Protocols** (based on port scan results)
+- Model (if detectable)
+- Hostname
+- Latency
+
+**Supported Protocols Detected:**
+- Samsung Legacy (port 55000)
+- Samsung Modern WebSocket (ports 8001, 8002)
+- LG WebOS (ports 3000, 3001)
+- Sony IRCC (port 80)
+- Philips JointSpace (ports 1925, 1926)
+- Roku ECP (port 8060)
+
+**Documentation:**
+- `/VENUE_DISCOVERY_README.md` - Comprehensive usage guide
+- `/DISCOVERY_SCRIPT_DEPENDENCIES.txt` - Quick reference
+- `/ONSITE_DISCOVERY_SUMMARY.md` - Test results and summary
+
+**Test Results (2025-10-04):**
+- Network: 192.168.101.0/24
+- TVs found: 1 Samsung (LA40D550)
+- Protocol detected: Samsung Legacy (port 55000)
+- Scan time: ~60 seconds (without nmap)
+
+---
+
 ## Next Actions
 
 1. **Immediate (This Week)**
+   - [x] ✅ Create standalone onsite discovery script
    - [ ] Implement network sweep API
    - [ ] Add brand-specific scanning
    - [ ] Complete Samsung WebSocket pairing
@@ -763,6 +827,7 @@ def log_network_command(hostname, command, result):
 2. **Short Term (This Month)**
    - [ ] Update UI with scan methods
    - [ ] Build adoption wizard
+   - [ ] Add JSON/CSV import functionality
    - [ ] Add LG WebOS support
 
 3. **Long Term (This Quarter)**
@@ -773,6 +838,6 @@ def log_network_command(hostname, command, result):
 
 ---
 
-**Status:** Ready for Phase 2 implementation
+**Status:** Phase 1 Complete, Onsite Tool Ready
 **Owner:** Development Team
 **Last Updated:** October 4, 2025

@@ -53,6 +53,40 @@ This guide explains how to discover and adopt network-controllable TVs and displ
 
 ## Network Discovery Methods
 
+### Method 0: Onsite Discovery Tool (Standalone)
+**Best for:** Initial venue surveys and site assessments
+
+**Standalone Python script** for discovering TVs without SmartVenue backend running.
+
+**Usage:**
+```bash
+# On venue laptop/device
+pip3 install requests tabulate
+sudo apt-get install nmap -y  # Optional
+
+# Scan venue network
+python3 venue_tv_discovery_nmap_optional.py 192.168.1
+```
+
+**Features:**
+- ✅ Scans **all TV brands** (Samsung, LG, Sony, Philips, Roku, Apple TV, Vizio, Panasonic, TCL, Hisense, Sharp)
+- ✅ **Port scanning** for protocol detection
+- ✅ Works with or without nmap
+- ✅ Generates JSON + CSV reports
+
+**Output:**
+- `tv_discovery_report_YYYYMMDD_HHMMSS.json`
+- `tv_discovery_report_YYYYMMDD_HHMMSS.csv`
+
+**Import reports into SmartVenue** to create virtual controllers automatically.
+
+**Documentation:** See `/VENUE_DISCOVERY_README.md` for full guide.
+
+**Pros:** No SmartVenue needed, comprehensive scan, all brands
+**Cons:** Manual process, requires report import
+
+---
+
 ### Method 1: Quick Scan (Recommended)
 **Best for:** Finding TVs you know exist on the network
 
