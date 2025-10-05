@@ -35,6 +35,10 @@ ENV/
 # Exception: Allow specific backup databases for rollback purposes
 !backup-database-*.db
 
+# Exception: Allow template database for deployments
+!smartvenue_template.db
+!backend/smartvenue_template.db
+
 # Environment variables
 .env
 .env.local

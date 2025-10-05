@@ -11,8 +11,8 @@ from sqlalchemy.orm import Session
 
 from .base import CommandExecutor
 from ..models import Command, ExecutionResult
-from ...models.device import ManagedDevice
-from ...services.esphome import esphome_manager
+from ...models.device import Device
+from ...services.esphome_client import esphome_manager
 
 
 class IRExecutor(CommandExecutor):
@@ -40,7 +40,7 @@ class IRExecutor(CommandExecutor):
 
         try:
             # Get the managed device from database
-            device = self.db.query(ManagedDevice).filter_by(
+            device = self.db.query(Device).filter_by(
                 hostname=command.controller_id
             ).first()
 
@@ -61,12 +61,11 @@ class IRExecutor(CommandExecutor):
             success = await asyncio.wait_for(
                 esphome_manager.send_tv_command(
                     hostname=device.hostname,
-                    ip_address=device.current_ip_address,
+                    ip_address=device.ip_address,
                     command=command.command,
                     box=port,
                     channel=channel,
-                    digit=digit,
-                    api_key=device.api_key
+                    digit=digit
                 ),
                 timeout=5.0  # 5 second timeout
             )
