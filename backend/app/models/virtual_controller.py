@@ -89,6 +89,24 @@ class VirtualDevice(Base):
     # Device capabilities
     capabilities = Column(JSON, nullable=True)  # {"power": true, "volume": true, "hdmi_input": true}
 
+    # Hybrid Control Support (IR + Network)
+    fallback_ir_controller = Column(String, nullable=True)  # Hostname of IR controller (e.g., "ir-abc123")
+    fallback_ir_port = Column(Integer, nullable=True)  # Port number on IR controller (0-4)
+    power_on_method = Column(String, default="network")  # "network", "ir", "hybrid"
+    control_strategy = Column(String, default="network_only")  # "network_only", "hybrid_ir_fallback", "ir_only"
+
+    # Status Cache (updated by polling service)
+    cached_power_state = Column(String, nullable=True)  # "on", "off", "standby"
+    cached_volume_level = Column(Integer, nullable=True)  # 0-100
+    cached_mute_status = Column(Boolean, nullable=True)  # true/false
+    cached_current_input = Column(String, nullable=True)  # "HDMI 1", "HDMI 2", etc.
+    cached_current_app = Column(String, nullable=True)  # "Netflix", "YouTube", etc.
+
+    # Status metadata
+    last_status_poll = Column(DateTime(timezone=True), nullable=True)
+    status_poll_failures = Column(Integer, default=0)  # Consecutive failures
+    status_available = Column(Boolean, default=False)  # Can this device provide status?
+
     # Status
     is_active = Column(Boolean, default=True)
     is_online = Column(Boolean, default=False)

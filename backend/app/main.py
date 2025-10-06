@@ -24,6 +24,7 @@ from .routers.network_tv import router as network_tv_router
 from .routers.network_discovery import router as network_discovery_router
 from .routers.virtual_controllers import router as virtual_controllers_router
 from .routers.device_status import router as device_status_router
+from .routers.hybrid_devices import router as hybrid_devices_router
 from .commands.api import router as unified_commands_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
@@ -31,6 +32,7 @@ from .services.queue_processor import start_queue_processor, stop_queue_processo
 from .services.history_cleanup import start_history_cleanup, stop_history_cleanup
 from .services.schedule_processor import start_schedule_processor, stop_schedule_processor
 from .services.device_status_checker import status_checker
+from .services.tv_status_poller import tv_status_poller
 
 # Configure logging
 logging.basicConfig(
@@ -82,10 +84,16 @@ async def lifespan(app: FastAPI):
     await status_checker.start_status_monitoring()
     logger.info("Device status monitoring started")
 
+    # Start TV status polling service
+    await tv_status_poller.start()
+    logger.info("TV status polling service started")
+
     yield
 
     # Shutdown
     logger.info("Shutting down SmartVenue backend...")
+    await tv_status_poller.stop()
+    logger.info("TV status polling service stopped")
     await status_checker.stop_status_monitoring()
     logger.info("Device status monitoring stopped")
     await stop_schedule_processor()
@@ -222,6 +230,12 @@ app.include_router(
 # Include device status router
 app.include_router(
     device_status_router
+)
+
+# Include hybrid devices router
+app.include_router(
+    hybrid_devices_router,
+    prefix=f"{settings.API_V1_STR}"
 )
 
 # Mount static files for channel icons
