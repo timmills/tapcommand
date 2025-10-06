@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BrandInfoCards } from '../components/brand-info-cards';
 
 interface DiscoveredTV {
   ip: string;
@@ -354,7 +355,7 @@ export const NetworkControllersPage = () => {
                 </div>
               )}
 
-              {tv.status === 'online' && tv.protocol === 'samsung_legacy' && (
+              {tv.status === 'online' && tv.protocol && (
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => handleCommand(tv.ip, 'power')}
@@ -384,23 +385,7 @@ export const NetworkControllersPage = () => {
       </div>
 
       <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="font-medium text-slate-900">Setup Instructions</h3>
-        <p className="mt-1 text-sm text-slate-500">
-          Enable network control on your TVs to allow adoption
-        </p>
-        <div className="mt-3 space-y-2 text-sm text-slate-600">
-          <p className="font-medium">On each TV (using physical remote):</p>
-          <ol className="list-decimal list-inside space-y-1 pl-2">
-            <li>Press <strong>Home</strong> button</li>
-            <li>Navigate to <strong>Settings</strong> → <strong>General</strong> → <strong>External Device Manager</strong></li>
-            <li>Enable <strong>Device Connect Manager</strong></li>
-            <li>Go to <strong>General</strong> → <strong>Network</strong> → <strong>Expert Settings</strong></li>
-            <li>Enable <strong>"Power On with Mobile"</strong></li>
-          </ol>
-          <p className="text-xs text-slate-500 pt-2">
-            After enabling, click "Discover TVs" to detect control ports
-          </p>
-        </div>
+        <BrandInfoCards />
       </div>
 
       {/* Virtual Controllers Section - MOVED TO BOTTOM */}

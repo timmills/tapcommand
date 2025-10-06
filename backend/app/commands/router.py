@@ -11,7 +11,15 @@ from typing import Optional
 from .models import Command
 from .executors.base import CommandExecutor
 from .executors.ir_executor import IRExecutor
-from .executors.network import SamsungLegacyExecutor, LGWebOSExecutor, RokuExecutor
+from .executors.network import (
+    SamsungLegacyExecutor,
+    LGWebOSExecutor,
+    RokuExecutor,
+    HisenseExecutor,
+    SonyBraviaExecutor,
+    VizioExecutor,
+    PhilipsExecutor
+)
 
 
 class ProtocolRouter:
@@ -57,12 +65,15 @@ class ProtocolRouter:
 
             # Sony Bravia
             elif command.protocol == "sony_bravia":
-                # TODO: Implement SonyBraviaExecutor
-                return None
+                return SonyBraviaExecutor(self.db)
 
             # Roku
             elif command.protocol == "roku":
                 return RokuExecutor(self.db)
+
+            # Hisense VIDAA
+            elif command.protocol == "hisense_vidaa":
+                return HisenseExecutor(self.db)
 
             # Android TV
             elif command.protocol == "android_tv":
@@ -71,13 +82,11 @@ class ProtocolRouter:
 
             # Philips JointSpace
             elif command.protocol == "philips_jointspace":
-                # TODO: Implement PhilipsExecutor
-                return None
+                return PhilipsExecutor(self.db)
 
             # Vizio SmartCast
             elif command.protocol == "vizio_smartcast":
-                # TODO: Implement VizioExecutor
-                return None
+                return VizioExecutor(self.db)
 
         # No executor found
         return None

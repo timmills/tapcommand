@@ -1,3 +1,0 @@
-ip,mac,vendor,model,hostname,protocols,open_ports,latency_ms
-192.168.101.46,CC:6E:A4:BB:22:29,Samsung,UA75MU6100,Samsung,"Samsung Modern (WebSocket), Samsung Modern (WebSocket)","8001, 8002",0.192
-192.168.101.52,7C:64:56:F5:A7:56,Samsung,QA55Q7FAM,TY_WR.cranswick.local,"Samsung Modern (WebSocket), Samsung Modern (WebSocket)","8001, 8002",0.247

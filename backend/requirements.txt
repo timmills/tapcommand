@@ -16,3 +16,11 @@ pydantic-settings==2.1.0
 passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
 bcrypt==4.1.2
+
+# Network TV Control
+samsungctl==0.7.1
+wakeonlan==3.1.0
+hisensetv==0.3.0
+pywebostv==0.8.9
+pyvizio==0.1.61
+requests>=2.31.0
