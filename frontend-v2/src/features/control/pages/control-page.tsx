@@ -27,12 +27,25 @@ interface PortRow {
 
 export const ControlPage = () => {
   const navigate = useNavigate();
-  const { data: controllers = [], isLoading } = useManagedDevices();
+  const { data: controllers = [], isLoading, error, isError } = useManagedDevices();
   const { data: tags = [] } = useDeviceTags();
   const { data: channels = [] } = useAvailableChannels();
   const { data: queueMetrics } = useQueueMetrics();
 
-  const rows = useMemo(() => buildRows(controllers, tags), [controllers, tags]);
+  const rows = useMemo(() => {
+    console.log('[ControlPage] Building rows from controllers:', {
+      controllerCount: controllers.length,
+      controllers: controllers.map(c => ({
+        id: c.id,
+        hostname: c.hostname,
+        portCount: c.ir_ports?.length,
+        ports: c.ir_ports?.map(p => ({ port: p.port_number, active: p.is_active }))
+      }))
+    });
+    const result = buildRows(controllers, tags);
+    console.log('[ControlPage] Built rows:', result.length);
+    return result;
+  }, [controllers, tags]);
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [nameFilter, setNameFilter] = useState('');
@@ -213,9 +226,23 @@ export const ControlPage = () => {
             <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
               Loading controllers…
             </div>
+          ) : isError ? (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-6 text-center shadow-sm">
+              <div className="text-red-700 font-semibold mb-2">Error loading controllers</div>
+              <div className="text-sm text-red-600">{error?.message || 'Unknown error'}</div>
+              <div className="text-xs text-slate-500 mt-2">Check console for details</div>
+            </div>
           ) : displayRows.length === 0 ? (
             <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-slate-500 shadow-sm">
-              No devices match the current filters.
+              <div className="font-semibold mb-2">No devices match the current filters</div>
+              <div className="text-sm">
+                Controllers: {controllers.length} | Rows built: {rows.length} | Displayed: {displayRows.length}
+              </div>
+              <div className="text-xs mt-2">
+                {controllers.length === 0 && "No controllers loaded from API"}
+                {controllers.length > 0 && rows.length === 0 && "All ports filtered out (check port.is_active)"}
+                {rows.length > 0 && displayRows.length === 0 && "All rows filtered out (check filters)"}
+              </div>
             </div>
           ) : (
             <div className="space-y-4">

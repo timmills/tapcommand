@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 LOG_FILE="$SCRIPT_DIR/backend-restart.log"
 PID_FILE="$SCRIPT_DIR/uvicorn.pid"
-VENV_DIR="$SCRIPT_DIR/../venv"
+VENV_DIR="$SCRIPT_DIR/venv"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 VITE_STOP_SCRIPT="$REPO_ROOT/stop_all_vite.sh"
 FRONTEND_DIR="$REPO_ROOT/frontend-v2"
