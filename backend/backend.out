@@ -9472,286 +9472,1195 @@ INFO:     100.98.57.42:51297 - "GET /api/v1/management/available-channels HTTP/1
 INFO:     127.0.0.1:40562 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57038 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
 INFO:     127.0.0.1:57046 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
-r occurred: 192.168.101.146: The connection dropped immediately after encrypted hello; Try enabling encryption on the device or turning off encryption on the client (aioesphomeapi).
-2025-10-08 08:00:01,463 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: Connection closed
-2025-10-08 08:00:01,467 - app.services.queue_processor - WARNING - ✗ Worker 2 failed command 23: Command execution failed (attempt 1)
-2025-10-08 08:00:01,471 - app.services.queue_processor - INFO - Worker 2 executing command 20: power_on on ir-dca09e port 1 (attempt 1)
-2025-10-08 08:00:03,389 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:00:03,390 - app.services.esphome_client - ERROR - Error calling service 'tv_power_on' on ir-dca09e: Authenticated connection not ready yet for 192.168.101.132; current state is ConnectionState.SOCKET_OPENED!
-2025-10-08 08:00:03,394 - app.services.queue_processor - WARNING - ✗ Worker 1 failed command 21: Command execution failed (attempt 1)
-2025-10-08 08:00:03,395 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:00:03,395 - app.services.esphome_client - ERROR - Error calling service 'tv_power_on' on ir-dca09e: Authenticated connection not ready yet for 192.168.101.132; current state is ConnectionState.SOCKET_OPENED!
-2025-10-08 08:00:03,398 - app.services.queue_processor - WARNING - ✗ Worker 0 failed command 22: Command execution failed (attempt 1)
-2025-10-08 08:00:03,917 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:00:04,053 - app.services.esphome_client - INFO - Called service 'tv_power_on' on ir-dca09e with data: {'port': 1}
-2025-10-08 08:00:04,062 - app.services.queue_processor - INFO - ✓ Worker 2 completed command 20 in 2581ms
-2025-10-08 08:00:04,901 - app.services.queue_processor - INFO - Worker 1 executing command 19: power_on on ir-dca09e port 1 (attempt 2)
-2025-10-08 08:00:05,049 - app.services.esphome_client - INFO - Called service 'tv_power_on' on ir-dca09e with data: {'port': 1}
-2025-10-08 08:00:05,055 - app.services.queue_processor - INFO - ✓ Worker 1 completed command 19 in 147ms
-2025-10-08 08:00:05,408 - app.services.queue_processor - INFO - Worker 0 executing command 22: power_on on ir-dca09e port 2 (attempt 2)
-2025-10-08 08:00:05,789 - app.services.esphome_client - INFO - Called service 'tv_power_on' on ir-dca09e with data: {'port': 2}
-2025-10-08 08:00:05,794 - app.services.queue_processor - INFO - ✓ Worker 0 completed command 22 in 380ms
-2025-10-08 08:00:13,397 - app.services.discovery - INFO - mDNS service discovered: presence-garage._esphomelib._tcp.local.
-2025-10-08 08:00:13,397 - app.services.discovery - INFO - Processing mDNS device: presence-garage at 192.168.101.21:6053
-2025-10-08 08:00:13,397 - app.services.discovery - INFO - Discovered ESPHome device: presence-garage (192.168.101.21)
-2025-10-08 08:00:13,397 - app.main - INFO - New device discovered: presence-garage (192.168.101.21)
-2025-10-08 08:00:13,401 - app.main - INFO - Saved presence-garage to DeviceDiscovery table
-2025-10-08 08:00:13,472 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
-2025-10-08 08:00:13,473 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
-2025-10-08 08:00:13,473 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
-2025-10-08 08:00:13,473 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
-2025-10-08 08:00:13,479 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
-2025-10-08 08:00:13,490 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
-2025-10-08 08:00:13,490 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
-2025-10-08 08:00:13,490 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
-2025-10-08 08:00:13,490 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
-2025-10-08 08:00:13,497 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
-2025-10-08 08:01:11,860 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:01:11,860 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:01:14,311 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:01:14,518 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:01:14,777 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:01:14,781 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:01:17,559 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:01:20,613 - app.services.device_status_checker - INFO - Device nw-b85a97 status changed: online=True, power=on
-2025-10-08 08:06:14,782 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:06:14,782 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:06:17,168 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:06:17,456 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:06:17,671 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:06:20,618 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:06:23,678 - app.services.esphome_client - WARNING - Timed out waiting for capabilities from ir-dc4516
-2025-10-08 08:06:33,678 - aioesphomeapi.connection - ERROR - 192.168.101.146: disconnect request failed: Timeout waiting for DisconnectResponse after 10.0s
-2025-10-08 08:06:33,678 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:06:33,682 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:06:34,848 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
-2025-10-08 08:06:34,848 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
-2025-10-08 08:06:34,848 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
-2025-10-08 08:06:34,849 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
-2025-10-08 08:06:34,849 - app.main - ERROR - Error saving discovered device to database: no running event loop
+INFO:     127.0.0.1:33186 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33188 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33766 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33770 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37004 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37016 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49267 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49267 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64393 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:64393 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:49267 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:62570 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:38696 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38700 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53342 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53346 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 08:35:36,086 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 08:35:36,086 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 08:35:36,086 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 08:35:36,086 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 08:35:36,090 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 08:35:36,091 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 08:35:36,092 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 08:35:36,092 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 08:35:36,092 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 08:35:36,103 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+INFO:     127.0.0.1:54574 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54584 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42664 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59110 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64225 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52651 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53421 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:64225 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59110 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:59205 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65144 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52651 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52651 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59110 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65144 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65144 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59110 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53421 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:64225 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52651 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+2025-10-08 08:35:56,050 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 08:35:56,050 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 08:35:56,050 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 08:35:56,050 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 08:35:56,051 - app.main - ERROR - Error saving discovered device to database: no running event loop
+2025-10-08 08:35:56,135 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 08:35:56,135 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 08:35:56,135 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 08:35:56,135 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 08:35:56,138 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59205 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64280 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56566 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:57435 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:64907 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53936 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53936 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53936 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53936 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53936 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:56990 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:63864 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:59515 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49547 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:54864 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54864 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54864 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54864 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54864 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:58579 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50547 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61480 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52409 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:42018 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42024 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49730 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49738 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49738 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60603 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61659 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60603 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58412 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53407 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:60955 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55970 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55986 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 08:37:43,232 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38596 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61853 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/network-tv/discover HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53015 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/network-tv/discover HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38600 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53015 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53475 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:57745 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56011 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:53015 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60931 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58926 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49953 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49953 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61149 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:61246 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:51856 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:64778 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58920 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58924 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58928 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58942 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:38:32,339 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 08:38:32,340 - app.services.device_health - INFO - Checking health of 2 managed devices
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56196 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 08:38:34,765 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 08:38:35,266 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 08:38:35,476 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 08:38:35,693 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 08:38:35,697 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "GET /api/virtual-controllers/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56196 - "GET /api/network-tv/discover HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56196 - "GET /api/virtual-controllers/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56208 - "GET /api/network-tv/discover HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56196 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56196 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56750 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52347 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62847 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:54496 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52203 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60858 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56216 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56244 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60136 - "GET /api/v1/settings/app?include_private=true HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50361 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56250 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56228 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56522 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56524 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54874 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54882 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53448 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53458 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55856 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63682 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54047 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52600 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:55841 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:57411 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52906 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55868 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43860 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43864 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44894 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44908 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34318 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34322 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42904 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42918 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43286 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43300 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45844 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53984 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62410 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:60080 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:58510 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:54565 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:62410 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:45854 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48096 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57500 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53690 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53702 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45430 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45430 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62041 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62369 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:61917 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:55853 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:49952 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:62369 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:62041 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45446 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39294 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39296 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35300 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35306 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42528 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42544 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32996 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33012 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55456 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55458 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54867 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63939 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63918 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:52602 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:51794 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37318 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37334 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32968 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:32972 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37740 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37742 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44120 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:42:46,291 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:44126 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55222 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55228 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37196 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55608 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53740 - "GET /api/v1/management/available-channels HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61361 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52733 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:53740 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52733 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61361 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:55608 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:51880 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41294 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41308 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41866 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41870 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54212 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:43:35,697 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 08:43:35,698 - app.services.device_health - INFO - Checking health of 2 managed devices
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:43:38,193 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 08:43:38,379 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+INFO:     127.0.0.1:54220 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 08:43:38,586 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:43:43,716 - app.services.esphome_client - WARNING - Timed out waiting for capabilities from ir-dc4516
+INFO:     127.0.0.1:54276 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54278 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:43:53,717 - aioesphomeapi.connection - ERROR - 192.168.101.146: disconnect request failed: Timeout waiting for DisconnectResponse after 10.0s
+2025-10-08 08:43:53,717 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 08:43:53,721 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+INFO:     127.0.0.1:48366 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 08:43:55,660 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 08:43:55,660 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 08:43:55,660 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 08:43:55,660 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 08:43:55,661 - app.main - ERROR - Error saving discovered device to database: no running event loop
 /home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
   db.rollback()
 RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-WARNING:  WatchFiles detected changes in 'app/api/hybrid_devices.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-2025-10-08 08:07:22,591 - app.main - INFO - Shutting down SmartVenue backend...
-2025-10-08 08:07:22,591 - app.services.tv_status_poller - INFO - ⏹️  Stopping TV status polling service
-2025-10-08 08:07:22,591 - app.main - INFO - TV status polling service stopped
-2025-10-08 08:07:22,591 - app.services.device_status_checker - INFO - Device status monitoring stopped
-2025-10-08 08:07:22,591 - app.main - INFO - Device status monitoring stopped
-2025-10-08 08:07:22,591 - app.services.schedule_processor - INFO - Stopping schedule processor...
-2025-10-08 08:07:22,591 - app.services.schedule_processor - INFO - ✅ Schedule processor stopped
-2025-10-08 08:07:22,591 - app.main - INFO - Schedule processor stopped
-2025-10-08 08:07:22,591 - apscheduler.scheduler - INFO - Scheduler has been shut down
-2025-10-08 08:07:22,591 - app.services.history_cleanup - INFO - History cleanup loop cancelled
-2025-10-08 08:07:22,592 - app.services.history_cleanup - INFO - History cleanup service stopped
-2025-10-08 08:07:22,592 - app.main - INFO - History cleanup service stopped
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Stopping queue processor...
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 0 cancelled
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 0 stopped
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 1 cancelled
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 1 stopped
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 2 cancelled
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - Worker 2 stopped
-2025-10-08 08:07:22,592 - app.services.queue_processor - INFO - ✓ Queue processor stopped
-2025-10-08 08:07:22,592 - app.main - INFO - Command queue processor stopped
-2025-10-08 08:07:22,592 - app.services.device_health - INFO - Stopping device health monitoring service
-2025-10-08 08:07:22,592 - app.main - INFO - Device health monitoring stopped
-2025-10-08 08:07:22,592 - app.services.discovery - INFO - Stopping device discovery...
-2025-10-08 08:07:22,592 - app.services.discovery - INFO - Device discovery stopped
-2025-10-08 08:07:22,592 - app.main - INFO - Device discovery stopped
-INFO:     Application shutdown complete.
-INFO:     Finished server process [601558]
-Template seeding complete; using dynamic IR library system.
-/home/coastal/smartvenue/venv/lib/python3.12/site-packages/pydantic/_internal/_fields.py:149: UserWarning: Field "model_info" has conflict with protected namespace "model_".
-
-You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
-  warnings.warn(
-INFO:     Started server process [602107]
-INFO:     Waiting for application startup.
-2025-10-08 08:07:24,858 - app.main - INFO - Starting SmartVenue backend...
-2025-10-08 08:07:24,866 - app.main - INFO - Database tables created
-2025-10-08 08:07:24,897 - app.main - INFO - Database initialized with seed data
-2025-10-08 08:07:24,898 - app.services.discovery - INFO - Starting ESPHome device discovery...
-2025-10-08 08:07:24,899 - app.services.discovery - INFO - Device discovery started
-2025-10-08 08:07:24,899 - app.main - INFO - Device discovery started
-2025-10-08 08:07:24,899 - app.services.device_health - INFO - Starting device health monitoring service
-2025-10-08 08:07:24,899 - app.main - INFO - Device health monitoring started
-2025-10-08 08:07:24,899 - app.services.queue_processor - INFO - Starting queue processor with 3 workers...
-2025-10-08 08:07:24,899 - app.services.queue_processor - INFO - ✓ Queue processor started with 3 workers
-2025-10-08 08:07:24,899 - app.main - INFO - Command queue processor started
-2025-10-08 08:07:24,899 - app.services.history_cleanup - INFO - History cleanup service started (retention: 7 days, cleanup time: 03:00:00)
-2025-10-08 08:07:24,899 - app.main - INFO - History cleanup service started
-2025-10-08 08:07:24,899 - app.services.schedule_processor - INFO - Starting schedule processor...
-2025-10-08 08:07:24,901 - tzlocal - WARNING - /etc/timezone is deprecated in some distros, and no longer reliable. tzlocal is ignoring it, and you can likely delete it.
-2025-10-08 08:07:24,903 - app.services.schedule_processor - INFO - Loading 1 active schedules...
-2025-10-08 08:07:24,903 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
-2025-10-08 08:07:24,903 - app.services.schedule_processor - INFO -   ✓ Loaded schedule: Test Update2 (ID: 1)
-2025-10-08 08:07:24,903 - app.services.schedule_processor - INFO - ✅ Loaded 1 schedules
-2025-10-08 08:07:24,904 - apscheduler.scheduler - INFO - Added job "Test Update2" to job store "default"
-2025-10-08 08:07:24,904 - apscheduler.scheduler - INFO - Scheduler started
-2025-10-08 08:07:24,904 - app.services.schedule_processor - INFO - ✅ Schedule processor started successfully
-2025-10-08 08:07:24,904 - app.main - INFO - Schedule processor started
-2025-10-08 08:07:24,904 - app.services.device_status_checker - INFO - Device status monitoring started
-2025-10-08 08:07:24,904 - app.main - INFO - Device status monitoring started
-2025-10-08 08:07:24,904 - app.services.tv_status_poller - INFO - 🔄 Starting TV status polling service
-2025-10-08 08:07:24,904 - app.main - INFO - TV status polling service started
-2025-10-08 08:07:24,905 - app.services.queue_processor - INFO - Worker 0 started
-2025-10-08 08:07:24,911 - app.services.queue_processor - INFO - Worker 1 started
-2025-10-08 08:07:24,912 - app.services.queue_processor - INFO - Worker 2 started
-2025-10-08 08:07:24,913 - app.services.history_cleanup - INFO - Next history cleanup scheduled for 2025-10-09 03:00:00 (in 18.9 hours)
-2025-10-08 08:07:24,921 - app.services.device_status_checker - INFO - Checking status of 4 devices
-INFO:     Application startup complete.
-2025-10-08 08:07:28,002 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
-2025-10-08 08:07:28,002 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
-2025-10-08 08:07:28,002 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
-2025-10-08 08:07:28,002 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
-2025-10-08 08:07:28,009 - app.main - ERROR - Error saving discovered device to database: no running event loop
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48378 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39258 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50361 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50361 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50539 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:59651 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:39260 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40528 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:40542 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60690 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60692 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37230 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37242 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57056 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57068 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:54013 - 2025-10-08 08:47:49,406 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 08:49:08,588 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 08:49:08,589 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 08:49:10,074 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 08:49:10,074 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 08:49:10,074 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 08:49:11,266 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 08:49:13,186 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 08:49:16,258 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 08:49:19,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 08:49:22,402 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 08:49:25,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 08:49:28,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 08:49:28,630 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 08:49:31,682 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 08:49:34,754 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 08:49:37,826 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 08:49:38,196 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 08:49:38,197 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 08:49:39,846 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 08:49:39,846 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 08:49:39,846 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 08:49:39,846 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 08:49:39,847 - app.main - ERROR - Error saving discovered device to database: no running event loop
 /home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
   db.rollback()
 RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-2025-10-08 08:07:28,092 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-office._esphomelib._tcp.local.
-2025-10-08 08:07:28,092 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-office at 192.168.101.34:6053
-2025-10-08 08:07:28,092 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-office (192.168.101.34)
-2025-10-08 08:07:28,092 - app.main - INFO - New device discovered: bt-proxy-office (192.168.101.34)
-2025-10-08 08:07:28,097 - app.main - INFO - Saved bt-proxy-office to DeviceDiscovery table
-2025-10-08 08:07:28,106 - app.services.discovery - INFO - mDNS service discovered: kitchen-fan._esphomelib._tcp.local.
-2025-10-08 08:07:28,106 - app.services.discovery - INFO - Processing mDNS device: kitchen-fan at 192.168.101.29:6053
-2025-10-08 08:07:28,106 - app.services.discovery - INFO - Discovered ESPHome device: kitchen-fan (192.168.101.29)
-2025-10-08 08:07:28,106 - app.main - INFO - New device discovered: kitchen-fan (192.168.101.29)
-2025-10-08 08:07:28,113 - app.main - INFO - Saved kitchen-fan to DeviceDiscovery table
-2025-10-08 08:07:28,115 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
-2025-10-08 08:07:28,115 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
-2025-10-08 08:07:28,115 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
-2025-10-08 08:07:28,115 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
-2025-10-08 08:07:28,121 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
-2025-10-08 08:07:28,173 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
-2025-10-08 08:07:28,173 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
-2025-10-08 08:07:28,173 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
-2025-10-08 08:07:28,173 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
-2025-10-08 08:07:28,176 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
-2025-10-08 08:07:28,195 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
-2025-10-08 08:07:28,196 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
-2025-10-08 08:07:28,196 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
-2025-10-08 08:07:28,196 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
-2025-10-08 08:07:28,199 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
-2025-10-08 08:07:28,213 - app.services.discovery - INFO - mDNS service discovered: esp32-bluetooth-proxy-f32ccc._esphomelib._tcp.local.
-2025-10-08 08:07:28,214 - app.services.discovery - INFO - Processing mDNS device: esp32-bluetooth-proxy-f32ccc at 192.168.101.37:6053
-2025-10-08 08:07:28,214 - app.services.discovery - INFO - Discovered ESPHome device: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
-2025-10-08 08:07:28,214 - app.main - INFO - New device discovered: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
-2025-10-08 08:07:28,217 - app.main - INFO - Saved esp32-bluetooth-proxy-f32ccc to DeviceDiscovery table
-2025-10-08 08:07:28,223 - app.services.discovery - INFO - mDNS service discovered: waterheater._esphomelib._tcp.local.
-2025-10-08 08:07:28,223 - app.services.discovery - INFO - Processing mDNS device: waterheater at 192.168.101.73:6053
-2025-10-08 08:07:28,223 - app.services.discovery - INFO - Discovered ESPHome device: waterheater (192.168.101.73)
-2025-10-08 08:07:28,223 - app.main - INFO - New device discovered: waterheater (192.168.101.73)
-2025-10-08 08:07:28,226 - app.main - INFO - Saved waterheater to DeviceDiscovery table
-2025-10-08 08:07:28,315 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-garage._esphomelib._tcp.local.
-2025-10-08 08:07:28,315 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-garage at 192.168.101.38:6053
-2025-10-08 08:07:28,315 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-garage (192.168.101.38)
-2025-10-08 08:07:28,315 - app.main - INFO - New device discovered: bt-proxy-garage (192.168.101.38)
-2025-10-08 08:07:28,318 - app.main - INFO - Saved bt-proxy-garage to DeviceDiscovery table
-2025-10-08 08:07:29,045 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
-2025-10-08 08:07:29,045 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
-2025-10-08 08:07:29,045 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
-2025-10-08 08:07:29,045 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
-2025-10-08 08:07:29,046 - app.main - ERROR - Error saving discovered device to database: no running event loop
-2025-10-08 08:07:29,125 - app.services.discovery - INFO - mDNS service discovered: loungefan._esphomelib._tcp.local.
-2025-10-08 08:07:29,126 - app.services.discovery - INFO - Processing mDNS device: loungefan at 192.168.101.39:6053
-2025-10-08 08:07:29,126 - app.services.discovery - INFO - Discovered ESPHome device: loungefan (192.168.101.39)
-2025-10-08 08:07:29,126 - app.main - INFO - New device discovered: loungefan (192.168.101.39)
-2025-10-08 08:07:29,129 - app.main - INFO - Saved loungefan to DeviceDiscovery table
-2025-10-08 08:07:29,134 - app.services.discovery - INFO - mDNS service discovered: rearpowerboardmonitor._esphomelib._tcp.local.
-2025-10-08 08:07:29,134 - app.services.discovery - INFO - Processing mDNS device: rearpowerboardmonitor at 192.168.101.27:6053
-2025-10-08 08:07:29,134 - app.services.discovery - INFO - Discovered ESPHome device: rearpowerboardmonitor (192.168.101.27)
-2025-10-08 08:07:29,134 - app.main - INFO - New device discovered: rearpowerboardmonitor (192.168.101.27)
-2025-10-08 08:07:29,141 - app.main - INFO - Saved rearpowerboardmonitor to DeviceDiscovery table
-2025-10-08 08:07:42,281 - app.services.discovery - INFO - mDNS service discovered: presence-garage._esphomelib._tcp.local.
-2025-10-08 08:07:42,281 - app.services.discovery - INFO - Processing mDNS device: presence-garage at 192.168.101.21:6053
-2025-10-08 08:07:42,281 - app.services.discovery - INFO - Discovered ESPHome device: presence-garage (192.168.101.21)
-2025-10-08 08:07:42,281 - app.main - INFO - New device discovered: presence-garage (192.168.101.21)
-2025-10-08 08:07:42,285 - app.main - INFO - Saved presence-garage to DeviceDiscovery table
-2025-10-08 08:12:24,904 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:12:24,906 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:12:27,840 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:12:27,899 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:12:27,998 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:12:31,107 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:12:31,300 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:12:31,305 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:17:31,055 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:17:34,115 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:17:34,116 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:17:36,843 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:17:44,116 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
-2025-10-08 08:17:44,116 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
-2025-10-08 08:17:47,170 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
-2025-10-08 08:17:50,242 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
-2025-10-08 08:17:53,314 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
-2025-10-08 08:17:56,386 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
-2025-10-08 08:17:59,458 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
-2025-10-08 08:18:02,530 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
-2025-10-08 08:18:02,598 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
-2025-10-08 08:18:05,666 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
-2025-10-08 08:18:08,738 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
-2025-10-08 08:18:11,810 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
-2025-10-08 08:18:14,479 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:18:14,495 - app.services.device_health - INFO - Found device ir-dc4516 at new IP: 192.168.101.146
-2025-10-08 08:18:14,686 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:18:15,093 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:18:15,097 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:21:32,093 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
-2025-10-08 08:21:32,093 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
-2025-10-08 08:21:32,093 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
-2025-10-08 08:21:32,093 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
-2025-10-08 08:21:32,096 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
-2025-10-08 08:21:32,096 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
-2025-10-08 08:21:32,097 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
-2025-10-08 08:21:32,097 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
-2025-10-08 08:21:32,097 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
-2025-10-08 08:21:32,103 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
-2025-10-08 08:22:34,113 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:23:15,096 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:23:15,097 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:23:17,713 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:23:18,265 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:23:18,461 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:23:18,780 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:23:18,785 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:27:37,172 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:28:18,786 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:28:18,787 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:28:21,193 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:28:21,205 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:28:21,400 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:28:21,600 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:28:21,605 - app.services.device_health - INFO - Health check complete: 2/2 devices online
-2025-10-08 08:32:40,230 - app.services.device_status_checker - INFO - Checking status of 4 devices
-2025-10-08 08:33:21,605 - app.services.device_health - INFO - Starting scheduled device health check
-2025-10-08 08:33:21,606 - app.services.device_health - INFO - Checking health of 2 managed devices
-2025-10-08 08:33:24,246 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
-2025-10-08 08:33:31,607 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
-2025-10-08 08:33:31,608 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
-2025-10-08 08:33:34,358 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
-2025-10-08 08:33:34,358 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
-2025-10-08 08:33:34,358 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
-2025-10-08 08:33:34,358 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
-2025-10-08 08:33:34,359 - app.main - ERROR - Error saving discovered device to database: no running event loop
+2025-10-08 08:49:39,852 - app.services.discovery - INFO - mDNS service discovered: rearpowerboardmonitor._esphomelib._tcp.local.
+2025-10-08 08:49:39,852 - app.services.discovery - INFO - Processing mDNS device: rearpowerboardmonitor at 192.168.101.27:6053
+2025-10-08 08:49:39,852 - app.services.discovery - INFO - Discovered ESPHome device: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 08:49:39,852 - app.main - INFO - New device discovered: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 08:49:39,859 - app.main - INFO - Saved rearpowerboardmonitor to DeviceDiscovery table
+2025-10-08 08:49:39,902 - app.services.discovery - INFO - mDNS service discovered: loungefan._esphomelib._tcp.local.
+2025-10-08 08:49:39,902 - app.services.discovery - INFO - Processing mDNS device: loungefan at 192.168.101.39:6053
+2025-10-08 08:49:39,902 - app.services.discovery - INFO - Discovered ESPHome device: loungefan (192.168.101.39)
+2025-10-08 08:49:39,902 - app.main - INFO - New device discovered: loungefan (192.168.101.39)
+2025-10-08 08:49:39,905 - app.main - INFO - Saved loungefan to DeviceDiscovery table
+2025-10-08 08:49:39,906 - app.services.discovery - INFO - mDNS service discovered: kitchen-fan._esphomelib._tcp.local.
+2025-10-08 08:49:39,906 - app.services.discovery - INFO - Processing mDNS device: kitchen-fan at 192.168.101.29:6053
+2025-10-08 08:49:39,906 - app.services.discovery - INFO - Discovered ESPHome device: kitchen-fan (192.168.101.29)
+2025-10-08 08:49:39,906 - app.main - INFO - New device discovered: kitchen-fan (192.168.101.29)
+2025-10-08 08:49:39,913 - app.main - INFO - Saved kitchen-fan to DeviceDiscovery table
+2025-10-08 08:49:39,923 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-office._esphomelib._tcp.local.
+2025-10-08 08:49:39,923 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-office at 192.168.101.34:6053
+2025-10-08 08:49:39,923 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-office (192.168.101.34)
+2025-10-08 08:49:39,923 - app.main - INFO - New device discovered: bt-proxy-office (192.168.101.34)
+2025-10-08 08:49:39,930 - app.main - INFO - Saved bt-proxy-office to DeviceDiscovery table
+2025-10-08 08:49:39,930 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 08:49:39,930 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 08:49:39,930 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 08:49:39,930 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 08:49:39,936 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 08:49:39,953 - app.services.discovery - INFO - mDNS service discovered: presence-garage._esphomelib._tcp.local.
+2025-10-08 08:49:39,953 - app.services.discovery - INFO - Processing mDNS device: presence-garage at 192.168.101.21:6053
+2025-10-08 08:49:39,953 - app.services.discovery - INFO - Discovered ESPHome device: presence-garage (192.168.101.21)
+2025-10-08 08:49:39,953 - app.main - INFO - New device discovered: presence-garage (192.168.101.21)
+2025-10-08 08:49:39,957 - app.main - INFO - Saved presence-garage to DeviceDiscovery table
+2025-10-08 08:49:39,957 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 08:49:39,957 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 08:49:39,957 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 08:49:39,957 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 08:49:39,967 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+2025-10-08 08:49:39,967 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 08:49:39,967 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 08:49:39,967 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 08:49:39,967 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 08:49:39,973 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 08:49:39,997 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-garage._esphomelib._tcp.local.
+2025-10-08 08:49:39,998 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-garage at 192.168.101.38:6053
+2025-10-08 08:49:39,998 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-garage (192.168.101.38)
+2025-10-08 08:49:39,998 - app.main - INFO - New device discovered: bt-proxy-garage (192.168.101.38)
+2025-10-08 08:49:40,004 - app.main - INFO - Saved bt-proxy-garage to DeviceDiscovery table
+2025-10-08 08:49:40,008 - app.services.discovery - INFO - mDNS service discovered: esp32-bluetooth-proxy-f32ccc._esphomelib._tcp.local.
+2025-10-08 08:49:40,008 - app.services.discovery - INFO - Processing mDNS device: esp32-bluetooth-proxy-f32ccc at 192.168.101.37:6053
+2025-10-08 08:49:40,008 - app.services.discovery - INFO - Discovered ESPHome device: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 08:49:40,008 - app.main - INFO - New device discovered: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 08:49:40,015 - app.main - INFO - Saved esp32-bluetooth-proxy-f32ccc to DeviceDiscovery table
+2025-10-08 08:49:40,024 - app.services.discovery - INFO - mDNS service discovered: waterheater._esphomelib._tcp.local.
+2025-10-08 08:49:40,024 - app.services.discovery - INFO - Processing mDNS device: waterheater at 192.168.101.73:6053
+2025-10-08 08:49:40,024 - app.services.discovery - INFO - Discovered ESPHome device: waterheater (192.168.101.73)
+2025-10-08 08:49:40,024 - app.main - INFO - New device discovered: waterheater (192.168.101.73)
+2025-10-08 08:49:40,027 - app.main - INFO - Saved waterheater to DeviceDiscovery table
+2025-10-08 08:49:41,282 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 08:49:44,354 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 08:49:47,426 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 08:49:50,498 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 08:49:53,570 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 08:49:56,642 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 08:49:56,643 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 08:49:59,714 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 08:50:09,715 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 08:50:12,770 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 08:50:12,947 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 08:50:12,952 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 08:52:52,463 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 08:55:12,953 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 08:55:12,953 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 08:55:14,643 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 08:55:14,643 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 08:55:14,643 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 08:55:15,394 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 08:55:17,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 08:55:20,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 08:55:23,874 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 08:55:26,946 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 08:55:30,018 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 08:55:33,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 08:55:33,181 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 08:55:36,291 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 08:55:39,362 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 08:55:42,434 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 08:55:44,865 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 08:55:44,866 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 08:55:47,938 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 08:55:51,010 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 08:55:54,082 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 08:55:57,154 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 08:56:00,226 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 08:56:03,298 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 08:56:03,299 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 08:56:06,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 08:56:16,370 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 08:56:19,426 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 08:56:19,604 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 08:56:19,608 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 08:57:15,765 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 08:57:15,765 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 08:57:15,766 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 08:57:15,766 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 08:57:15,766 - app.main - ERROR - Error saving discovered device to database: no running event loop
 /home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
   db.rollback()
 RuntimeWarning: Enable tracemalloc to get the object allocation traceback
-2025-10-08 08:33:34,690 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
-2025-10-08 08:33:37,762 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
-2025-10-08 08:33:40,834 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
-2025-10-08 08:33:43,906 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
-2025-10-08 08:33:46,978 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
-2025-10-08 08:33:50,050 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
-2025-10-08 08:33:50,117 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
-2025-10-08 08:33:53,186 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
-2025-10-08 08:33:56,258 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
-2025-10-08 08:33:59,330 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
-2025-10-08 08:34:01,759 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
-2025-10-08 08:34:01,801 - app.services.device_health - INFO - Found device ir-dc4516 at new IP: 192.168.101.146
-2025-10-08 08:34:01,994 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
-2025-10-08 08:34:02,192 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
-2025-10-08 08:34:02,197 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 08:57:53,156 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 08:57:53,157 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 08:57:53,157 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 08:57:53,157 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 08:57:53,157 - app.main - ERROR - Error saving discovered device to database: no running event loop
+2025-10-08 08:57:55,520 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:01:19,609 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:01:19,609 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:01:22,092 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:01:22,705 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:01:22,923 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:01:23,165 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:01:23,169 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:02:58,577 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:03:43,784 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:03:43,784 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:03:43,784 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:03:43,784 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:03:43,787 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:03:43,812 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:03:43,813 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:03:43,813 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:03:43,813 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:03:43,816 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:06:23,170 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:06:23,170 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:06:26,108 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:06:26,626 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:06:26,857 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:06:27,038 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:06:27,042 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:08:01,635 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:11:27,042 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:11:27,043 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:11:29,550 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:11:30,004 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:11:30,202 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:11:30,397 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:11:30,401 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:13:04,690 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:15:37,366 - app.services.discovery - INFO - Removed ESPHome device: ir-dc4516
+2025-10-08 09:15:37,366 - app.main - INFO - Device removed: ir-dc4516
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 09:16:01,522 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 09:16:01,523 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-10-08 09:16:30,401 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:16:30,402 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:16:32,839 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:16:38,575 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:16:38,801 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:16:38,974 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:16:38,980 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:17:47,641 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:17:47,648 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:17:47,659 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:17:47,659 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:17:47,659 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:17:47,659 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:17:47,662 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:18:07,749 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:18:10,806 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 09:18:10,809 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 09:18:10,809 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 09:18:10,809 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 09:18:10,812 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+2025-10-08 09:21:38,981 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:21:38,981 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:21:39,326 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:21:39,326 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:21:39,326 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:21:41,748 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:21:42,434 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 09:21:45,506 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:21:48,579 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 09:21:51,650 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 09:21:54,722 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 09:21:57,794 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:21:57,847 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:22:00,930 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 09:22:04,002 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:22:07,074 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 09:22:09,101 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:22:09,102 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:22:12,194 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 09:22:15,266 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 09:22:18,338 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 09:22:21,410 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 09:22:24,482 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 09:22:27,554 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 09:22:27,555 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 09:22:30,626 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 09:22:40,627 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:22:43,682 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 09:22:43,869 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:22:43,873 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 09:23:10,806 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:27:43,874 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:27:43,874 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:27:45,553 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:27:45,554 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:27:45,554 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:27:46,321 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:27:48,642 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 09:27:51,714 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:27:54,786 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 09:27:57,858 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 09:28:00,930 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 09:28:04,002 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:28:04,035 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:28:07,138 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 09:28:10,210 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:28:13,282 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 09:28:13,865 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:28:17,397 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:28:17,397 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:28:20,450 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 09:28:23,522 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 09:28:26,594 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 09:28:29,666 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 09:28:32,738 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 09:28:35,810 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 09:28:35,811 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 09:28:38,882 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 09:28:48,883 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:28:51,938 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 09:28:52,159 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:28:52,163 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 09:31:51,421 - app.services.discovery - INFO - mDNS service discovered: kitchen-fan._esphomelib._tcp.local.
+2025-10-08 09:31:51,422 - app.services.discovery - INFO - Processing mDNS device: kitchen-fan at 192.168.101.29:6053
+2025-10-08 09:31:51,422 - app.services.discovery - INFO - Discovered ESPHome device: kitchen-fan (192.168.101.29)
+2025-10-08 09:31:51,422 - app.main - INFO - New device discovered: kitchen-fan (192.168.101.29)
+2025-10-08 09:31:51,431 - app.main - INFO - Saved kitchen-fan to DeviceDiscovery table
+2025-10-08 09:31:51,464 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:31:51,465 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:31:51,465 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:31:51,465 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:31:51,473 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:31:51,479 - app.services.discovery - INFO - mDNS service discovered: loungefan._esphomelib._tcp.local.
+2025-10-08 09:31:51,480 - app.services.discovery - INFO - Processing mDNS device: loungefan at 192.168.101.39:6053
+2025-10-08 09:31:51,481 - app.services.discovery - INFO - Discovered ESPHome device: loungefan (192.168.101.39)
+2025-10-08 09:31:51,481 - app.main - INFO - New device discovered: loungefan (192.168.101.39)
+2025-10-08 09:31:51,494 - app.main - INFO - Saved loungefan to DeviceDiscovery table
+2025-10-08 09:31:51,495 - app.services.discovery - INFO - mDNS service discovered: rearpowerboardmonitor._esphomelib._tcp.local.
+2025-10-08 09:31:51,496 - app.services.discovery - INFO - Processing mDNS device: rearpowerboardmonitor at 192.168.101.27:6053
+2025-10-08 09:31:51,496 - app.services.discovery - INFO - Discovered ESPHome device: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 09:31:51,496 - app.main - INFO - New device discovered: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 09:31:51,508 - app.main - INFO - Saved rearpowerboardmonitor to DeviceDiscovery table
+2025-10-08 09:31:51,511 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 09:31:51,512 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 09:31:51,512 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 09:31:51,512 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 09:31:51,528 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+2025-10-08 09:31:51,549 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:31:51,550 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:31:51,550 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:31:51,550 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:31:51,558 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:31:51,573 - app.services.discovery - INFO - mDNS service discovered: presence-garage._esphomelib._tcp.local.
+2025-10-08 09:31:51,574 - app.services.discovery - INFO - Processing mDNS device: presence-garage at 192.168.101.21:6053
+2025-10-08 09:31:51,574 - app.services.discovery - INFO - Discovered ESPHome device: presence-garage (192.168.101.21)
+2025-10-08 09:31:51,575 - app.main - INFO - New device discovered: presence-garage (192.168.101.21)
+2025-10-08 09:31:51,585 - app.main - INFO - Saved presence-garage to DeviceDiscovery table
+2025-10-08 09:31:51,585 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-office._esphomelib._tcp.local.
+2025-10-08 09:31:51,585 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-office at 192.168.101.34:6053
+2025-10-08 09:31:51,586 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-office (192.168.101.34)
+2025-10-08 09:31:51,586 - app.main - INFO - New device discovered: bt-proxy-office (192.168.101.34)
+2025-10-08 09:31:51,598 - app.main - INFO - Saved bt-proxy-office to DeviceDiscovery table
+2025-10-08 09:32:00,664 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-garage._esphomelib._tcp.local.
+2025-10-08 09:32:00,665 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-garage at 192.168.101.38:6053
+2025-10-08 09:32:00,665 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-garage (192.168.101.38)
+2025-10-08 09:32:00,665 - app.main - INFO - New device discovered: bt-proxy-garage (192.168.101.38)
+2025-10-08 09:32:00,668 - app.main - INFO - Saved bt-proxy-garage to DeviceDiscovery table
+2025-10-08 09:32:00,755 - app.services.discovery - INFO - mDNS service discovered: esp32-bluetooth-proxy-f32ccc._esphomelib._tcp.local.
+2025-10-08 09:32:00,756 - app.services.discovery - INFO - Processing mDNS device: esp32-bluetooth-proxy-f32ccc at 192.168.101.37:6053
+2025-10-08 09:32:00,756 - app.services.discovery - INFO - Discovered ESPHome device: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 09:32:00,756 - app.main - INFO - New device discovered: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 09:32:00,759 - app.main - INFO - Saved esp32-bluetooth-proxy-f32ccc to DeviceDiscovery table
+2025-10-08 09:32:00,759 - app.services.discovery - INFO - mDNS service discovered: waterheater._esphomelib._tcp.local.
+2025-10-08 09:32:00,759 - app.services.discovery - INFO - Processing mDNS device: waterheater at 192.168.101.73:6053
+2025-10-08 09:32:00,759 - app.services.discovery - INFO - Discovered ESPHome device: waterheater (192.168.101.73)
+2025-10-08 09:32:00,759 - app.main - INFO - New device discovered: waterheater (192.168.101.73)
+2025-10-08 09:32:00,762 - app.main - INFO - Saved waterheater to DeviceDiscovery table
+2025-10-08 09:33:16,923 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:33:47,650 - app.services.discovery - INFO - Removed ESPHome device: ir-dc4516
+2025-10-08 09:33:47,650 - app.main - INFO - Device removed: ir-dc4516
+2025-10-08 09:33:52,163 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:33:52,163 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:33:54,909 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:34:02,163 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:34:02,163 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:34:05,218 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 09:34:08,290 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:34:11,362 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 09:34:14,434 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 09:34:17,506 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 09:34:20,578 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:34:20,670 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:34:20,787 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 09:34:20,788 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 09:34:20,788 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 09:34:20,788 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 09:34:20,788 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-10-08 09:34:23,778 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 09:34:26,850 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:34:29,922 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 09:34:32,347 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:32,360 - app.services.device_health - INFO - Found device ir-dc4516 at new IP: 192.168.101.146
+2025-10-08 09:34:32,580 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:34:32,761 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:32,766 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:38:19,980 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:39:32,766 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:39:32,767 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:39:35,192 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:39:35,260 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:39:35,457 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:39:35,789 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:39:35,804 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:39:41,411 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 09:39:41,415 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 09:39:41,415 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 09:39:41,415 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 09:39:41,416 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-10-08 09:40:28,373 - app.services.discovery - INFO - Removed ESPHome device: ir-dca09e
+2025-10-08 09:40:28,373 - app.main - INFO - Device removed: ir-dca09e
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:54,437 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:54,438 - app.main - ERROR - Error saving discovered device to database: no running event loop
+2025-10-08 09:43:23,038 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:44:35,806 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:44:35,807 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:44:38,468 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:44:38,503 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:44:38,715 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:44:38,947 - aioesphomeapi.connection - ERROR - 192.168.101.146: disconnect request failed: 192.168.101.146: EOF received
+2025-10-08 09:44:38,947 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:44:38,952 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:45:55,325 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:45:55,328 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:45:55,363 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:45:55,366 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:48:26,096 - app.services.device_status_checker - INFO - Checking status of 4 devices
+covery table
+2025-10-08 09:03:43,812 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:03:43,813 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:03:43,813 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:03:43,813 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:03:43,819 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:06:46,694 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:06:46,694 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:06:49,103 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:06:49,193 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:06:49,398 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:06:49,592 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:06:49,596 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:08:01,580 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:64834 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64834 - "GET /api/v1/templates/1 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52437 - "OPTIONS /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56670 - "GET /api/v1/templates/device-hierarchy HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61958 - "GET /api/v1/settings/app?include_private=true HTTP/1.1" 200 OK
+INFO:     100.98.57.42:55728 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52437 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:52437 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59203 - "OPTIONS /api/v1/templates/compile-stream HTTP/1.1" 200 OK
+INFO:     100.98.57.42:59203 - "POST /api/v1/templates/compile-stream HTTP/1.1" 200 OK
+2025-10-08 09:11:49,597 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:11:49,597 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:11:51,988 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:11:52,032 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:11:52,313 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:11:52,505 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:11:52,510 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:13:04,637 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:65526 - "OPTIONS /api/v1/templates/ota-stream HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65526 - "POST /api/v1/templates/ota-stream HTTP/1.1" 200 OK
+2025-10-08 09:15:32,599 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:15:32,637 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:15:32,638 - esphome.espota2 - INFO - Connecting to 192.168.101.146 port 3232...
+2025-10-08 09:15:32,642 - esphome.espota2 - ERROR - Connecting to 192.168.101.146 port 3232 failed: [Errno 111] Connection refused
+2025-10-08 09:15:32,642 - esphome.espota2 - ERROR - Connection failed.
+2025-10-08 09:15:32,642 - esphome.espota2 - INFO - Connecting to 192.168.101.146 port 8266...
+2025-10-08 09:15:32,644 - esphome.espota2 - INFO - Connected to 192.168.101.146
+2025-10-08 09:15:32,645 - esphome.espota2 - INFO - Uploading /tmp/smartvenue-esphome/builds/firmware_10c26a25-21f3-4546-9bff-c7432543951e.bin (524304 bytes)
+2025-10-08 09:15:32,699 - esphome.espota2 - INFO - Compressed to 371642 bytes
+2025-10-08 09:15:37,199 - esphome.espota2 - INFO - Upload took 4.47 seconds, waiting for result...
+2025-10-08 09:15:37,242 - esphome.espota2 - INFO - OTA successful
+2025-10-08 09:15:38,243 - app.services.discovery - INFO - Removed ESPHome device: ir-dc4516
+2025-10-08 09:15:38,243 - app.main - INFO - Device removed: ir-dc4516
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 09:16:01,522 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 09:16:01,522 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 09:16:01,523 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-10-08 09:16:16,412 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:16:16,442 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:16:19,226 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:16:24,349 - app.services.esphome_client - WARNING - Timed out waiting for capabilities from ir-dc4516
+INFO:     100.98.57.42:49952 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49952 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+2025-10-08 09:16:34,350 - aioesphomeapi.connection - ERROR - 192.168.101.146: disconnect request failed: Timeout waiting for DisconnectResponse after 10.0s
+2025-10-08 09:16:34,350 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:16:52,510 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:16:52,510 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:16:54,958 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:16:55,253 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:16:55,475 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:16:55,658 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:16:55,662 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:17:47,641 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:17:47,641 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:17:47,644 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:17:47,658 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:17:47,659 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:17:47,659 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:17:47,659 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:17:47,665 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:18:07,696 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:18:10,755 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 09:18:10,757 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 09:18:10,757 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 09:18:10,757 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 09:18:10,761 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+2025-10-08 09:21:55,662 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:21:55,663 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:21:57,105 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:21:57,105 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:21:57,106 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:21:58,128 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:22:00,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 09:22:03,234 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:22:06,306 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 09:22:09,378 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 09:22:12,450 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 09:22:15,522 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:22:15,562 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:22:18,658 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 09:22:21,730 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:22:24,802 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 09:22:26,227 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:22:26,227 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:22:29,282 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 09:22:32,354 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 09:22:35,426 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 09:22:38,498 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 09:22:41,570 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 09:22:44,642 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 09:22:44,643 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 09:22:47,714 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 09:22:57,715 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:23:00,770 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 09:23:00,963 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:23:00,968 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 09:23:10,755 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:28:00,969 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:28:00,969 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:28:02,382 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:28:02,382 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:28:02,382 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:28:03,650 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:28:05,474 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+2025-10-08 09:28:08,546 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:28:11,618 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.138', 6053): [Errno 113] Connect call failed ('192.168.101.138', 6053)
+2025-10-08 09:28:13,813 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:28:16,873 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+2025-10-08 09:28:19,938 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.140', 6053): [Errno 113] Connect call failed ('192.168.101.140', 6053)
+2025-10-08 09:28:23,010 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:28:23,082 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:28:26,146 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.143', 6053): [Errno 113] Connect call failed ('192.168.101.143', 6053)
+2025-10-08 09:28:29,218 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:28:32,290 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.145', 6053): [Errno 113] Connect call failed ('192.168.101.145', 6053)
+2025-10-08 09:28:33,984 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:28:33,984 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:28:37,090 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.147', 6053): [Errno 113] Connect call failed ('192.168.101.147', 6053)
+2025-10-08 09:28:40,162 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.148', 6053): [Errno 113] Connect call failed ('192.168.101.148', 6053)
+2025-10-08 09:28:43,234 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.149', 6053): [Errno 113] Connect call failed ('192.168.101.149', 6053)
+2025-10-08 09:28:46,306 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.150', 6053): [Errno 113] Connect call failed ('192.168.101.150', 6053)
+2025-10-08 09:28:49,378 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.151', 6053): [Errno 113] Connect call failed ('192.168.101.151', 6053)
+2025-10-08 09:28:52,450 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.152', 6053): [Errno 113] Connect call failed ('192.168.101.152', 6053)
+2025-10-08 09:28:52,451 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.153', 6053): [Errno 111] Connect call failed ('192.168.101.153', 6053)
+2025-10-08 09:28:55,522 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.154', 6053): [Errno 113] Connect call failed ('192.168.101.154', 6053)
+2025-10-08 09:29:05,523 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:29:08,578 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.156', 6053): [Errno 113] Connect call failed ('192.168.101.156', 6053)
+2025-10-08 09:29:08,788 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:29:08,793 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+INFO:     100.98.57.42:61459 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "GET /api/v1/templates/1 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61252 - "OPTIONS /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:63545 - "GET /api/v1/templates/device-hierarchy HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50991 - "GET /api/v1/settings/app?include_private=true HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50678 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "OPTIONS /api/v1/templates/compile-stream HTTP/1.1" 200 OK
+INFO:     100.98.57.42:61459 - "POST /api/v1/templates/compile-stream HTTP/1.1" 200 OK
+2025-10-08 09:32:02,129 - app.services.discovery - INFO - mDNS service discovered: kitchen-fan._esphomelib._tcp.local.
+2025-10-08 09:32:02,130 - app.services.discovery - INFO - Processing mDNS device: kitchen-fan at 192.168.101.29:6053
+2025-10-08 09:32:02,130 - app.services.discovery - INFO - Discovered ESPHome device: kitchen-fan (192.168.101.29)
+2025-10-08 09:32:02,130 - app.main - INFO - New device discovered: kitchen-fan (192.168.101.29)
+2025-10-08 09:32:02,134 - app.main - INFO - Saved kitchen-fan to DeviceDiscovery table
+2025-10-08 09:32:02,134 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:32:02,134 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:32:02,134 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:32:02,134 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:32:02,137 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+2025-10-08 09:32:02,138 - app.services.discovery - INFO - mDNS service discovered: loungefan._esphomelib._tcp.local.
+2025-10-08 09:32:02,138 - app.services.discovery - INFO - Processing mDNS device: loungefan at 192.168.101.39:6053
+2025-10-08 09:32:02,138 - app.services.discovery - INFO - Discovered ESPHome device: loungefan (192.168.101.39)
+2025-10-08 09:32:02,138 - app.main - INFO - New device discovered: loungefan (192.168.101.39)
+2025-10-08 09:32:02,141 - app.main - INFO - Saved loungefan to DeviceDiscovery table
+2025-10-08 09:32:02,141 - app.services.discovery - INFO - mDNS service discovered: rearpowerboardmonitor._esphomelib._tcp.local.
+2025-10-08 09:32:02,141 - app.services.discovery - INFO - Processing mDNS device: rearpowerboardmonitor at 192.168.101.27:6053
+2025-10-08 09:32:02,141 - app.services.discovery - INFO - Discovered ESPHome device: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 09:32:02,141 - app.main - INFO - New device discovered: rearpowerboardmonitor (192.168.101.27)
+2025-10-08 09:32:02,144 - app.main - INFO - Saved rearpowerboardmonitor to DeviceDiscovery table
+2025-10-08 09:32:02,145 - app.services.discovery - INFO - mDNS service discovered: mainpowermonitor._esphomelib._tcp.local.
+2025-10-08 09:32:02,145 - app.services.discovery - INFO - Processing mDNS device: mainpowermonitor at 192.168.101.43:6053
+2025-10-08 09:32:02,145 - app.services.discovery - INFO - Discovered ESPHome device: mainpowermonitor (192.168.101.43)
+2025-10-08 09:32:02,145 - app.main - INFO - New device discovered: mainpowermonitor (192.168.101.43)
+2025-10-08 09:32:02,148 - app.main - INFO - Saved mainpowermonitor to DeviceDiscovery table
+2025-10-08 09:32:02,148 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:32:02,148 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:32:02,148 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:32:02,148 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:32:02,151 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:32:02,151 - app.services.discovery - INFO - mDNS service discovered: presence-garage._esphomelib._tcp.local.
+2025-10-08 09:32:02,151 - app.services.discovery - INFO - Processing mDNS device: presence-garage at 192.168.101.21:6053
+2025-10-08 09:32:02,151 - app.services.discovery - INFO - Discovered ESPHome device: presence-garage (192.168.101.21)
+2025-10-08 09:32:02,151 - app.main - INFO - New device discovered: presence-garage (192.168.101.21)
+2025-10-08 09:32:02,154 - app.main - INFO - Saved presence-garage to DeviceDiscovery table
+2025-10-08 09:32:02,154 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-office._esphomelib._tcp.local.
+2025-10-08 09:32:02,155 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-office at 192.168.101.34:6053
+2025-10-08 09:32:02,155 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-office (192.168.101.34)
+2025-10-08 09:32:02,155 - app.main - INFO - New device discovered: bt-proxy-office (192.168.101.34)
+2025-10-08 09:32:02,158 - app.main - INFO - Saved bt-proxy-office to DeviceDiscovery table
+2025-10-08 09:32:02,158 - app.services.discovery - INFO - mDNS service discovered: bt-proxy-garage._esphomelib._tcp.local.
+2025-10-08 09:32:02,158 - app.services.discovery - INFO - Processing mDNS device: bt-proxy-garage at 192.168.101.38:6053
+2025-10-08 09:32:02,158 - app.services.discovery - INFO - Discovered ESPHome device: bt-proxy-garage (192.168.101.38)
+2025-10-08 09:32:02,158 - app.main - INFO - New device discovered: bt-proxy-garage (192.168.101.38)
+2025-10-08 09:32:02,161 - app.main - INFO - Saved bt-proxy-garage to DeviceDiscovery table
+2025-10-08 09:32:02,161 - app.services.discovery - INFO - mDNS service discovered: esp32-bluetooth-proxy-f32ccc._esphomelib._tcp.local.
+2025-10-08 09:32:02,161 - app.services.discovery - INFO - Processing mDNS device: esp32-bluetooth-proxy-f32ccc at 192.168.101.37:6053
+2025-10-08 09:32:02,161 - app.services.discovery - INFO - Discovered ESPHome device: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 09:32:02,161 - app.main - INFO - New device discovered: esp32-bluetooth-proxy-f32ccc (192.168.101.37)
+2025-10-08 09:32:02,165 - app.main - INFO - Saved esp32-bluetooth-proxy-f32ccc to DeviceDiscovery table
+2025-10-08 09:32:02,165 - app.services.discovery - INFO - mDNS service discovered: waterheater._esphomelib._tcp.local.
+2025-10-08 09:32:02,165 - app.services.discovery - INFO - Processing mDNS device: waterheater at 192.168.101.73:6053
+2025-10-08 09:32:02,165 - app.services.discovery - INFO - Discovered ESPHome device: waterheater (192.168.101.73)
+2025-10-08 09:32:02,165 - app.main - INFO - New device discovered: waterheater (192.168.101.73)
+2025-10-08 09:32:02,168 - app.main - INFO - Saved waterheater to DeviceDiscovery table
+2025-10-08 09:33:16,871 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:56179 - "OPTIONS /api/v1/templates/ota-stream HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56179 - "POST /api/v1/templates/ota-stream HTTP/1.1" 200 OK
+2025-10-08 09:33:30,768 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: EOF received
+2025-10-08 09:33:30,768 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: EOF received
+2025-10-08 09:33:30,768 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:33:30,769 - esphome.espota2 - INFO - Connecting to 192.168.101.146 port 3232...
+2025-10-08 09:33:30,773 - esphome.espota2 - ERROR - Connecting to 192.168.101.146 port 3232 failed: [Errno 111] Connection refused
+2025-10-08 09:33:30,773 - esphome.espota2 - ERROR - Connection failed.
+2025-10-08 09:33:30,773 - esphome.espota2 - INFO - Connecting to 192.168.101.146 port 8266...
+2025-10-08 09:33:30,776 - esphome.espota2 - INFO - Connected to 192.168.101.146
+2025-10-08 09:33:30,776 - esphome.espota2 - INFO - Uploading /tmp/smartvenue-esphome/builds/firmware_f0710906-3779-4fcd-9c71-0f96e8fd59d3.bin (533264 bytes)
+2025-10-08 09:33:30,936 - esphome.espota2 - INFO - Compressed to 376659 bytes
+2025-10-08 09:33:47,472 - esphome.espota2 - INFO - Upload took 16.36 seconds, waiting for result...
+2025-10-08 09:33:47,516 - esphome.espota2 - INFO - OTA successful
+2025-10-08 09:33:48,517 - app.services.discovery - INFO - Removed ESPHome device: ir-dc4516
+2025-10-08 09:33:48,517 - app.main - INFO - Device removed: ir-dc4516
+INFO:     100.98.57.42:65276 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65276 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:57391 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:65276 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:51533 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50697 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:48390 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 09:34:08,793 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:34:08,794 - app.services.device_health - INFO - Checking health of 2 managed devices
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 09:34:11,247 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+INFO:     127.0.0.1:48394 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48040 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 09:34:18,793 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:34:18,794 - app.services.device_health - INFO - Scanning 21 IPs for device ir-dc4516
+2025-10-08 09:34:20,787 - app.services.discovery - INFO - mDNS service discovered: ir-dc4516._esphomelib._tcp.local.
+2025-10-08 09:34:20,788 - app.services.discovery - INFO - Processing mDNS device: ir-dc4516 at 192.168.101.146:6053
+2025-10-08 09:34:20,788 - app.services.discovery - INFO - Discovered ESPHome device: ir-dc4516 (192.168.101.146)
+2025-10-08 09:34:20,788 - app.main - INFO - New device discovered: ir-dc4516 (192.168.101.146)
+2025-10-08 09:34:20,789 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:48044 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 09:34:21,858 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.136', 6053): [Errno 113] Connect call failed ('192.168.101.136', 6053)
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 09:34:24,930 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.137', 6053): [Errno 113] Connect call failed ('192.168.101.137', 6053)
+2025-10-08 09:34:26,996 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:26,996 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Authenticated connection not ready yet for 192.168.101.138; current state is ConnectionState.INITIALIZED!
+2025-10-08 09:34:26,996 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:26,996 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+INFO:     127.0.0.1:40918 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 09:34:30,050 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.139', 6053): [Errno 113] Connect call failed ('192.168.101.139', 6053)
+INFO:     127.0.0.1:40932 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 09:34:32,334 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:32,334 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Authenticated connection not ready yet for 192.168.101.140; current state is ConnectionState.INITIALIZED!
+2025-10-08 09:34:32,334 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:32,335 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+INFO:     100.98.57.42:56079 - "GET /api/v1/commands/queue/metrics HTTP/1.1" 200 OK
+2025-10-08 09:34:35,426 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.141', 6053): [Errno 113] Connect call failed ('192.168.101.141', 6053)
+2025-10-08 09:34:35,520 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.142', 6053): [Errno 111] Connect call failed ('192.168.101.142', 6053)
+2025-10-08 09:34:37,525 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:37,525 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Authenticated connection not ready yet for 192.168.101.143; current state is ConnectionState.INITIALIZED!
+2025-10-08 09:34:37,525 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:37,525 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:34:40,611 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error connecting to ('192.168.101.144', 6053): [Errno 113] Connect call failed ('192.168.101.144', 6053)
+2025-10-08 09:34:42,694 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:42,694 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Authenticated connection not ready yet for 192.168.101.145; current state is ConnectionState.INITIALIZED!
+2025-10-08 09:34:42,694 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:42,694 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: Error while starting connection: Starting connection cancelled
+2025-10-08 09:34:45,222 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: 192.168.101.146: The connection dropped immediately after encrypted hello; Try enabling encryption on the device or turning off encryption on the client (aioesphomeapi).
+2025-10-08 09:34:45,222 - app.services.esphome_client - ERROR - Failed to connect to ir-dc4516: 192.168.101.146: Connection closed
+2025-10-08 09:34:45,222 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:45,355 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,355 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,356 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:45,540 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:34:45,544 - app.services.device_health - INFO - Health check complete: 1/2 devices online
+2025-10-08 09:34:47,723 - app.services.esphome_client - ERROR - Error getting device info from ir-dc4516: Not connected to 192.168.101.146!
+2025-10-08 09:34:47,723 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:52,618 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:34:52,639 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:34:53,082 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:35:13,905 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:35:13,969 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:35:15,752 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:35:18,822 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:35:19,857 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:35:19,857 - app.services.esphome_client - ERROR - Error retrieving capabilities from ir-dc4516: Read failed
+2025-10-08 09:35:19,857 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:35:23,941 - aioesphomeapi.connection - WARNING - 192.168.101.146: Connection error occurred: [Errno 104] Connection reset by peer
+2025-10-08 09:38:19,929 - app.services.device_status_checker - INFO - Checking status of 4 devices
+INFO:     100.98.57.42:63249 - "GET /api/v1/commands/queue/all?limit=1000 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58117 - "GET /api/v1/templates HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58117 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:58792 - "GET /api/v1/settings/app?include_private=true HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49964 - "GET /api/v1/templates/1 HTTP/1.1" 200 OK
+INFO:     100.98.57.42:50528 - "GET /api/v1/templates/device-hierarchy HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56451 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56451 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56451 - "POST /api/v1/templates/preview HTTP/1.1" 200 OK
+INFO:     100.98.57.42:56451 - "POST /api/v1/templates/compile-stream HTTP/1.1" 200 OK
+2025-10-08 09:40:10,540 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:40:10,541 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:40:10,541 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 09:40:10,543 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 09:40:10,543 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:10,543 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:10,544 - app.main - ERROR - Error saving discovered device to database: no running event loop
+/home/coastal/smartvenue/backend/app/main.py:200: RuntimeWarning: coroutine 'on_device_discovered.<locals>.fetch_caps' was never awaited
+  db.rollback()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+2025-10-08 09:40:13,033 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:40:13,284 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:40:13,504 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:40:13,858 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:40:13,863 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+INFO:     100.98.57.42:52650 - "POST /api/v1/templates/ota-stream HTTP/1.1" 200 OK
+2025-10-08 09:40:22,436 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:40:22,464 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:40:22,465 - esphome.espota2 - INFO - Connecting to 192.168.101.132 port 3232...
+2025-10-08 09:40:22,468 - esphome.espota2 - ERROR - Connecting to 192.168.101.132 port 3232 failed: [Errno 111] Connection refused
+2025-10-08 09:40:22,468 - esphome.espota2 - ERROR - Connection failed.
+2025-10-08 09:40:22,468 - esphome.espota2 - INFO - Connecting to 192.168.101.132 port 8266...
+2025-10-08 09:40:22,503 - esphome.espota2 - INFO - Connected to 192.168.101.132
+2025-10-08 09:40:22,503 - esphome.espota2 - INFO - Uploading /tmp/smartvenue-esphome/builds/firmware_10084f71-bc38-4d1d-b4b7-c5c2246bc0bc.bin (535952 bytes)
+2025-10-08 09:40:22,566 - esphome.espota2 - INFO - Compressed to 378078 bytes
+2025-10-08 09:40:28,157 - esphome.espota2 - INFO - Upload took 5.55 seconds, waiting for result...
+2025-10-08 09:40:28,249 - esphome.espota2 - INFO - OTA successful
+2025-10-08 09:40:29,250 - app.services.discovery - INFO - Removed ESPHome device: ir-dca09e
+2025-10-08 09:40:29,251 - app.main - INFO - Device removed: ir-dca09e
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - mDNS service discovered: ir-dca09e._esphomelib._tcp.local.
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - Processing mDNS device: ir-dca09e at 192.168.101.132:6053
+2025-10-08 09:40:54,437 - app.services.discovery - INFO - Discovered ESPHome device: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:54,437 - app.main - INFO - New device discovered: ir-dca09e (192.168.101.132)
+2025-10-08 09:40:54,438 - app.main - ERROR - Error saving discovered device to database: no running event loop
+2025-10-08 09:41:07,813 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:41:07,842 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:41:10,492 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:41:10,670 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:43:22,987 - app.services.device_status_checker - INFO - Checking status of 4 devices
+2025-10-08 09:45:13,863 - app.services.device_health - INFO - Starting scheduled device health check
+2025-10-08 09:45:13,863 - app.services.device_health - INFO - Checking health of 2 managed devices
+2025-10-08 09:45:16,546 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dca09e
+2025-10-08 09:45:16,575 - app.services.esphome_client - INFO - Connected to ESPHome device: ir-dc4516
+2025-10-08 09:45:16,795 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dca09e
+2025-10-08 09:45:17,149 - app.services.esphome_client - INFO - Disconnected from ESPHome device: ir-dc4516
+2025-10-08 09:45:17,153 - app.services.device_health - INFO - Health check complete: 2/2 devices online
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-left._esphomelib._tcp.local.
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-left at 192.168.101.114:6053
+2025-10-08 09:45:55,325 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-left (192.168.101.114)
+2025-10-08 09:45:55,325 - app.main - INFO - New device discovered: light-kitchen-left (192.168.101.114)
+2025-10-08 09:45:55,331 - app.main - INFO - Saved light-kitchen-left to DeviceDiscovery table
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - mDNS service discovered: light-kitchen-right._esphomelib._tcp.local.
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - Processing mDNS device: light-kitchen-right at 192.168.101.96:6053
+2025-10-08 09:45:55,363 - app.services.discovery - INFO - Discovered ESPHome device: light-kitchen-right (192.168.101.96)
+2025-10-08 09:45:55,363 - app.main - INFO - New device discovered: light-kitchen-right (192.168.101.96)
+2025-10-08 09:45:55,371 - app.main - INFO - Saved light-kitchen-right to DeviceDiscovery table
+INFO:     100.98.57.42:57131 - "GET /api/v1/commands/ir-dca09e/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:49274 - "GET /api/v1/commands/ir-dc4516/port-status HTTP/1.1" 200 OK
+INFO:     100.98.57.42:64432 - "GET /api/v1/commands/nw-b85a97/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:50429 - "GET /api/v1/commands/nw-9cf332/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:49952 - "GET /api/v1/commands/nw-bb2229/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:49274 - "GET /api/v1/settings/tags HTTP/1.1" 200 OK
+INFO:     100.98.57.42:51485 - "GET /api/v1/commands/nw-f5a756/port-status HTTP/1.1" 404 Not Found
+INFO:     100.98.57.42:57131 - "GET /api/v1/management/managed HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54514 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54516 - "GET /api/virtual-controllers/devices/all HTTP/1.1" 200 OK
+2025-10-08 09:48:26,046 - app.services.device_status_checker - INFO - Checking status of 4 devices

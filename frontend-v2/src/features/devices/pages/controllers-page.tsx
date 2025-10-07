@@ -7,7 +7,11 @@ import { ControllerEditModal } from '../components/controller-edit-modal';
 export const ControllersPage = () => {
   const { data, isLoading, isError, error, refetch, isFetching } = useManagedDevices();
 
-  const controllers = useMemo(() => data ?? [], [data]);
+  // Filter out virtual controllers (network TVs) - only show IR controllers
+  const controllers = useMemo(() =>
+    (data ?? []).filter(controller => !controller.hostname.startsWith('nw-')),
+    [data]
+  );
   const [editingDevice, setEditingDevice] = useState<ManagedDevice | null>(null);
   const activePortCount = useMemo(
     () => controllers.reduce((count, controller) => count + controller.ir_ports.filter((port) => port.is_active).length, 0),

@@ -9,6 +9,7 @@ import { sendDiagnosticSignal, sendBulkCommand } from '@/features/devices/api/de
 import type { ChannelOption, DeviceTag, ManagedDevice } from '@/types';
 import { formatRelativeTime } from '@/utils/datetime';
 import { ChannelSelectorModal } from '../components/channel-selector-modal';
+import { useVirtualDevices } from '@/features/devices/hooks/use-virtual-devices';
 
 interface PortRow {
   id: string;
@@ -31,10 +32,12 @@ export const ControlPage = () => {
   const { data: tags = [] } = useDeviceTags();
   const { data: channels = [] } = useAvailableChannels();
   const { data: queueMetrics } = useQueueMetrics();
+  const { data: virtualDevices = [] } = useVirtualDevices();
 
   const rows = useMemo(() => {
     console.log('[ControlPage] Building rows from controllers:', {
       controllerCount: controllers.length,
+      virtualDeviceCount: virtualDevices.length,
       controllers: controllers.map(c => ({
         id: c.id,
         hostname: c.hostname,
@@ -42,10 +45,10 @@ export const ControlPage = () => {
         ports: c.ir_ports?.map(p => ({ port: p.port_number, active: p.is_active }))
       }))
     });
-    const result = buildRows(controllers, tags);
+    const result = buildRows(controllers, tags, virtualDevices);
     console.log('[ControlPage] Built rows:', result.length);
     return result;
-  }, [controllers, tags]);
+  }, [controllers, tags, virtualDevices]);
 
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [nameFilter, setNameFilter] = useState('');
@@ -750,17 +753,59 @@ const ActionButton = ({
   </button>
 );
 
-function buildRows(controllers: ManagedDevice[], tags: DeviceTag[]): PortRow[] {
+interface VirtualDevice {
+  id: number;
+  controller_id: number;
+  port_number: number;
+  port_id: string | null;
+  device_name: string;
+  device_type: string | null;
+  ip_address: string;
+  mac_address: string | null;
+  port: number | null;
+  protocol: string | null;
+  is_active: boolean;
+  is_online: boolean;
+  fallback_ir_controller: string | null;
+  fallback_ir_port: number | null;
+  power_on_method: string | null;
+  control_strategy: string | null;
+}
+
+function buildRows(controllers: ManagedDevice[], tags: DeviceTag[], virtualDevices: VirtualDevice[]): PortRow[] {
   const tagMap = new Map<number, DeviceTag>(tags.map((tag) => [tag.id, tag]));
 
   const rows: PortRow[] = [];
+
+  // Build set of IR ports that are used as hybrid fallbacks
+  const hybridIRPorts = new Set<string>();
+  virtualDevices.forEach((vd) => {
+    if (vd.fallback_ir_controller && vd.fallback_ir_port) {
+      hybridIRPorts.add(`${vd.fallback_ir_controller}:${vd.fallback_ir_port}`);
+    }
+  });
+
+  // Add IR controller ports (excluding those used as hybrid fallbacks)
   controllers.forEach((controller) => {
+    // Skip virtual controllers - they'll be added from virtualDevices
+    if (controller.device_type === 'virtual_controller') {
+      return;
+    }
+
     controller.ir_ports.forEach((port) => {
       if (!port.is_active || port.port_number === 0) {
         return;
       }
+
+      // Skip if this IR port is used as a hybrid fallback
+      const portKey = `${controller.hostname}:${port.port_number}`;
+      if (hybridIRPorts.has(portKey)) {
+        console.log(`[buildRows] Skipping IR port ${portKey} - used as hybrid fallback`);
+        return;
+      }
+
       rows.push({
-        id: `${controller.id}-${port.port_number}`,
+        id: `ir-${controller.id}-${port.port_number}`,
         portId: port.id ?? port.port_number,
         controllerId: controller.id,
         controllerName: controller.device_name ?? controller.hostname,
@@ -777,6 +822,37 @@ function buildRows(controllers: ManagedDevice[], tags: DeviceTag[]): PortRow[] {
       });
     });
   });
+
+  // Add Virtual Devices (network TVs)
+  virtualDevices.forEach((vd) => {
+    if (!vd.is_active) {
+      return;
+    }
+
+    // Find the Virtual Controller for this device
+    const virtualController = controllers.find((c) => c.id === vd.controller_id);
+    if (!virtualController) {
+      console.warn(`[buildRows] Virtual device ${vd.id} references missing controller ${vd.controller_id}`);
+      return;
+    }
+
+    rows.push({
+      id: `vd-${vd.id}`,
+      portId: vd.id,
+      controllerId: vd.controller_id,
+      controllerName: virtualController.device_name ?? virtualController.hostname,
+      hostname: virtualController.hostname,
+      portNumber: vd.port_number,
+      deviceName: vd.device_name,
+      location: virtualController.location ?? 'Unassigned',
+      tags: [], // Virtual Devices don't have tags yet
+      lastSeen: virtualController.last_seen,
+      isOnline: vd.is_online,
+      defaultChannel: null, // Virtual Devices don't have default channels yet
+    });
+  });
+
+  console.log(`[buildRows] Built ${rows.length} total rows: ${rows.filter(r => r.id.startsWith('ir-')).length} IR ports, ${rows.filter(r => r.id.startsWith('vd-')).length} virtual devices`);
 
   return rows;
 }
