@@ -112,7 +112,20 @@
       "Bash(pgrep:*)",
       "Bash(command:*)",
       "Bash(bash:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git tag:*)",
+      "WebFetch(domain:sc0ty.pl)",
+      "WebFetch(domain:www.home-assistant.io)",
+      "WebFetch(domain:community.home-assistant.io)",
+      "WebFetch(domain:pypi.org)",
+      "WebFetch(domain:community.openhab.org)",
+      "Bash(/dev/null)",
+      "Bash(for:*)",
+      "Bash(do if ping -c 1 -W 1 $ip)",
+      "Bash(then echo \"✅ $ip is ONLINE\")",
+      "Bash(else echo \"❌ $ip is OFFLINE\")",
+      "Bash(fi)",
+      "WebFetch(domain:maclookup.app)"
     ],
     "deny": [],
     "ask": []

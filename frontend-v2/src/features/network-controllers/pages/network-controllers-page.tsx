@@ -25,24 +25,69 @@ interface VirtualController {
   protocol: string;
   total_ports: number;
   is_online: boolean;
+  fallback_ir_controller?: string;
+  fallback_ir_port?: number;
+  power_on_method?: string;
+  control_strategy?: string;
 }
 
 interface AdoptionModalProps {
   tv: DiscoveredTV | null;
   isOpen: boolean;
   onClose: () => void;
-  onAdopt: (ip: string) => Promise<void>;
+  onAdopt: (ip: string, controllerName?: string) => Promise<void>;
 }
 
 const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => {
   const [adopting, setAdopting] = useState(false);
+  const [availableIRControllers, setAvailableIRControllers] = useState<ManagedDevice[]>([]);
+  const [selectedIRController, setSelectedIRController] = useState<string>('');
+  const [selectedIRPort, setSelectedIRPort] = useState<number>(1);
+  const [linkIR, setLinkIR] = useState(false);
+  const [controllerName, setControllerName] = useState('');
+
+  useEffect(() => {
+    if (isOpen && tv) {
+      // Pre-fill controller name with TV name
+      setControllerName(tv.name || '');
+
+      // Load available IR controllers
+      axios.get<ManagedDevice[]>('http://localhost:8000/api/v1/management/managed')
+        .then(response => {
+          const irControllers = response.data.filter(d => d.device_type === 'ir_controller');
+          setAvailableIRControllers(irControllers);
+          if (irControllers.length > 0) {
+            setSelectedIRController(irControllers[0].hostname);
+          }
+        })
+        .catch(error => console.error('Failed to load IR controllers:', error));
+    }
+  }, [isOpen, tv]);
 
   if (!isOpen || !tv) return null;
 
   const handleAdopt = async () => {
     setAdopting(true);
     try {
-      await onAdopt(tv.ip);
+      await onAdopt(tv.ip, controllerName.trim() || undefined);
+
+      // If user wants to link IR, do it after adoption
+      if (linkIR && selectedIRController) {
+        // Get the newly adopted virtual controller
+        const vcsResponse = await axios.get('http://localhost:8000/api/virtual-controllers/');
+        const newVC = vcsResponse.data.find((vc: any) => vc.controller_id.includes(tv.mac.slice(-6).toLowerCase()));
+
+        if (newVC) {
+          // Link IR fallback
+          await axios.post(`http://localhost:8000/api/hybrid-devices/${newVC.id}/link-ir-fallback`, {
+            ir_controller_hostname: selectedIRController,
+            ir_port: selectedIRPort,
+            power_on_method: 'hybrid',
+            control_strategy: 'hybrid_ir_fallback'
+          });
+        }
+      }
+
       onClose();
     } catch (error) {
       console.error('Adoption failed:', error);
@@ -70,6 +115,20 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
               </div>
             </div>
           </div>
+
+          <label className="flex flex-col text-sm font-medium text-slate-700">
+            Controller Name
+            <input
+              type="text"
+              value={controllerName}
+              onChange={(e) => setControllerName(e.target.value)}
+              placeholder="Enter a name for this controller"
+              className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            />
+            <span className="mt-1 text-xs text-slate-500">
+              Give this virtual controller a friendly name (e.g., "Lobby TV", "Room 101")
+            </span>
+          </label>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
@@ -100,6 +159,58 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
               <li>✓ Removes from discovery list</li>
             </ul>
           </div>
+
+          {availableIRControllers.length > 0 && (
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <div className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  id="link-ir"
+                  checked={linkIR}
+                  onChange={(e) => setLinkIR(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-amber-300 text-brand-600 focus:ring-brand-500"
+                />
+                <div className="flex-1">
+                  <label htmlFor="link-ir" className="text-sm font-medium text-amber-900 cursor-pointer">
+                    Link IR Controller for Hybrid Control
+                  </label>
+                  <p className="mt-1 text-xs text-amber-700">
+                    Recommended: Use IR for power-on, network for other commands
+                  </p>
+                </div>
+              </div>
+
+              {linkIR && (
+                <div className="mt-3 space-y-3">
+                  <div>
+                    <label className="block text-xs font-medium text-amber-900">IR Controller</label>
+                    <select
+                      value={selectedIRController}
+                      onChange={(e) => setSelectedIRController(e.target.value)}
+                      className="mt-1 block w-full rounded-md border-amber-200 text-sm focus:border-brand-500 focus:ring-brand-500"
+                    >
+                      {availableIRControllers.map((controller) => (
+                        <option key={controller.hostname} value={controller.hostname}>
+                          {controller.hostname} ({controller.current_ip_address})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-amber-900">IR Port</label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="8"
+                      value={selectedIRPort}
+                      onChange={(e) => setSelectedIRPort(parseInt(e.target.value))}
+                      className="mt-1 block w-full rounded-md border-amber-200 text-sm focus:border-brand-500 focus:ring-brand-500"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="mt-6 flex gap-3">
@@ -134,6 +245,7 @@ export const NetworkControllersPage = () => {
   const [virtualControllers, setVirtualControllers] = useState<VirtualController[]>([]);
   const [hidingDevice, setHidingDevice] = useState<string | null>(null);
   const [deletingController, setDeletingController] = useState<string | null>(null);
+  const [unlinkingIR, setUnlinkingIR] = useState<number | null>(null);
 
   const handleDiscover = async () => {
     setDiscovering(true);
@@ -163,9 +275,13 @@ export const NetworkControllersPage = () => {
     }
   };
 
-  const handleAdopt = async (ip: string) => {
+  const handleAdopt = async (ip: string, controllerName?: string) => {
     try {
-      await axios.post(`http://localhost:8000/api/network-tv/adopt/${ip}`);
+      const payload: Record<string, unknown> = {};
+      if (controllerName) {
+        payload['controller_name'] = controllerName;
+      }
+      await axios.post(`http://localhost:8000/api/network-tv/adopt/${ip}`, payload);
       // Refresh both lists
       await handleDiscover();
       await loadVirtualControllers();
@@ -212,6 +328,23 @@ export const NetworkControllersPage = () => {
       console.error('Failed to delete controller:', error);
     } finally {
       setDeletingController(null);
+    }
+  };
+
+  const handleUnlinkIR = async (deviceId: number) => {
+    if (!confirm('Are you sure you want to remove the IR fallback for this TV?')) {
+      return;
+    }
+
+    setUnlinkingIR(deviceId);
+    try {
+      await axios.delete(`http://localhost:8000/api/hybrid-devices/${deviceId}/unlink-ir-fallback`);
+      // Refresh virtual controllers to show updated status
+      await loadVirtualControllers();
+    } catch (error) {
+      console.error('Failed to unlink IR controller:', error);
+    } finally {
+      setUnlinkingIR(null);
     }
   };
 
@@ -407,6 +540,11 @@ export const NetworkControllersPage = () => {
                   <div>
                     <h4 className="font-medium text-green-900">{vc.controller_name}</h4>
                     <p className="text-sm text-green-700">{vc.controller_id} • {vc.protocol}</p>
+                    {vc.fallback_ir_controller && (
+                      <p className="text-xs text-green-600 mt-1">
+                        🔌 IR Fallback: {vc.fallback_ir_controller} (Port {vc.fallback_ir_port})
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -418,6 +556,20 @@ export const NetworkControllersPage = () => {
                     </svg>
                     {vc.is_online ? 'Online' : 'Offline'}
                   </span>
+                  {/* Unlink IR Button - only show if IR fallback is configured */}
+                  {vc.fallback_ir_controller && (
+                    <button
+                      onClick={() => handleUnlinkIR(vc.id)}
+                      disabled={unlinkingIR === vc.id}
+                      className="inline-flex items-center gap-1 rounded-md border border-orange-200 bg-white px-3 py-1.5 text-sm font-medium text-orange-700 shadow-sm transition hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      title="Remove IR Fallback"
+                    >
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                      {unlinkingIR === vc.id ? 'Unlinking...' : 'Unlink IR'}
+                    </button>
+                  )}
                   {/* Delete Button */}
                   <button
                     onClick={() => handleDeleteController(vc.controller_id)}

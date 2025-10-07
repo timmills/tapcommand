@@ -78,10 +78,30 @@ TV_VENDORS = {
     "00:01:FE": "Philips", "00:04:ED": "Philips", "00:09:6E": "Philips",
     "00:0D:3A": "Philips", "00:12:56": "Philips", "00:17:A4": "Philips",
 
-    # Other brands
+    # Hisense
+    "00:1F:A4": "Hisense", "00:23:BA": "Hisense", "D8:90:E8": "Hisense",
+
+    # TCL
+    "00:00:DD": "TCL", "00:0C:61": "TCL", "10:05:01": "TCL",
+    "C8:28:32": "TCL", "E8:9F:6D": "TCL",
+
+    # CHiQ / Changhong
+    "D8:47:10": "CHiQ", "84:2C:80": "CHiQ",
+
+    # Sharp
+    "00:03:A0": "Sharp", "00:17:C8": "Sharp", "08:7A:4C": "Sharp",
+
+    # Toshiba
+    "00:00:39": "Toshiba", "00:0D:F6": "Toshiba", "00:21:35": "Toshiba",
+
+    # Vizio
+    "00:1B:FB": "Vizio", "E0:B9:4D": "Vizio", "D4:E8:B2": "Vizio",
+
+    # Roku
     "00:0D:4B": "Roku", "D8:31:CF": "Roku", "CC:6D:A0": "Roku",
+
+    # Other brands
     "7C:61:66": "Apple TV", "A4:D1:D2": "Apple TV",
-    "00:1B:FB": "Vizio", "E0:B9:4D": "Vizio",
     "00:09:D0": "Panasonic", "00:0D:8E": "Panasonic",
 }
 
@@ -92,7 +112,10 @@ PROTOCOL_PORTS = {
     "LG WebOS": [3000, 3001],
     "Sony IRCC": [80],
     "Philips JointSpace": [1925, 1926],
+    "Hisense VIDAA": [36669],
     "Roku": [8060],
+    "Vizio SmartCast": [7345, 9000],
+    "Android TV": [6466, 6467, 5555],  # CHiQ, TCL, Sharp, Toshiba
 }
 
 def check_dependencies() -> Tuple[bool, List[str]]:
@@ -242,8 +265,15 @@ def detect_tv_protocol(ip: str, vendor: str) -> Dict:
         ports_to_check.extend([80, 10000])
     elif vendor == "Philips":
         ports_to_check.extend([1925, 1926])
+    elif vendor == "Hisense":
+        ports_to_check.extend([36669, 3000])
+    elif vendor == "Vizio":
+        ports_to_check.extend([7345, 9000])
     elif vendor == "Roku":
         ports_to_check.extend([8060])
+    elif vendor in ["TCL", "CHiQ", "Sharp", "Toshiba"]:
+        # Android TV ports
+        ports_to_check.extend([6466, 6467, 5555, 8060])
 
     # Check each port
     for port in ports_to_check:
@@ -261,8 +291,16 @@ def detect_tv_protocol(ip: str, vendor: str) -> Dict:
                 detected_protocols.append("Sony IRCC")
             elif port in [1925, 1926]:
                 detected_protocols.append("Philips JointSpace")
+            elif port == 36669:
+                detected_protocols.append("Hisense VIDAA (MQTT)")
+            elif port in [7345, 9000]:
+                detected_protocols.append("Vizio SmartCast")
             elif port == 8060:
                 detected_protocols.append("Roku ECP")
+            elif port in [6466, 6467]:
+                detected_protocols.append("Android TV Remote v2")
+            elif port == 5555 and vendor in ["TCL", "CHiQ", "Sharp", "Toshiba"]:
+                detected_protocols.append("Android ADB")
 
     return {
         'open_ports': open_ports,
@@ -323,7 +361,8 @@ def discover_tvs_on_network(subnet: str = "192.168.1") -> List[Dict]:
         hostname = get_hostname(ip)
 
         # Only process if vendor is a known TV manufacturer
-        if vendor in ["Samsung", "LG", "Sony", "Philips", "Roku", "Apple TV", "Vizio", "Panasonic"]:
+        if vendor in ["Samsung", "LG", "Sony", "Philips", "Roku", "Apple TV", "Vizio", "Panasonic",
+                      "Hisense", "TCL", "CHiQ", "Sharp", "Toshiba"]:
             potential_tvs.append({
                 'ip': ip,
                 'mac': mac,
@@ -458,6 +497,10 @@ def print_adoption_guide(tvs: List[Dict]):
     samsung_modern = [tv for tv in tvs if "Samsung Modern" in tv.get('protocols', [])]
     lg_tvs = [tv for tv in tvs if "LG WebOS" in tv.get('protocols', [])]
     sony_tvs = [tv for tv in tvs if "Sony" in tv.get('protocols', [])]
+    hisense_tvs = [tv for tv in tvs if "Hisense" in tv.get('protocols', [])]
+    vizio_tvs = [tv for tv in tvs if "Vizio" in tv.get('protocols', [])]
+    android_tvs = [tv for tv in tvs if "Android TV" in tv.get('protocols', [])]
+    roku_tvs = [tv for tv in tvs if "Roku ECP" in tv.get('protocols', []) and tv.get('vendor') != 'Samsung']
 
     if samsung_legacy:
         print(f"{Colors.OKGREEN}Samsung Legacy TVs ({len(samsung_legacy)} found):{Colors.ENDC}")
@@ -487,6 +530,37 @@ def print_adoption_guide(tvs: List[Dict]):
         print(f"  • Requires PSK (Pre-Shared Key) configuration on TV")
         print(f"  • Settings → Network → IP Control → Authentication")
         print(f"  • IPs: {', '.join([tv['ip'] for tv in sony_tvs])}")
+        print()
+
+    if hisense_tvs:
+        print(f"{Colors.OKGREEN}Hisense VIDAA TVs ({len(hisense_tvs)} found):{Colors.ENDC}")
+        print(f"  • Uses MQTT protocol (port 36669)")
+        print(f"  • Optional SSL (auto-detected)")
+        print(f"  • Default credentials (no pairing needed)")
+        print(f"  • IPs: {', '.join([tv['ip'] for tv in hisense_tvs])}")
+        print()
+
+    if vizio_tvs:
+        print(f"{Colors.OKGREEN}Vizio SmartCast TVs ({len(vizio_tvs)} found):{Colors.ENDC}")
+        print(f"  • Requires pairing token")
+        print(f"  • Enable 'SmartCast' in TV settings")
+        print(f"  • IPs: {', '.join([tv['ip'] for tv in vizio_tvs])}")
+        print()
+
+    if android_tvs:
+        print(f"{Colors.OKGREEN}Android TVs ({len(android_tvs)} found - CHiQ/TCL/Sharp/Toshiba):{Colors.ENDC}")
+        print(f"  • Uses Android TV Remote Protocol v2")
+        print(f"  • Pairing required (4-digit code shown on TV)")
+        print(f"  • No developer mode needed")
+        print(f"  • IPs: {', '.join([tv['ip'] for tv in android_tvs])}")
+        print()
+
+    if roku_tvs:
+        print(f"{Colors.OKGREEN}Roku TVs/Devices ({len(roku_tvs)} found):{Colors.ENDC}")
+        print(f"  • External Control Protocol (ECP)")
+        print(f"  • No pairing required")
+        print(f"  • Can be adopted immediately")
+        print(f"  • IPs: {', '.join([tv['ip'] for tv in roku_tvs])}")
         print()
 
     print(f"{Colors.OKBLUE}All discovered TVs can be adopted into SmartVenue.{Colors.ENDC}")

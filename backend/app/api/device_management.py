@@ -396,9 +396,42 @@ async def get_managed_devices(db: Session = Depends(get_db)):
     return ir_responses + vc_responses
 
 
-@router.get("/managed/{device_id}", response_model=ManagedDeviceResponse)
+@router.get("/managed/{device_id}")
 async def get_managed_device(device_id: int, db: Session = Depends(get_db)):
-    """Get a specific managed device"""
+    """Get a specific managed device (IR device or Virtual Controller)"""
+
+    # Check if it's a Virtual Controller (negative ID)
+    if device_id < 0:
+        from ..models.virtual_controller import VirtualController
+
+        # Extract real Virtual Controller ID
+        vc_id = abs(device_id) - 10000
+        controller = db.query(VirtualController).filter(VirtualController.id == vc_id).first()
+        if not controller:
+            raise HTTPException(status_code=404, detail="Virtual Controller not found")
+
+        # Return Virtual Controller details in a format compatible with frontend
+        return {
+            "id": controller.id,
+            "hostname": controller.controller_name,
+            "friendly_name": controller.controller_name,
+            "device_type": "network_tv",
+            "protocol": controller.protocol,
+            "is_online": True,  # Virtual controllers are always "available"
+            "controller_id": controller.controller_id,
+            "device_count": len(controller.virtual_devices),
+            "virtual_devices": [
+                {
+                    "id": vd.id,
+                    "ip_address": vd.ip_address,
+                    "mac_address": vd.mac_address,
+                    "model": vd.model,
+                    "manufacturer": vd.manufacturer
+                } for vd in controller.virtual_devices
+            ]
+        }
+
+    # Otherwise it's an IR ManagedDevice (positive ID)
     device = db.query(ManagedDevice).filter(ManagedDevice.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -701,7 +734,46 @@ async def update_managed_device(
 
 @router.delete("/managed/{device_id}")
 async def unmanage_device(device_id: int, db: Session = Depends(get_db)):
-    """Remove a device from management (but keep in discovery)"""
+    """Remove a device from management (IR device or Virtual Controller)"""
+
+    # Check if it's a Virtual Controller (negative ID)
+    if device_id < 0:
+        from ..models.virtual_controller import VirtualController
+        from ..models.network_discovery import NetworkScanCache
+
+        # Extract real Virtual Controller ID
+        vc_id = abs(device_id) - 10000
+        controller = db.query(VirtualController).filter(VirtualController.id == vc_id).first()
+
+        if not controller:
+            raise HTTPException(status_code=404, detail="Virtual Controller not found")
+
+        controller_id = controller.controller_id
+        controller_name = controller.controller_name
+
+        # Get device count and MAC addresses before deletion
+        device_count = len(controller.virtual_devices)
+        mac_addresses = [vd.mac_address for vd in controller.virtual_devices if vd.mac_address]
+
+        # Reset is_adopted flag for all devices associated with this controller
+        if mac_addresses:
+            db.query(NetworkScanCache).filter(
+                NetworkScanCache.mac_address.in_(mac_addresses)
+            ).update({
+                'is_adopted': False,
+                'adopted_hostname': None
+            }, synchronize_session=False)
+
+        # Delete the controller (cascade deletes virtual devices)
+        db.delete(controller)
+        db.commit()
+
+        return {
+            "message": f"Virtual Controller {controller_name} removed. {device_count} device(s) returned to discovery pool.",
+            "controller_id": controller_id
+        }
+
+    # Otherwise it's an IR ManagedDevice (positive ID)
     device = db.query(ManagedDevice).filter(ManagedDevice.id == device_id).first()
     if not device:
         raise HTTPException(status_code=404, detail="Device not found")
@@ -711,26 +783,67 @@ async def unmanage_device(device_id: int, db: Session = Depends(get_db)):
     # Delete the managed device (will cascade delete IR ports)
     db.delete(device)
 
-    # Remove cached device info
+    # Keep cached device info but mark as offline
+    # For IR controllers, clear capabilities to force fresh scan on next adoption
+    # Skip clearing for network devices (they don't have ESPHome capabilities)
     device_record = db.query(Device).filter(Device.hostname == hostname).first()
     if device_record:
-        db.delete(device_record)
+        device_record.is_adopted = False
+        if hostname.startswith("ir-"):
+            device_record.capabilities = None  # Clear stale capabilities for IR controllers
 
-    # Remove discovery entry so it will be rediscovered fresh
+    # Mark discovery entry as not managed so it reappears in discovery list
     discovered = db.query(DeviceDiscovery).filter(DeviceDiscovery.hostname == hostname).first()
     if discovered:
-        db.delete(discovered)
+        discovered.is_managed = False
 
     _refresh_tag_usage_counts(db)
 
     db.commit()
-    return {"message": f"Device {hostname} removed from management"}
+
+    # Mark device as not adopted in discovery service's in-memory cache
+    from ..services.discovery import discovery_service
+    discovery_service.mark_device_unadopted(hostname)
+
+    return {"message": f"Device {hostname} removed from management and returned to discovery pool"}
 
 
 @router.post("/managed/{device_id}/health-check")
 async def check_device_health(device_id: int, db: Session = Depends(get_db)):
-    """Perform comprehensive health check on a specific device"""
+    """Perform comprehensive health check on a specific device (IR device or Virtual Controller)"""
     try:
+        # Check if it's a Virtual Controller (negative ID)
+        if device_id < 0:
+            from ..models.virtual_controller import VirtualController
+            from ..services.device_status_checker import status_checker
+
+            # Extract real Virtual Controller ID
+            vc_id = abs(device_id) - 10000
+            controller = db.query(VirtualController).filter(VirtualController.id == vc_id).first()
+            if not controller:
+                raise HTTPException(status_code=404, detail="Virtual Controller not found")
+
+            # Use device status checker for Virtual Controllers
+            status = await status_checker.check_device_now(controller.controller_id)
+
+            if not status:
+                raise HTTPException(status_code=404, detail="Status check failed")
+
+            return {
+                "hostname": controller.controller_name,
+                "is_online": status.is_online,
+                "current_ip": controller.virtual_devices[0].ip_address if controller.virtual_devices else None,
+                "mac_address": controller.virtual_devices[0].mac_address if controller.virtual_devices else None,
+                "api_reachable": status.is_online,
+                "power_state": status.power_state,
+                "check_method": status.check_method,
+                "current_channel": status.current_channel,
+                "response_time_ms": None,
+                "error_message": None if status.is_online else "Device offline",
+                "check_timestamp": status.last_checked_at.isoformat()
+            }
+
+        # Otherwise it's an IR ManagedDevice (positive ID)
         result = await health_checker.check_single_device(device_id, db)
 
         if not result:

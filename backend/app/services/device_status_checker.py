@@ -15,8 +15,7 @@ import requests
 
 from ..db.database import SessionLocal
 from ..models.device_status import DeviceStatus
-from ..models.virtual_device import VirtualDevice
-from ..models.virtual_controller import VirtualController
+from ..models.virtual_controller import VirtualDevice, VirtualController
 
 logger = logging.getLogger(__name__)
 

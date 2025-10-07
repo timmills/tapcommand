@@ -111,6 +111,16 @@ class ESPHomeDiscoveryService:
         """Check if discovery service is currently running"""
         return self.running
 
+    def mark_device_unadopted(self, hostname: str):
+        """
+        Mark a device as unadopted so it will appear in discovery again.
+        This is called when a device is removed from management.
+        """
+        logger.info(f"Marking device {hostname} as unadopted - will be available for re-adoption")
+        # The device should already be in discovered_devices from mDNS
+        # This method is mainly for logging and potential future adoption tracking
+        # The actual adoption state is managed in the database
+
     def _add_device(self, device: ESPHomeDevice):
         """Internal method to add a discovered device"""
         self.discovered_devices[device.hostname] = device
@@ -143,6 +153,7 @@ class ESPHomeServiceListener(ServiceListener):
 
     def add_service(self, zc: Zeroconf, type_: str, name: str) -> None:
         """Called when a new ESPHome service is discovered"""
+        logger.info(f"mDNS service discovered: {name}")
         info = zc.get_service_info(type_, name)
         if info:
             try:
@@ -150,6 +161,8 @@ class ESPHomeServiceListener(ServiceListener):
                 hostname = name.split('.')[0]  # Remove .local suffix
                 ip_address = socket.inet_ntoa(info.addresses[0])
                 port = info.port
+
+                logger.info(f"Processing mDNS device: {hostname} at {ip_address}:{port}")
 
                 # Extract properties from TXT records
                 properties = {}
@@ -163,10 +176,9 @@ class ESPHomeServiceListener(ServiceListener):
                 # Extract MAC address (ESPHome includes this in hostname)
                 mac_address = hostname.split('-')[-1] if '-' in hostname else "unknown"
 
-                # Only process IR blaster devices (hostname starts with "ir-")
-                if hostname.startswith("ir-"):
-                    device = ESPHomeDevice(hostname, ip_address, port, mac_address, properties)
-                    self.discovery_service._add_device(device)
+                # Accept all ESPHome devices (not just ir- prefixed ones)
+                device = ESPHomeDevice(hostname, ip_address, port, mac_address, properties)
+                self.discovery_service._add_device(device)
 
             except Exception as e:
                 logger.error(f"Error processing discovered service {name}: {e}")

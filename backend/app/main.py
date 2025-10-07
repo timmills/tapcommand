@@ -24,7 +24,7 @@ from .routers.network_tv import router as network_tv_router
 from .routers.network_discovery import router as network_discovery_router
 from .routers.virtual_controllers import router as virtual_controllers_router
 from .routers.device_status import router as device_status_router
-from .routers.hybrid_devices import router as hybrid_devices_router
+from .api.hybrid_devices import router as hybrid_devices_router
 from .commands.api import router as unified_commands_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
@@ -111,8 +111,95 @@ async def lifespan(app: FastAPI):
 def on_device_discovered(device):
     """Callback when a new device is discovered"""
     logger.info(f"New device discovered: {device.hostname} ({device.ip_address})")
-    # Here you could automatically register the device or update its status
-    # For now, we just log it
+
+    # Save to database for adoption
+    from .db.database import SessionLocal
+    from .models.device_management import DeviceDiscovery
+    from .models.device import Device
+    from .services.esphome_client import esphome_manager
+    from .services.settings_service import settings_service
+    from datetime import datetime
+
+    db = SessionLocal()
+    try:
+        # Check if device already exists
+        existing = db.query(DeviceDiscovery).filter(
+            DeviceDiscovery.hostname == device.hostname
+        ).first()
+
+        if existing:
+            # Update existing record
+            existing.ip_address = device.ip_address
+            existing.last_seen = datetime.now()
+            existing.firmware_version = device.version
+            existing.discovery_properties = device.properties
+        else:
+            # Create new discovery record
+            discovery = DeviceDiscovery(
+                hostname=device.hostname,
+                mac_address=device.mac_address,
+                ip_address=device.ip_address,
+                friendly_name=device.friendly_name,
+                device_type=device.device_type,
+                firmware_version=device.version,
+                discovery_properties=device.properties,
+                is_managed=False
+            )
+            db.add(discovery)
+
+        # Only fetch capabilities for IR controllers (ir-* prefix)
+        # Skip network devices (nw-*) as they don't have ESPHome capabilities
+        if device.hostname.startswith("ir-"):
+            # Fetch capabilities asynchronously (fire and forget to not block mDNS callback)
+            async def fetch_caps():
+                try:
+                    api_key = settings_service.get_setting("esphome_api_key")
+                    capabilities = await esphome_manager.fetch_capabilities(
+                        device.hostname,
+                        device.ip_address,
+                        api_key
+                    )
+
+                    # Update in a new session since this runs async
+                    db_async = SessionLocal()
+                    try:
+                        dev_rec = db_async.query(Device).filter(Device.hostname == device.hostname).first()
+                        if dev_rec:
+                            dev_rec.capabilities = capabilities
+                            dev_rec.last_seen = datetime.now()
+                            dev_rec.is_online = True
+                        else:
+                            dev_rec = Device(
+                                hostname=device.hostname,
+                                mac_address=device.mac_address,
+                                ip_address=device.ip_address,
+                                friendly_name=device.friendly_name,
+                                device_type=device.device_type,
+                                firmware_version=device.version,
+                                is_online=True,
+                                capabilities=capabilities
+                            )
+                            db_async.add(dev_rec)
+                        db_async.commit()
+                        logger.info(f"Updated capabilities for {device.hostname}")
+                    except Exception as e:
+                        logger.error(f"Error updating capabilities in async task: {e}")
+                        db_async.rollback()
+                    finally:
+                        db_async.close()
+                except Exception as e:
+                    logger.debug(f"Failed to fetch capabilities for {device.hostname}: {e}")
+
+            # Schedule the async task
+            asyncio.create_task(fetch_caps())
+
+        db.commit()
+        logger.info(f"Saved {device.hostname} to DeviceDiscovery table")
+    except Exception as e:
+        logger.error(f"Error saving discovered device to database: {e}")
+        db.rollback()
+    finally:
+        db.close()
 
 
 def on_device_removed(hostname):

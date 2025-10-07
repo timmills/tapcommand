@@ -6,8 +6,10 @@ interface DiscoveryServiceResponse {
 }
 
 export const fetchDiscoveredDevices = async (): Promise<DiscoveredDevice[]> => {
-  const response = await apiClient.get<DiscoveryServiceResponse>('/api/v1/devices/discovery/devices');
-  return response.data.devices ?? [];
+  // Use database-backed discovery endpoint instead of in-memory mDNS-only endpoint
+  // This ensures we see devices that have been discovered but may not be actively broadcasting mDNS
+  const response = await apiClient.get<DiscoveredDevice[]>('/api/v1/management/discovered');
+  return response.data ?? [];
 };
 
 export const startDiscovery = async (): Promise<void> => {

@@ -4,7 +4,7 @@ Supports Samsung legacy (port 55000) and modern (WebSocket) TVs
 Now reads from network scan cache database
 """
 
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
 from typing import Optional, List
 from sqlalchemy.orm import Session
@@ -333,7 +333,7 @@ async def test_tv(ip: str, db: Session = Depends(get_db)):
 
 
 @router.post("/adopt/{ip}")
-async def adopt_device(ip: str, db: Session = Depends(get_db)):
+async def adopt_device(ip: str, request: Request, db: Session = Depends(get_db)):
     """
     Adopt a device from the network scan cache
 
@@ -342,12 +342,24 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
     2. Maps the TV to port 1 of that Virtual Controller
     3. Marks the device as adopted in the scan cache
 
+    Request body (optional):
+    {
+        "controller_name": "Optional custom name for the controller"
+    }
+
     Returns the created Virtual Controller and device mapping details
     """
     from ..models.virtual_controller import VirtualController, VirtualDevice
     import re
 
     try:
+        # Parse request body for optional controller name
+        body = {}
+        try:
+            body = await request.json()
+        except:
+            pass  # No body or invalid JSON - that's okay
+
         # Get device from scan cache
         device = db.query(NetworkScanCache).filter_by(ip_address=ip).first()
 
@@ -376,8 +388,8 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
             existing = db.query(VirtualController).filter_by(controller_id=controller_id).first()
             counter += 1
 
-        # Create controller name
-        controller_name = f"{tv_info['name']} Controller"
+        # Create controller name - use custom name if provided, otherwise use default
+        controller_name = body.get('controller_name', '').strip() or f"{tv_info['name']} Controller"
 
         # Determine controller type
         controller_type = "network_tv"
@@ -434,11 +446,14 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
         # Create Virtual Device on port 1
         port_id = f"{controller_id}-1"
 
+        # Use the same custom name for both controller and device
+        device_name = controller_name
+
         virtual_device = VirtualDevice(
             controller_id=virtual_controller.id,
             port_number=1,
             port_id=port_id,
-            device_name=tv_info['name'],
+            device_name=device_name,
             device_type=tv_info['device_type'],
             ip_address=ip,
             mac_address=device.mac_address,
@@ -483,7 +498,7 @@ async def adopt_device(ip: str, db: Session = Depends(get_db)):
                 "id": virtual_device.id,
                 "port_number": 1,
                 "port_id": port_id,
-                "device_name": tv_info['name'],
+                "device_name": device_name,
                 "ip_address": ip,
                 "mac_address": device.mac_address,
                 "protocol": tv_info['protocol'],

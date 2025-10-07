@@ -607,11 +607,13 @@ const DiscoveryControllerModal = ({ discovered, open, onClose, onSaved }: Discov
   const { data: settings } = useApplicationSettings(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [apiKeyInput, setApiKeyInput] = useState('');
+  const [deviceName, setDeviceName] = useState('');
 
   useEffect(() => {
     if (!open) return;
     setErrorMessage(null);
     setApiKeyInput('');
+    setDeviceName(discovered.friendly_name || '');
   }, [open, discovered]);
 
   const capabilitiesObject = useMemo(() => extractDiscoveryCapabilities(discovered), [discovered]);
@@ -640,6 +642,10 @@ const DiscoveryControllerModal = ({ discovered, open, onClose, onSaved }: Discov
       const apiKeyClean = apiKeyInput.trim();
       if (apiKeyClean) {
         payload['api_key'] = apiKeyClean;
+      }
+      const deviceNameClean = deviceName.trim();
+      if (deviceNameClean) {
+        payload['device_name'] = deviceNameClean;
       }
       await connectMutation.mutateAsync({ hostname: discovered.hostname, payload });
       if (onSaved) {
@@ -698,6 +704,20 @@ const DiscoveryControllerModal = ({ discovered, open, onClose, onSaved }: Discov
                   </div>
                 </dl>
               </div>
+
+              <label className="flex flex-col text-sm font-medium text-slate-700">
+                Controller name
+                <input
+                  type="text"
+                  value={deviceName}
+                  onChange={(event) => setDeviceName(event.target.value)}
+                  placeholder="Enter a name for this controller"
+                  className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+                <span className="mt-1 text-xs text-slate-500">
+                  Give this controller a friendly name (e.g., "Office TV", "Lobby IR Controller")
+                </span>
+              </label>
 
               <label className="flex flex-col text-sm font-medium text-slate-700">
                 API key

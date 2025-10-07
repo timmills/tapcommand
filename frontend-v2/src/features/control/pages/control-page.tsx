@@ -287,7 +287,11 @@ export const ControlPage = () => {
                             type="button"
                             onClick={async (e) => {
                               e.stopPropagation();
-                              const targets = locationRows.map((row) => ({
+                              // Use selected rows if any in this location, otherwise all rows
+                              const rowsToControl = selectedInLocation > 0
+                                ? locationRows.filter((r) => selectedIds.has(r.id))
+                                : locationRows;
+                              const targets = rowsToControl.map((row) => ({
                                 hostname: row.hostname,
                                 port: row.portNumber,
                               }));
@@ -301,7 +305,11 @@ export const ControlPage = () => {
                             type="button"
                             onClick={async (e) => {
                               e.stopPropagation();
-                              const targets = locationRows.map((row) => ({
+                              // Use selected rows if any in this location, otherwise all rows
+                              const rowsToControl = selectedInLocation > 0
+                                ? locationRows.filter((r) => selectedIds.has(r.id))
+                                : locationRows;
+                              const targets = rowsToControl.map((row) => ({
                                 hostname: row.hostname,
                                 port: row.portNumber,
                               }));

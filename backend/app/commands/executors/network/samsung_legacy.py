@@ -69,8 +69,6 @@ class SamsungLegacyExecutor(CommandExecutor):
         start_time = time.time()
 
         try:
-            import samsungctl
-
             # Get Virtual Device from database
             device = self.db.query(VirtualDevice).join(VirtualController).filter(
                 VirtualController.controller_id == command.controller_id
@@ -82,6 +80,13 @@ class SamsungLegacyExecutor(CommandExecutor):
                     message=f"Samsung TV {command.controller_id} not found",
                     error="DEVICE_NOT_FOUND"
                 )
+
+            # Special handling for power_on: Use Wake-on-LAN instead of Samsung protocol
+            # Samsung Legacy protocol (port 55000) doesn't work when TV is OFF
+            if command.command.lower() in ["power_on", "poweron"]:
+                return await self._wake_on_lan(device, start_time)
+
+            import samsungctl
 
             # Get the KEY code for this command
             key = self.KEY_MAP.get(command.command.lower())
@@ -122,6 +127,53 @@ class SamsungLegacyExecutor(CommandExecutor):
             return ExecutionResult(
                 success=False,
                 message=f"Samsung Legacy command '{command.command}' failed: {str(e)}",
+                error=str(e),
+                data={"execution_time_ms": execution_time_ms}
+            )
+
+    async def _wake_on_lan(self, device: VirtualDevice, start_time: float) -> ExecutionResult:
+        """
+        Turn on Samsung Legacy TV using Wake-on-LAN
+
+        Samsung Legacy protocol (port 55000) doesn't work when TV is OFF because
+        the network interface is unpowered. Must use WOL magic packets instead.
+        """
+        if not device.mac_address:
+            return ExecutionResult(
+                success=False,
+                message=f"Cannot power on {device.device_name}: MAC address not configured",
+                error="MAC_ADDRESS_REQUIRED"
+            )
+
+        try:
+            from wakeonlan import send_magic_packet
+
+            # Send multiple WOL packets for reliability (recommended: 16 packets)
+            packet_count = 16
+            for _ in range(packet_count):
+                send_magic_packet(device.mac_address)
+
+            execution_time_ms = int((time.time() - start_time) * 1000)
+
+            return ExecutionResult(
+                success=True,
+                message=f"Wake-on-LAN packets sent to {device.device_name}",
+                data={
+                    "execution_time_ms": execution_time_ms,
+                    "device": device.device_name,
+                    "ip": device.ip_address,
+                    "mac_address": device.mac_address,
+                    "method": "wake_on_lan",
+                    "packets_sent": packet_count,
+                    "note": "TV may take 5-15 seconds to fully boot"
+                }
+            )
+
+        except Exception as e:
+            execution_time_ms = int((time.time() - start_time) * 1000)
+            return ExecutionResult(
+                success=False,
+                message=f"Failed to send WOL packets: {str(e)}",
                 error=str(e),
                 data={"execution_time_ms": execution_time_ms}
             )

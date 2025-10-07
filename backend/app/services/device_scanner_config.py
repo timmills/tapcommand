@@ -131,6 +131,57 @@ DEVICE_TYPES = {
         enabled=True
     ),
 
+    # Android TV brands (CHiQ, TCL, Sharp, Toshiba)
+    "chiq_android": DeviceTypeConfig(
+        device_type="chiq_android",
+        display_name="CHiQ Android TV",
+        mac_vendor_patterns=["changhong", "chiq"],
+        port_scans=[
+            PortScanRule(port=6466, protocol="tcp", description="Android TV Remote Control", timeout_ms=500),
+            PortScanRule(port=6467, protocol="tcp", description="Android TV Pairing", timeout_ms=500),
+            PortScanRule(port=5555, protocol="tcp", description="Android ADB", timeout_ms=500),
+        ],
+        priority=72,
+        enabled=True
+    ),
+
+    "tcl_android": DeviceTypeConfig(
+        device_type="tcl_android",
+        display_name="TCL Android TV",
+        mac_vendor_patterns=["tcl"],
+        port_scans=[
+            PortScanRule(port=6466, protocol="tcp", description="Android TV Remote Control", timeout_ms=500),
+            PortScanRule(port=6467, protocol="tcp", description="Android TV Pairing", timeout_ms=500),
+            PortScanRule(port=8060, protocol="tcp", description="Roku ECP (some models)", timeout_ms=500),
+        ],
+        priority=71,
+        enabled=True
+    ),
+
+    "sharp_android": DeviceTypeConfig(
+        device_type="sharp_android",
+        display_name="Sharp Android TV",
+        mac_vendor_patterns=["sharp"],
+        port_scans=[
+            PortScanRule(port=6466, protocol="tcp", description="Android TV Remote Control", timeout_ms=500),
+            PortScanRule(port=6467, protocol="tcp", description="Android TV Pairing", timeout_ms=500),
+        ],
+        priority=68,
+        enabled=True
+    ),
+
+    "toshiba_android": DeviceTypeConfig(
+        device_type="toshiba_android",
+        display_name="Toshiba Android TV",
+        mac_vendor_patterns=["toshiba"],
+        port_scans=[
+            PortScanRule(port=6466, protocol="tcp", description="Android TV Remote Control", timeout_ms=500),
+            PortScanRule(port=6467, protocol="tcp", description="Android TV Pairing", timeout_ms=500),
+        ],
+        priority=67,
+        enabled=True
+    ),
+
     # Roku devices
     "roku": DeviceTypeConfig(
         device_type="roku",
@@ -235,7 +286,11 @@ def get_device_type_by_vendor(vendor_name: str) -> Optional[DeviceTypeConfig]:
 
 def get_all_tv_vendors() -> List[str]:
     """Get list of all TV vendor patterns for quick filtering"""
-    tv_types = ["samsung_tv_legacy", "samsung_tv_tizen", "lg_webos", "sony_bravia", "philips_android"]
+    tv_types = [
+        "samsung_tv_legacy", "samsung_tv_tizen", "lg_webos", "sony_bravia",
+        "philips_android", "hisense_vidaa", "tcl_roku", "vizio_smartcast",
+        "chiq_android", "tcl_android", "sharp_android", "toshiba_android"
+    ]
     patterns = []
 
     for device_type in tv_types:
