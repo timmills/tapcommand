@@ -18,6 +18,7 @@ import time
 from ..db.database import get_db
 from ..models.device import Device
 from ..models.device_management import ManagedDevice
+from ..models.virtual_controller import VirtualController
 from ..services.esphome_client import esphome_manager
 from ..services.command_queue import CommandQueueService
 from ..services.settings_service import settings_service
@@ -326,8 +327,30 @@ async def bulk_command(
     command_ids = []
 
     for target in bulk_request.targets:
-        # Verify device exists
+        # Check if device exists in devices table or virtual_controllers table
         device = db.query(Device).filter(Device.hostname == target.hostname).first()
+
+        # If not in devices table, check if it's a Virtual Controller
+        if not device and target.hostname.startswith('nw-'):
+            # Check virtual_controllers table
+            vc = db.query(VirtualController).filter(
+                VirtualController.controller_id == target.hostname
+            ).first()
+
+            if vc:
+                # Create entry in devices table for tracking
+                device = Device(
+                    hostname=target.hostname,
+                    mac_address=target.hostname,  # Use controller_id as placeholder
+                    ip_address="0.0.0.0",  # Virtual controllers don't have single IP
+                    device_type="network_tv",
+                    friendly_name=vc.controller_name,
+                    is_online=vc.is_online,
+                    last_seen=vc.last_seen or datetime.now()
+                )
+                db.add(device)
+                db.flush()
+
         if not device:
             # Skip non-existent devices but continue with others
             continue

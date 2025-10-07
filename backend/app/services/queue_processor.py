@@ -14,8 +14,11 @@ from sqlalchemy.orm import Session
 from ..db.database import SessionLocal
 from ..models.command_queue import CommandQueue
 from ..models.device import Device
+from ..models.virtual_controller import VirtualController, VirtualDevice
 from .command_queue import CommandQueueService
 from .esphome_client import ESPHomeClient
+from ..commands.router import ProtocolRouter
+from ..commands.models import Command as ExecutorCommand
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +114,7 @@ class CommandQueueProcessor:
             db.close()
 
     async def _execute_command(self, cmd_id: int, worker_id: int):
-        """Execute a queued command"""
+        """Execute a queued command using protocol router"""
         db = SessionLocal()
         try:
             # Re-fetch the command in this session
@@ -125,34 +128,97 @@ class CommandQueueProcessor:
                 f"{cmd.command} on {cmd.hostname} port {cmd.port} (attempt {cmd.attempts})"
             )
 
-            # Get device info
-            device = db.query(Device).filter(Device.hostname == cmd.hostname).first()
-            if not device:
-                CommandQueueService.mark_failed(
-                    db, cmd.id, f"Device {cmd.hostname} not found", retry=False
-                )
-                return
+            # Determine device type and protocol
+            device_type = None
+            protocol = None
+            controller_id = cmd.hostname
 
-            # Get or create ESPHome client
-            client = await self._get_client(device.hostname, device.ip_address)
+            # Check if it's a Virtual Controller (network TV)
+            if cmd.hostname.startswith('nw-'):
+                vc = db.query(VirtualController).filter(
+                    VirtualController.controller_id == cmd.hostname
+                ).first()
+
+                if vc:
+                    # Get the Virtual Device for this port
+                    vd = db.query(VirtualDevice).filter(
+                        VirtualDevice.controller_id == vc.id,
+                        VirtualDevice.port_number == cmd.port
+                    ).first()
+
+                    if vd:
+                        # All network TVs use device_type="network_tv"
+                        # Protocol field determines the specific executor
+                        device_type = "network_tv"
+                        protocol = vd.protocol
+                    else:
+                        CommandQueueService.mark_failed(
+                            db, cmd.id, f"Virtual device port {cmd.port} not found", retry=False
+                        )
+                        return
+                else:
+                    CommandQueueService.mark_failed(
+                        db, cmd.id, f"Virtual controller {cmd.hostname} not found", retry=False
+                    )
+                    return
+            else:
+                # IR Controller (ESPHome-based)
+                device = db.query(Device).filter(Device.hostname == cmd.hostname).first()
+                if not device:
+                    CommandQueueService.mark_failed(
+                        db, cmd.id, f"Device {cmd.hostname} not found", retry=False
+                    )
+                    return
+                device_type = device.device_type or "universal"
+                protocol = None  # IR doesn't use protocol
+
+            # Create ExecutorCommand from queue command
+            # Note: Network TVs don't use ports - each Virtual Device is a single device
+            # Only IR controllers use ports (physical IR blaster ports 1-5)
+            parameters = {}
+            if cmd.channel:
+                parameters['channel'] = cmd.channel
+            if cmd.digit is not None:
+                parameters['digit'] = cmd.digit
+
+            executor_cmd = ExecutorCommand(
+                controller_id=controller_id,
+                command=cmd.command,
+                device_type=device_type,
+                protocol=protocol,
+                parameters=parameters if parameters else None
+            )
+
+            # Get appropriate executor via protocol router
+            router = ProtocolRouter(db)
+            executor = router.get_executor(executor_cmd)
+
+            if not executor:
+                CommandQueueService.mark_failed(
+                    db, cmd.id,
+                    f"No executor found for device_type={device_type}, protocol={protocol}",
+                    retry=False
+                )
+                logger.error(f"No executor for {device_type}/{protocol}")
+                return
 
             # Execute command
             start_time = time.time()
-            success = await self._send_command(client, cmd)
+            result = await executor.execute(executor_cmd)
             execution_time_ms = int((time.time() - start_time) * 1000)
 
-            if success:
+            if result.success:
                 # Mark as completed
                 CommandQueueService.mark_completed(
                     db, cmd.id, True, execution_time_ms
                 )
                 logger.info(
                     f"✓ Worker {worker_id} completed command {cmd.id} "
-                    f"in {execution_time_ms}ms"
+                    f"in {execution_time_ms}ms via {executor.__class__.__name__}"
                 )
             else:
                 # Command failed
-                error_msg = f"Command execution failed (attempt {cmd.attempts})"
+                error_msg = f"{result.message} (attempt {cmd.attempts})"
                 CommandQueueService.mark_failed(db, cmd.id, error_msg, retry=True)
                 logger.warning(
                     f"✗ Worker {worker_id} failed command {cmd.id}: {error_msg}"
