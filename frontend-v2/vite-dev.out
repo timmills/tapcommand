@@ -23,3 +23,316 @@
 6:08:22 PM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
 6:08:38 PM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
 6:08:46 PM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+7:46:43 AM [vite] (client) hmr update /src/index.css, /src/features/devices/pages/connected-devices-page.tsx
+7:46:50 AM [vite] (client) hmr update /src/index.css, /src/features/devices/pages/connected-devices-page.tsx
+7:47:11 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+7:47:25 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+7:47:37 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+7:47:52 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+7:48:10 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:03:37 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:03:46 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:03:58 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:04:11 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:04:18 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:04:24 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:04:31 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:04:38 AM [vite] (client) hmr update /src/index.css, /src/features/devices/pages/connected-devices-page.tsx
+8:07:42 AM [vite] (client) hmr update /src/features/devices/components/virtual-device-ir-fallback-modal.tsx, /src/index.css
+8:14:58 AM [vite] (client) hmr update /src/index.css, /src/features/devices/pages/connected-devices-page.tsx
+8:15:07 AM [vite] (client) hmr update /src/index.css, /src/features/devices/pages/connected-devices-page.tsx
+8:15:21 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:15:37 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:15:46 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:16:33 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:16:44 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:18:55 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:19:17 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:19:26 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:19:35 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:19:42 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:19:47 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:20:21 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:20:29 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:20:36 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:20:44 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:20:52 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:21:15 AM [vite] (client) hmr update /src/index.css, /src/features/network-controllers/pages/network-controllers-page.tsx
+8:28:34 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:28:42 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:28:51 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:29:01 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:29:15 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:33:15 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:33:15 AM [vite] Internal server error: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx: Missing semicolon. (211:11)
+
+  209 |               ) : null}
+  210 |             </tr>
+> 211 |           ))}
+      |            ^
+  212 |         </tbody>
+  213 |       </table>
+  214 |     </div>
+  Plugin: vite:react-babel
+  File: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx:211:11
+  209 |                ) : null}
+  210 |              </tr>
+  211 |            ))}
+      |             ^
+  212 |          </tbody>
+  213 |        </table>
+      at constructor (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6630:19)
+      at TypeScriptParserMixin.semicolon (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6926:10)
+      at TypeScriptParserMixin.parseReturnStatement (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13152:12)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12807:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9532:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12776:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12756:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13325:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13318:10)
+      at TypeScriptParserMixin.parseBlock (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12110:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12085:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11695:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11335:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4797:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11085:23)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12503:17)
+      at TypeScriptParserMixin.parseExprListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12185:18)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11256:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11190:29)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11124:19)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9358:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11098:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11089:17)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10788:23)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4665:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4744:36)
+8:33:15 AM [vite] Internal server error: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx: Missing semicolon. (211:11)
+
+  209 |               ) : null}
+  210 |             </tr>
+> 211 |           ))}
+      |            ^
+  212 |         </tbody>
+  213 |       </table>
+  214 |     </div>
+  Plugin: vite:react-babel
+  File: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx:211:11
+  209 |                ) : null}
+  210 |              </tr>
+  211 |            ))}
+      |             ^
+  212 |          </tbody>
+  213 |        </table>
+      at constructor (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6630:19)
+      at TypeScriptParserMixin.semicolon (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6926:10)
+      at TypeScriptParserMixin.parseReturnStatement (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13152:12)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12807:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9532:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12776:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12756:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13325:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13318:10)
+      at TypeScriptParserMixin.parseBlock (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12110:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12085:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11695:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11335:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4797:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11085:23)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12503:17)
+      at TypeScriptParserMixin.parseExprListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12185:18)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11256:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11190:29)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11124:19)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9358:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11098:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11089:17)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10788:23)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4665:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4744:36)
+8:33:15 AM [vite] Internal server error: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx: Missing semicolon. (211:11)
+
+  209 |               ) : null}
+  210 |             </tr>
+> 211 |           ))}
+      |            ^
+  212 |         </tbody>
+  213 |       </table>
+  214 |     </div>
+  Plugin: vite:react-babel
+  File: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx:211:11
+  209 |                ) : null}
+  210 |              </tr>
+  211 |            ))}
+      |             ^
+  212 |          </tbody>
+  213 |        </table>
+      at constructor (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6630:19)
+      at TypeScriptParserMixin.semicolon (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6926:10)
+      at TypeScriptParserMixin.parseReturnStatement (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13152:12)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12807:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9532:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12776:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12756:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13325:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13318:10)
+      at TypeScriptParserMixin.parseBlock (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12110:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12085:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11695:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11335:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4797:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11085:23)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12503:17)
+      at TypeScriptParserMixin.parseExprListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12185:18)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11256:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11190:29)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11124:19)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9358:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11098:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11089:17)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10788:23)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4665:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4744:36)
+8:33:15 AM [vite] Internal server error: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx: Missing semicolon. (211:11)
+
+  209 |               ) : null}
+  210 |             </tr>
+> 211 |           ))}
+      |            ^
+  212 |         </tbody>
+  213 |       </table>
+  214 |     </div>
+  Plugin: vite:react-babel
+  File: /home/coastal/smartvenue/frontend-v2/src/features/devices/components/connected-devices-table.tsx:211:11
+  209 |                ) : null}
+  210 |              </tr>
+  211 |            ))}
+      |             ^
+  212 |          </tbody>
+  213 |        </table>
+      at constructor (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:367:19)
+      at TypeScriptParserMixin.raise (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6630:19)
+      at TypeScriptParserMixin.semicolon (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:6926:10)
+      at TypeScriptParserMixin.parseReturnStatement (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13152:12)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12807:21)
+      at TypeScriptParserMixin.parseStatementContent (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9532:18)
+      at TypeScriptParserMixin.parseStatementLike (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12776:17)
+      at TypeScriptParserMixin.parseStatementListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12756:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13325:61)
+      at TypeScriptParserMixin.parseBlockBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13318:10)
+      at TypeScriptParserMixin.parseBlock (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:13306:10)
+      at TypeScriptParserMixin.parseFunctionBody (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12110:24)
+      at TypeScriptParserMixin.parseArrowExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12085:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11695:12)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11335:23)
+      at TypeScriptParserMixin.parseExprAtom (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4797:20)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11085:23)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10804:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12503:17)
+      at TypeScriptParserMixin.parseExprListItem (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12185:18)
+      at TypeScriptParserMixin.parseCallExpressionArguments (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11256:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11190:29)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11124:19)
+      at TypeScriptParserMixin.parseSubscript (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9358:18)
+      at TypeScriptParserMixin.parseSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11098:19)
+      at TypeScriptParserMixin.parseExprSubscripts (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11089:17)
+      at TypeScriptParserMixin.parseUpdate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11070:21)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:11050:23)
+      at TypeScriptParserMixin.parseMaybeUnary (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9857:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10903:61)
+      at TypeScriptParserMixin.parseExprOps (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10908:23)
+      at TypeScriptParserMixin.parseMaybeConditional (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10885:23)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10835:21)
+      at TypeScriptParserMixin.parseMaybeAssign (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:9806:20)
+      at TypeScriptParserMixin.parseExpressionBase (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10788:23)
+      at /home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:39
+      at TypeScriptParserMixin.allowInAnd (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:12436:12)
+      at TypeScriptParserMixin.parseExpression (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:10784:17)
+      at TypeScriptParserMixin.jsxParseExpressionContainer (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4665:31)
+      at TypeScriptParserMixin.jsxParseElementAt (/home/coastal/smartvenue/frontend-v2/node_modules/@babel/parser/lib/index.js:4744:36)
+8:33:31 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:33:41 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:33:49 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx
+8:34:00 AM [vite] (client) hmr update /src/index.css, /src/features/devices/components/connected-devices-table.tsx

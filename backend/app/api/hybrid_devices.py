@@ -12,7 +12,7 @@ from typing import Optional
 from ..db.database import get_db
 from ..models.virtual_controller import VirtualDevice
 
-router = APIRouter(prefix="/api/hybrid-devices", tags=["hybrid-devices"])
+router = APIRouter(prefix="/hybrid-devices", tags=["hybrid-devices"])
 
 
 class LinkIRFallbackRequest(BaseModel):

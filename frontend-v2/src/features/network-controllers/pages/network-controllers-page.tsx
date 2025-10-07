@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BrandInfoCards } from '../components/brand-info-cards';
+import { VirtualDeviceIRFallbackModal } from '@/features/devices/components/virtual-device-ir-fallback-modal';
+import type { ManagedDevice } from '@/types/api';
 
 interface DiscoveredTV {
   ip: string;
@@ -15,6 +17,25 @@ interface DiscoveredTV {
   confidence_score: number | null;
   confidence_reason: string | null;
   adoptable: 'ready' | 'needs_config' | 'unlikely';
+}
+
+interface VirtualDevice {
+  id: number;
+  controller_id: number;
+  port_number: number;
+  port_id: string | null;
+  device_name: string;
+  device_type: string | null;
+  ip_address: string;
+  mac_address: string | null;
+  port: number | null;
+  protocol: string | null;
+  is_active: boolean;
+  is_online: boolean;
+  fallback_ir_controller: string | null;
+  fallback_ir_port: number | null;
+  power_on_method: string | null;
+  control_strategy: string | null;
 }
 
 interface VirtualController {
@@ -243,9 +264,11 @@ export const NetworkControllersPage = () => {
     tv: null,
   });
   const [virtualControllers, setVirtualControllers] = useState<VirtualController[]>([]);
+  const [virtualDevices, setVirtualDevices] = useState<VirtualDevice[]>([]);
   const [hidingDevice, setHidingDevice] = useState<string | null>(null);
   const [deletingController, setDeletingController] = useState<string | null>(null);
   const [unlinkingIR, setUnlinkingIR] = useState<number | null>(null);
+  const [editingVirtualDevice, setEditingVirtualDevice] = useState<VirtualDevice | null>(null);
 
   const handleDiscover = async () => {
     setDiscovering(true);
@@ -282,9 +305,10 @@ export const NetworkControllersPage = () => {
         payload['controller_name'] = controllerName;
       }
       await axios.post(`http://localhost:8000/api/network-tv/adopt/${ip}`, payload);
-      // Refresh both lists
+      // Refresh all lists
       await handleDiscover();
       await loadVirtualControllers();
+      await loadVirtualDevices();
     } catch (error) {
       console.error('Adoption failed:', error);
       throw error;
@@ -297,6 +321,15 @@ export const NetworkControllersPage = () => {
       setVirtualControllers(response.data);
     } catch (error) {
       console.error('Failed to load virtual controllers:', error);
+    }
+  };
+
+  const loadVirtualDevices = async () => {
+    try {
+      const response = await axios.get<VirtualDevice[]>('http://localhost:8000/api/virtual-controllers/devices/all');
+      setVirtualDevices(response.data);
+    } catch (error) {
+      console.error('Failed to load virtual devices:', error);
     }
   };
 
@@ -321,8 +354,9 @@ export const NetworkControllersPage = () => {
     setDeletingController(controllerId);
     try {
       await axios.delete(`http://localhost:8000/api/virtual-controllers/${controllerId}`);
-      // Refresh both lists
+      // Refresh all lists
       await loadVirtualControllers();
+      await loadVirtualDevices();
       await handleDiscover();
     } catch (error) {
       console.error('Failed to delete controller:', error);
@@ -338,9 +372,9 @@ export const NetworkControllersPage = () => {
 
     setUnlinkingIR(deviceId);
     try {
-      await axios.delete(`http://localhost:8000/api/hybrid-devices/${deviceId}/unlink-ir-fallback`);
-      // Refresh virtual controllers to show updated status
-      await loadVirtualControllers();
+      await axios.delete(`http://localhost:8000/api/v1/hybrid-devices/${deviceId}/unlink-ir-fallback`);
+      // Refresh virtual devices to show updated status
+      await loadVirtualDevices();
     } catch (error) {
       console.error('Failed to unlink IR controller:', error);
     } finally {
@@ -352,6 +386,7 @@ export const NetworkControllersPage = () => {
   useEffect(() => {
     handleDiscover();
     loadVirtualControllers();
+    loadVirtualDevices();
   }, []);
 
   const getAdoptableIcon = (adoptable: string) => {
@@ -528,64 +563,69 @@ export const NetworkControllersPage = () => {
           <p className="text-xs text-slate-500">
             These TVs have been adopted and can be controlled through the Management page
           </p>
-          {virtualControllers.map((vc) => (
-            <div key={vc.id} className="rounded-lg border border-green-200 bg-green-50 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                    <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+          {virtualControllers.map((vc) => {
+            // Find the Virtual Device for this controller (port 1)
+            const virtualDevice = virtualDevices.find(vd => vd.controller_id === vc.id && vd.port_number === 1);
+
+            return (
+              <div key={vc.id} className="rounded-lg border border-green-200 bg-green-50 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
+                      <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-green-900">{vc.controller_name}</h4>
+                      <p className="text-sm text-green-700">{vc.controller_id} • {vc.protocol}</p>
+                      {virtualDevice?.fallback_ir_controller && (
+                        <p className="text-xs text-green-600 mt-1">
+                          🔌 IR Fallback: {virtualDevice.fallback_ir_controller} (Port {virtualDevice.fallback_ir_port})
+                        </p>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-medium text-green-900">{vc.controller_name}</h4>
-                    <p className="text-sm text-green-700">{vc.controller_id} • {vc.protocol}</p>
-                    {vc.fallback_ir_controller && (
-                      <p className="text-xs text-green-600 mt-1">
-                        🔌 IR Fallback: {vc.fallback_ir_controller} (Port {vc.fallback_ir_port})
-                      </p>
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
+                      vc.is_online ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'
+                    }`}>
+                      <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
+                        <circle cx="4" cy="4" r="3" />
+                      </svg>
+                      {vc.is_online ? 'Online' : 'Offline'}
+                    </span>
+                    {/* Edit Port / Configure IR Button */}
+                    {virtualDevice && (
+                      <button
+                        onClick={() => setEditingVirtualDevice(virtualDevice)}
+                        className="inline-flex items-center gap-1 rounded-md border border-blue-200 bg-white px-3 py-1.5 text-sm font-medium text-blue-700 shadow-sm transition hover:bg-blue-50"
+                        title="Configure IR Fallback"
+                      >
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {virtualDevice.fallback_ir_controller ? 'Edit IR' : 'Link IR'}
+                      </button>
                     )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium ${
-                    vc.is_online ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-700'
-                  }`}>
-                    <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 8 8">
-                      <circle cx="4" cy="4" r="3" />
-                    </svg>
-                    {vc.is_online ? 'Online' : 'Offline'}
-                  </span>
-                  {/* Unlink IR Button - only show if IR fallback is configured */}
-                  {vc.fallback_ir_controller && (
+                    {/* Delete Button */}
                     <button
-                      onClick={() => handleUnlinkIR(vc.id)}
-                      disabled={unlinkingIR === vc.id}
-                      className="inline-flex items-center gap-1 rounded-md border border-orange-200 bg-white px-3 py-1.5 text-sm font-medium text-orange-700 shadow-sm transition hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      title="Remove IR Fallback"
+                      onClick={() => handleDeleteController(vc.controller_id)}
+                      disabled={deletingController === vc.controller_id}
+                      className="inline-flex items-center gap-1 rounded-md border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-700 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                      title="Delete this Virtual Controller"
                     >
                       <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
-                      {unlinkingIR === vc.id ? 'Unlinking...' : 'Unlink IR'}
+                      {deletingController === vc.controller_id ? 'Deleting...' : 'Delete'}
                     </button>
-                  )}
-                  {/* Delete Button */}
-                  <button
-                    onClick={() => handleDeleteController(vc.controller_id)}
-                    disabled={deletingController === vc.controller_id}
-                    className="inline-flex items-center gap-1 rounded-md border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-700 shadow-sm transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                    title="Delete this Virtual Controller"
-                  >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    {deletingController === vc.controller_id ? 'Deleting...' : 'Delete'}
-                  </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -594,6 +634,16 @@ export const NetworkControllersPage = () => {
         isOpen={adoptionModal.isOpen}
         onClose={() => setAdoptionModal({ isOpen: false, tv: null })}
         onAdopt={handleAdopt}
+      />
+
+      <VirtualDeviceIRFallbackModal
+        device={editingVirtualDevice}
+        open={Boolean(editingVirtualDevice)}
+        onClose={() => setEditingVirtualDevice(null)}
+        onSaved={() => {
+          setEditingVirtualDevice(null);
+          loadVirtualDevices();
+        }}
       />
     </section>
   );

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import type { DeviceTag, ManagedDevice } from '@/types';
 import { formatRelativeTime } from '@/utils/datetime';
 import { usePortStatus, getPowerStateForPort } from '../hooks/use-port-status';
+import { useVirtualDevices } from '../hooks/use-virtual-devices';
 
 interface ConnectedDevice {
   id: string;
@@ -49,6 +50,7 @@ const buildConnectedDevices = (controllers: ManagedDevice[], tagMap: Map<number,
 export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController }: ConnectedDevicesTableProps) => {
   const [sortField, setSortField] = useState<SortField>('device');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const { data: virtualDevices = [] } = useVirtualDevices();
 
   const tagMap = new Map(tags.map((tag) => [tag.id, tag] as const));
   const connectedDevices = buildConnectedDevices(controllers, tagMap);
@@ -138,11 +140,28 @@ export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
-          {sortedDevices.map((device) => (
-            <tr key={device.id} className="hover:bg-slate-50/70">
-              <td className="px-4 py-3 align-top">
-                <div className="text-sm font-medium text-slate-900">{device.deviceName}</div>
-              </td>
+          {sortedDevices.map((device) => {
+            // Find linked network TV for this IR port
+            const linkedDevice = virtualDevices.find(
+              vd => vd.fallback_ir_controller === device.controllerHostname && vd.fallback_ir_port === device.portNumber
+            );
+
+            return (
+              <tr key={device.id} className="hover:bg-slate-50/70">
+                <td className="px-4 py-3 align-top">
+                  <div className="space-y-1">
+                    <div className="text-sm font-medium text-slate-900">{device.deviceName}</div>
+                    {linkedDevice && (
+                      <div className="flex items-center gap-1.5 text-xs text-blue-600">
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span className="font-medium">{linkedDevice.device_name}</span>
+                        <span className="text-slate-500">({linkedDevice.ip_address})</span>
+                      </div>
+                    )}
+                  </div>
+                </td>
               <td className="px-4 py-3 align-top text-sm text-slate-600">
                 <div>{device.controllerName}</div>
                 <div className="text-xs text-slate-500">{device.controllerHostname}</div>
@@ -181,7 +200,8 @@ export const ConnectedDevicesTable = ({ controllers, tags = [], onEditController
                 </td>
               ) : null}
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

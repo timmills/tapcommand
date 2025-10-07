@@ -46,6 +46,10 @@ class VirtualDeviceInfo(BaseModel):
     protocol: Optional[str]
     is_active: bool
     is_online: bool
+    fallback_ir_controller: Optional[str] = None
+    fallback_ir_port: Optional[int] = None
+    power_on_method: Optional[str] = None
+    control_strategy: Optional[str] = None
 
     class Config:
         from_attributes = True
