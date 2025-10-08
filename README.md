@@ -48,6 +48,10 @@ npm run dev
 Raspberry Pi 4 Hub (FastAPI + SQLite + React UI)
          ↓ (Hidden "TV" WiFi Network)
 ESP8266 IR Blasters → Foxtel Boxes/Samsung/LG TVs
+         ↓ (Venue Network)
+Network TVs (Samsung/LG/Sony/etc) → Direct IP Control
+         ↓ (Venue Network)
+Audio Amplifiers (Bosch Praesensa/AES70) → Zone Control
          ↑ (Tailscale VPN for remote management)
 ```
 
@@ -61,27 +65,40 @@ ESP8266 IR Blasters → Foxtel Boxes/Samsung/LG TVs
 ## 📱 Features
 
 ### Device Management
-- Auto-discovery via mDNS (`ir-*.local`)
+- **IR Controllers**: Auto-discovery via mDNS (`ir-*.local`)
+  - 5-port IR mapping per device
+  - Capability snapshots imported from ESPHome firmware
+  - Live YAML builder for crafting new templates
+- **Network TVs**: SSDP/UPnP discovery and adoption
+  - Direct IP control for Samsung, LG, Sony, Hisense, Roku, etc.
+  - Virtual Controller architecture for management
+  - Hybrid IR fallback for power-on support
+- **Audio Amplifiers**: AES70 auto-discovery
+  - Bosch Praesensa zone control (volume, mute)
+  - Automatic zone detection via AES70 role maps
+  - Real-time dB range discovery
 - Device registration with friendly names
 - Health monitoring (online/offline status)
-- 5-port IR mapping per device
-- Capability snapshots imported straight from ESPHome firmware during adoption
-- Live YAML builder for crafting new ESPHome templates
-- Template editor in Settings with Wi-Fi credential management (SSID/password/API key + hidden/broadcast toggle)
+- Template editor in Settings with Wi-Fi credential management
 
 ### Control System
-- Direct commands: `Box 2 Power`, `Channel 2-501`
+- **IR Commands**: Direct commands (`Box 2 Power`, `Channel 2-501`)
+- **Network TV Control**: Power, volume, input switching via IP
+- **Audio Zone Control**: Volume (0-100%), mute/unmute per zone
+- **Unified Command Queue**: All commands routed through single queue
 - Bulk operations: `Power off all displays`
 - Device status synchronization
 - Real-time connectivity monitoring
-- On-demand capability reporting via the custom `report_capabilities` ESPHome service
 
 ### Technology Stack
 - **Backend**: FastAPI, SQLAlchemy, AsyncIO, APScheduler
 - **Frontend**: React + Vite + TypeScript
 - **Database**: SQLite with Alembic migrations
-- **Discovery**: python-zeroconf (mDNS)
-- **Device Control**: aioesphomeapi
+- **Discovery**: python-zeroconf (mDNS), SSDP (UPnP)
+- **Device Control**:
+  - IR Controllers: aioesphomeapi
+  - Network TVs: Samsung Legacy, LG webOS, Sony Bravia, Hisense, Roku, etc.
+  - Audio Amplifiers: AES70py (Bosch Praesensa), AES70/OCA protocol
 - **Deployment**: Docker ready
 
 ## 🎯 API Endpoints

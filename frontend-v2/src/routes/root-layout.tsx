@@ -3,11 +3,11 @@ import { useMemo } from 'react';
 
 const navigation = [
   { label: 'Control', to: '/control' },
+  { label: 'Discovery', to: '/discovery' },
   { label: 'IR Controllers', to: '/controllers' },
   { label: 'TV Controllers', to: '/network-controllers' },
   { label: 'Audio Controllers', to: '/audio' },
   { label: 'Connected Devices', to: '/connected-devices' },
-  { label: 'Discovery', to: '/discovery' },
   { label: 'IR Libraries', to: '/ir-libraries' },
   { label: 'IR Capture', to: '/ir-capture' },
   { label: 'IR Commands', to: '/ir-commands' },
