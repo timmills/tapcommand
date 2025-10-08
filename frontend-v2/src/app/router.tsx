@@ -17,6 +17,8 @@ import { QueueDiagnosticsPage } from '../features/diagnostics/pages/queue-diagno
 import { UsersPage } from '../features/users/pages/users-page';
 import { LoginPage } from '../features/auth/pages/login-page';
 import { NetworkControllersPage } from '../features/network-controllers/pages/network-controllers-page';
+import { AudioPage } from '../features/audio/pages/audio-page';
+import { DocumentationPage } from '../features/documentation/pages/documentation-page';
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +38,8 @@ export const router = createBrowserRouter([
       { path: 'schedules', element: <SchedulesPage /> },
       { path: 'tags', element: <TagsPage /> },
       { path: 'queue-diagnostics', element: <QueueDiagnosticsPage /> },
+      { path: 'audio', element: <AudioPage /> },
+      { path: 'documentation', element: <DocumentationPage /> },
       { path: 'settings', element: <SettingsPage /> },
       { path: 'users', element: <UsersPage /> },
     ],

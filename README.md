@@ -48,6 +48,10 @@ npm run dev
 Raspberry Pi 4 Hub (FastAPI + SQLite + React UI)
          ↓ (Hidden "TV" WiFi Network)
 ESP8266 IR Blasters → Foxtel Boxes/Samsung/LG TVs
+         ↓ (Venue Network)
+Network TVs (Samsung/LG/Sony/etc) → Direct IP Control
+         ↓ (Venue Network)
+Audio Amplifiers (Bosch Praesensa/AES70) → Zone Control
          ↑ (Tailscale VPN for remote management)
 ```
 
@@ -61,43 +65,97 @@ ESP8266 IR Blasters → Foxtel Boxes/Samsung/LG TVs
 ## 📱 Features
 
 ### Device Management
-- Auto-discovery via mDNS (`ir-*.local`)
+- **IR Controllers**: Auto-discovery via mDNS (`ir-*.local`)
+  - 5-port IR mapping per device
+  - Capability snapshots imported from ESPHome firmware
+  - Live YAML builder for crafting new templates
+- **Network TVs**: SSDP/UPnP discovery and adoption
+  - Direct IP control for Samsung, LG, Sony, Hisense, Roku, etc.
+  - Virtual Controller architecture for management
+  - Hybrid IR fallback for power-on support
+- **Audio Amplifiers**: AES70 auto-discovery
+  - Bosch Praesensa zone control (volume, mute)
+  - Automatic zone detection via AES70 role maps
+  - Real-time dB range discovery
 - Device registration with friendly names
 - Health monitoring (online/offline status)
-- 5-port IR mapping per device
-- Capability snapshots imported straight from ESPHome firmware during adoption
-- Live YAML builder for crafting new ESPHome templates
-- Template editor in Settings with Wi-Fi credential management (SSID/password/API key + hidden/broadcast toggle)
+- Template editor in Settings with Wi-Fi credential management
 
 ### Control System
-- Direct commands: `Box 2 Power`, `Channel 2-501`
+- **IR Commands**: Direct commands (`Box 2 Power`, `Channel 2-501`)
+- **Network TV Control**: Power, volume, input switching via IP
+- **Audio Zone Control**: Volume (0-100%), mute/unmute per zone
+- **Unified Command Queue**: All commands routed through single queue
 - Bulk operations: `Power off all displays`
 - Device status synchronization
 - Real-time connectivity monitoring
-- On-demand capability reporting via the custom `report_capabilities` ESPHome service
 
 ### Technology Stack
 - **Backend**: FastAPI, SQLAlchemy, AsyncIO, APScheduler
 - **Frontend**: React + Vite + TypeScript
 - **Database**: SQLite with Alembic migrations
-- **Discovery**: python-zeroconf (mDNS)
-- **Device Control**: aioesphomeapi
+- **Discovery**: python-zeroconf (mDNS), SSDP (UPnP)
+- **Device Control**:
+  - IR Controllers: aioesphomeapi
+  - Network TVs: Samsung Legacy, LG webOS, Sony Bravia, Hisense, Roku, etc.
+  - Audio Amplifiers: AES70py (Bosch Praesensa), AES70/OCA protocol
 - **Deployment**: Docker ready
 
 ## 🎯 API Endpoints
 
-- `GET /api/v1/management/discovered` - List discovered devices
-- `POST /api/v1/management/sync-discovered` - Sync device discovery
-- `GET /api/v1/management/managed` - List managed devices
+### IR Controller Management
+- `GET /api/v1/management/discovered` - List discovered ESPHome devices
+- `POST /api/v1/management/sync-discovered` - Sync device discovery (mDNS)
+- `GET /api/v1/management/managed` - List managed IR controllers
 - `POST /api/v1/management/manage/{hostname}` - Add device to management
 - `DELETE /api/v1/management/managed/{id}` - Remove device
-- `POST /api/v1/management/managed/{id}/health-check` - Run a full device health check
-- `POST /api/v1/management/managed/health-check-all` - Check all managed devices
-- `GET /api/v1/management/health-status` - Monitor background health polling service
-- `GET /api/v1/templates/base` - Retrieve the default ESP template for the YAML builder
-- `GET /api/v1/templates/device-hierarchy` - IR library hierarchy (category → brand → model)
-- `POST /api/v1/templates/preview` - Generate a YAML preview based on port assignments
-- `GET /api/v1/templates/{template_id}` / `PUT /api/v1/templates/{template_id}` - Manage stored templates (used by the settings editor)
+- `POST /api/v1/management/managed/{id}/health-check` - Run device health check
+- `POST /api/v1/management/managed/health-check-all` - Check all devices
+- `GET /api/v1/management/health-status` - Monitor health polling service
+
+### Network TV Discovery & Control
+- `GET /api/network-tv/discover` - Discover TVs via SSDP/UPnP
+- `POST /api/network-tv/command` - Send command to TV (power, volume, etc.)
+- `GET /api/network-tv/test/{ip}` - Test TV connectivity
+- `POST /api/network-tv/adopt/{ip}` - Adopt TV as Virtual Controller
+- `POST /api/network-tv/hide/{mac_address}` - Hide device from discovery
+- `GET /api/network-tv/hidden` - List hidden devices
+
+### Audio Controller Management
+- `POST /api/audio/controllers/discover` - Discover Bosch Praesensa (AES70)
+- `GET /api/audio/controllers` - List audio controllers with zones
+- `GET /api/audio/zones` - List all audio zones
+- `POST /api/audio/zones/{zone_id}/volume` - Set zone volume (0-100%)
+- `POST /api/audio/zones/{zone_id}/volume/up` - Increase volume by 5%
+- `POST /api/audio/zones/{zone_id}/volume/down` - Decrease volume by 5%
+- `POST /api/audio/zones/{zone_id}/mute` - Toggle mute or set mute state
+- `POST /api/audio/controllers/{controller_id}/rediscover` - Rediscover zones
+- `DELETE /api/audio/controllers/{controller_id}` - Delete audio controller
+
+### Virtual Controllers (Network TVs & Audio)
+- `GET /api/virtual-controllers/` - List all virtual controllers
+- `GET /api/virtual-controllers/devices/all` - List all virtual devices
+- `DELETE /api/virtual-controllers/{controller_id}` - Delete virtual controller
+- `POST /api/hybrid-devices/{device_id}/link-ir-fallback` - Link IR fallback for TV
+- `DELETE /api/v1/hybrid-devices/{device_id}/unlink-ir-fallback` - Unlink IR fallback
+
+### Unified Command Queue (IR, TV, Audio)
+- `POST /api/commands/{hostname}/command` - Send command to any device type
+- `POST /api/commands/bulk` - Send bulk commands (batch operations)
+- `GET /api/commands/bulk/{batch_id}/status` - Check bulk command status
+- `GET /api/commands/queue/all` - View entire command queue
+- `GET /api/commands/queue/metrics` - Queue performance metrics
+- `GET /api/commands/{hostname}/health` - Check device health
+- `POST /api/commands/{hostname}/diagnostic` - Run diagnostics
+- `GET /api/commands/{hostname}/port-status` - Get port status (IR controllers)
+- `POST /api/commands/maintenance/cleanup-history` - Clean old command history
+
+### IR Templates & Libraries
+- `GET /api/v1/templates/base` - Get default ESP template for YAML builder
+- `GET /api/v1/templates/device-hierarchy` - IR library hierarchy
+- `POST /api/v1/templates/preview` - Generate YAML preview
+- `GET /api/v1/templates/{template_id}` - Get stored template
+- `PUT /api/v1/templates/{template_id}` - Update stored template
 
 Full API documentation: `http://100.93.158.19:8000/docs`
 

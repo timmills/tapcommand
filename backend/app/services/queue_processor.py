@@ -133,8 +133,8 @@ class CommandQueueProcessor:
             protocol = None
             controller_id = cmd.hostname
 
-            # Check if it's a Virtual Controller (network TV)
-            if cmd.hostname.startswith('nw-'):
+            # Check if it's a Virtual Controller (network TV or audio)
+            if cmd.hostname.startswith('nw-') or cmd.hostname.startswith('aud-'):
                 vc = db.query(VirtualController).filter(
                     VirtualController.controller_id == cmd.hostname
                 ).first()
@@ -147,9 +147,10 @@ class CommandQueueProcessor:
                     ).first()
 
                     if vd:
-                        # All network TVs use device_type="network_tv"
-                        # Protocol field determines the specific executor
-                        device_type = "network_tv"
+                        # Device type comes from Virtual Device
+                        # - network_tv for Network TVs
+                        # - audio_zone for Audio Zones
+                        device_type = vd.device_type
                         protocol = vd.protocol
                     else:
                         CommandQueueService.mark_failed(
@@ -212,6 +213,20 @@ class CommandQueueProcessor:
                 CommandQueueService.mark_completed(
                     db, cmd.id, True, execution_time_ms
                 )
+
+                # Update cached channel if this was a change_channel command
+                if cmd.command == "change_channel" and cmd.channel:
+                    if cmd.hostname.startswith('nw-'):
+                        # Update Virtual Device channel cache
+                        vd = db.query(VirtualDevice).filter(
+                            VirtualDevice.controller_id == vc.id,
+                            VirtualDevice.port_number == cmd.port
+                        ).first()
+                        if vd:
+                            vd.cached_current_channel = cmd.channel
+                            db.commit()
+                            logger.debug(f"Updated channel cache for {vd.device_name}: {cmd.channel}")
+
                 logger.info(
                     f"✓ Worker {worker_id} completed command {cmd.id} "
                     f"in {execution_time_ms}ms via {executor.__class__.__name__}"
