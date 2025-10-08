@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/lib/axios';
 
 export interface AudioZone {
   id: number;
