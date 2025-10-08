@@ -1,6 +1,7 @@
 import { RefreshCw, Trash2, Speaker } from 'lucide-react';
 import { useAudioControllers, useDeleteController, useRediscoverZones } from '../hooks/use-audio';
 import { ZoneCard } from '../components/zone-card';
+import { AmplifierInfoCards } from '../components/amplifier-info-cards';
 
 export function AudioPage() {
   const { data: controllers, isLoading, isError, error } = useAudioControllers();
@@ -126,6 +127,11 @@ export function AudioPage() {
           ))}
         </div>
       )}
+
+      {/* Supported Amplifiers Section */}
+      <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+        <AmplifierInfoCards />
+      </div>
     </section>
   );
 }
