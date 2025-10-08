@@ -14,6 +14,7 @@ const navigation = [
   { label: 'IR Builder', to: '/templates' },
   { label: 'Schedules', to: '/schedules' },
   { label: 'Queue Diagnostics', to: '/queue-diagnostics' },
+  { label: 'Documentation', to: '/documentation' },
   { label: 'Tags', to: '/tags' },
   { label: 'Channels', to: '/settings' },
   { label: 'Users', to: '/users' },
