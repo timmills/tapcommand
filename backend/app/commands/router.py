@@ -20,6 +20,7 @@ from .executors.network import (
     VizioExecutor,
     PhilipsExecutor
 )
+from .executors.audio import BoschAES70Executor
 
 
 class ProtocolRouter:
@@ -87,6 +88,11 @@ class ProtocolRouter:
             # Vizio SmartCast
             elif command.protocol == "vizio_smartcast":
                 return VizioExecutor(self.db)
+
+        # Audio Zone Controllers
+        if command.device_type == "audio_zone":
+            if command.protocol == "bosch_aes70":
+                return BoschAES70Executor(self.db)
 
         # No executor found
         return None

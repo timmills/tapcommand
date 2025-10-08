@@ -101,6 +101,7 @@ class VirtualDevice(Base):
     cached_mute_status = Column(Boolean, nullable=True)  # true/false
     cached_current_input = Column(String, nullable=True)  # "HDMI 1", "HDMI 2", etc.
     cached_current_app = Column(String, nullable=True)  # "Netflix", "YouTube", etc.
+    cached_current_channel = Column(String, nullable=True)  # Current channel number (for TVs)
 
     # Status metadata
     last_status_poll = Column(DateTime(timezone=True), nullable=True)

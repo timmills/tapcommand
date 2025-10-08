@@ -230,12 +230,26 @@ class TVStatusPoller:
             power_state = system.get_power_state()
             # {"state": "Active"}
 
+            # Try to get channel info if watching TV
+            channel_info = None
+            try:
+                # If current app is LiveTV, try to get channel
+                if current_app and current_app.get("id") == "com.webos.app.livetv":
+                    # LG webOS provides channel through TV control
+                    from pywebostv.controls import TvControl
+                    tv = TvControl(client)
+                    channel_info = tv.get_current_channel()
+                    # Returns channel number if available
+            except:
+                pass  # Channel info not available
+
             return {
                 "power": power_state.get("state", "unknown").lower() if power_state else "unknown",
                 "volume": volume_info.get("volume") if volume_info else None,
                 "muted": volume_info.get("muted") if volume_info else None,
                 "input": current_input.get("label") if current_input else None,
-                "app": current_app.get("title") if current_app else None
+                "app": current_app.get("title") if current_app else None,
+                "channel": channel_info.get("channelNumber") if channel_info else None
             }
 
         except Exception as e:
@@ -436,6 +450,10 @@ class TVStatusPoller:
         device.cached_current_input = status.get("input")
         device.cached_current_app = status.get("app")
         device.is_online = True
+
+        # Update channel if provided by the TV API
+        if status.get("channel"):
+            device.cached_current_channel = status.get("channel")
 
         logger.debug(f"Updated status for {device.device_name}: {status}")
 

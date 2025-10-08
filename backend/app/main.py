@@ -26,6 +26,7 @@ from .routers.virtual_controllers import router as virtual_controllers_router
 from .routers.device_status import router as device_status_router
 from .api.hybrid_devices import router as hybrid_devices_router
 from .commands.api import router as unified_commands_router
+from .routers.audio_controllers import router as audio_controllers_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
 from .services.queue_processor import start_queue_processor, stop_queue_processor
@@ -323,6 +324,11 @@ app.include_router(
 app.include_router(
     hybrid_devices_router,
     prefix=f"{settings.API_V1_STR}"
+)
+
+# Include audio controllers router
+app.include_router(
+    audio_controllers_router
 )
 
 # Mount static files for channel icons

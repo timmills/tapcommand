@@ -125,7 +125,14 @@
       "Bash(then echo \"✅ $ip is ONLINE\")",
       "Bash(else echo \"❌ $ip is OFFLINE\")",
       "Bash(fi)",
-      "WebFetch(domain:maclookup.app)"
+      "WebFetch(domain:maclookup.app)",
+      "WebFetch(domain:licensing.boschsecurity.com)",
+      "WebFetch(domain:resources-boschsecurity-cdn.azureedge.net)",
+      "WebFetch(domain:ocaalliance.com)",
+      "WebFetch(domain:ocaalliance.github.io)",
+      "WebFetch(domain:aes70py.org)",
+      "WebFetch(domain:manuals.plus)",
+      "Bash(pip freeze)"
     ],
     "deny": [],
     "ask": []
