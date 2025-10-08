@@ -132,7 +132,8 @@
       "WebFetch(domain:ocaalliance.github.io)",
       "WebFetch(domain:aes70py.org)",
       "WebFetch(domain:manuals.plus)",
-      "Bash(pip freeze)"
+      "Bash(pip freeze)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
