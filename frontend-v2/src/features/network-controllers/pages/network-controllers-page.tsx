@@ -427,7 +427,7 @@ export const NetworkControllersPage = () => {
     <section className="space-y-6">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Network Controllers</h2>
+          <h2 className="text-lg font-semibold text-slate-900">TV Controllers</h2>
           <p className="text-sm text-slate-500">
             Discover and adopt network TVs. {tvs.filter(tv => tv.adoptable === 'ready').length} ready to adopt • {virtualControllers.length} adopted
           </p>

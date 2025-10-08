@@ -22,7 +22,7 @@ export function AudioPage() {
     <section className="space-y-6">
       {/* Page header */}
       <header>
-        <h2 className="text-lg font-semibold text-slate-900">Audio Control</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Audio Controllers</h2>
         <p className="text-sm text-slate-500">
           Manage audio amplifiers and zones
         </p>
