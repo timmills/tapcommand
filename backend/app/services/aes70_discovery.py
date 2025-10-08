@@ -13,7 +13,8 @@ from sqlalchemy.orm import Session
 
 # AES70 imports
 try:
-    from aes70 import tcp_connection, remote_device
+    from aes70.controller import tcp_connection
+    from aes70.controller.remote_device import RemoteDevice
     AES70_AVAILABLE = True
 except ImportError:
     AES70_AVAILABLE = False
@@ -68,7 +69,7 @@ class AES70DiscoveryService:
                 port=port
             )
 
-            device = remote_device.RemoteDevice(connection)
+            device = RemoteDevice(connection)
             device.set_keepalive_interval(10)
 
             # Get device info

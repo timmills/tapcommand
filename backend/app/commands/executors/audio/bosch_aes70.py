@@ -10,15 +10,16 @@ from typing import Optional, Dict, Any
 
 # AES70 imports
 try:
-    from aes70 import tcp_connection, remote_device
-    from aes70.types import OcaMuteState
+    from aes70.controller import tcp_connection
+    from aes70.controller.remote_device import RemoteDevice
+    from aes70.types.ocamutestate import OcaMuteState
     AES70_AVAILABLE = True
 except ImportError:
     AES70_AVAILABLE = False
     logging.warning("AES70py not installed - audio control will not be available")
 
 from ..base import CommandExecutor
-from ...models import Command, CommandResult
+from ...models import Command, ExecutionResult
 from ....models.virtual_controller import VirtualController, VirtualDevice
 from sqlalchemy.orm import Session
 
@@ -30,7 +31,7 @@ class BoschAES70Executor(CommandExecutor):
 
     def __init__(self, db: Session):
         self.db = db
-        self._connections: Dict[str, remote_device.RemoteDevice] = {}  # Cache connections per controller
+        self._connections: Dict[str, RemoteDevice] = {}  # Cache connections per controller
 
         if not AES70_AVAILABLE:
             logger.error("AES70py not installed - cannot create BoschAES70Executor")
@@ -43,11 +44,11 @@ class BoschAES70Executor(CommandExecutor):
             command.protocol == "bosch_aes70"
         )
 
-    async def execute(self, command: Command) -> CommandResult:
+    async def execute(self, command: Command) -> ExecutionResult:
         """Execute audio zone command"""
 
         if not AES70_AVAILABLE:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message="AES70py library not installed"
             )
@@ -58,7 +59,7 @@ class BoschAES70Executor(CommandExecutor):
         ).first()
 
         if not vc:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Audio controller {command.controller_id} not found"
             )
@@ -73,7 +74,7 @@ class BoschAES70Executor(CommandExecutor):
         ).first()
 
         if not vd:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Zone {zone_number} not found for controller {command.controller_id}"
             )
@@ -82,7 +83,7 @@ class BoschAES70Executor(CommandExecutor):
         device = await self._get_connection(vc)
 
         if not device:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Failed to connect to {vc.controller_name} at {vc.ip_address}"
             )
@@ -103,19 +104,19 @@ class BoschAES70Executor(CommandExecutor):
             elif command.command == "toggle_mute":
                 return await self._toggle_mute(device, vd)
             else:
-                return CommandResult(
+                return ExecutionResult(
                     success=False,
                     message=f"Unknown command: {command.command}"
                 )
 
         except Exception as e:
             logger.error(f"AES70 command error: {e}", exc_info=True)
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"AES70 error: {str(e)}"
             )
 
-    async def _get_connection(self, controller: VirtualController) -> Optional[remote_device.RemoteDevice]:
+    async def _get_connection(self, controller: VirtualController) -> Optional[RemoteDevice]:
         """Get or create AES70 connection to controller"""
 
         controller_id = controller.controller_id
@@ -140,7 +141,7 @@ class BoschAES70Executor(CommandExecutor):
                 port=controller.port or 65000
             )
 
-            device = remote_device.RemoteDevice(connection)
+            device = RemoteDevice(connection)
             device.set_keepalive_interval(10)
 
             # Cache connection
@@ -155,15 +156,15 @@ class BoschAES70Executor(CommandExecutor):
 
     async def _set_volume(
         self,
-        device: remote_device.RemoteDevice,
+        device: RemoteDevice,
         zone: VirtualDevice,
         volume: int
-    ) -> CommandResult:
+    ) -> ExecutionResult:
         """Set volume (0-100 scale) on zone"""
 
         # Validate volume range
         if volume < 0 or volume > 100:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Volume must be 0-100, got {volume}"
             )
@@ -174,7 +175,7 @@ class BoschAES70Executor(CommandExecutor):
         # Get gain object from zone config
         role_path = zone.connection_config.get("role_path") if zone.connection_config else None
         if not role_path:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Zone {zone.device_name} has no role_path configured"
             )
@@ -182,7 +183,7 @@ class BoschAES70Executor(CommandExecutor):
         gain_obj = role_map.get(role_path)
 
         if not gain_obj:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Gain object not found at {role_path}"
             )
@@ -201,16 +202,16 @@ class BoschAES70Executor(CommandExecutor):
 
         logger.info(f"✓ Set {zone.device_name} to {volume}% ({db_value:.1f}dB)")
 
-        return CommandResult(
+        return ExecutionResult(
             success=True,
             message=f"Set {zone.device_name} to {volume}% ({db_value:.1f}dB)"
         )
 
     async def _volume_up(
         self,
-        device: remote_device.RemoteDevice,
+        device: RemoteDevice,
         zone: VirtualDevice
-    ) -> CommandResult:
+    ) -> ExecutionResult:
         """Increase volume by 5%"""
         current_volume = zone.cached_volume_level or 50
         new_volume = min(100, current_volume + 5)
@@ -218,9 +219,9 @@ class BoschAES70Executor(CommandExecutor):
 
     async def _volume_down(
         self,
-        device: remote_device.RemoteDevice,
+        device: RemoteDevice,
         zone: VirtualDevice
-    ) -> CommandResult:
+    ) -> ExecutionResult:
         """Decrease volume by 5%"""
         current_volume = zone.cached_volume_level or 50
         new_volume = max(0, current_volume - 5)
@@ -228,10 +229,10 @@ class BoschAES70Executor(CommandExecutor):
 
     async def _mute(
         self,
-        device: remote_device.RemoteDevice,
+        device: RemoteDevice,
         zone: VirtualDevice,
         mute: bool
-    ) -> CommandResult:
+    ) -> ExecutionResult:
         """Mute/unmute zone"""
 
         # Get role map
@@ -240,14 +241,14 @@ class BoschAES70Executor(CommandExecutor):
         # Get mute object from zone config
         mute_path = zone.connection_config.get("mute_path") if zone.connection_config else None
         if not mute_path:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Zone {zone.device_name} does not support mute (no mute_path)"
             )
 
         mute_obj = role_map.get(mute_path)
         if not mute_obj:
-            return CommandResult(
+            return ExecutionResult(
                 success=False,
                 message=f"Mute object not found at {mute_path}"
             )
@@ -263,16 +264,16 @@ class BoschAES70Executor(CommandExecutor):
         action = "Muted" if mute else "Unmuted"
         logger.info(f"✓ {action} {zone.device_name}")
 
-        return CommandResult(
+        return ExecutionResult(
             success=True,
             message=f"{action} {zone.device_name}"
         )
 
     async def _toggle_mute(
         self,
-        device: remote_device.RemoteDevice,
+        device: RemoteDevice,
         zone: VirtualDevice
-    ) -> CommandResult:
+    ) -> ExecutionResult:
         """Toggle mute state"""
         current_mute = zone.cached_mute_status or False
         return await self._mute(device, zone, not current_mute)
