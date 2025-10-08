@@ -5,6 +5,7 @@ const navigation = [
   { label: 'Control', to: '/control' },
   { label: 'IR Controllers', to: '/controllers' },
   { label: 'Network Controllers', to: '/network-controllers' },
+  { label: 'Audio', to: '/audio' },
   { label: 'Connected Devices', to: '/connected-devices' },
   { label: 'Discovery', to: '/discovery' },
   { label: 'IR Libraries', to: '/ir-libraries' },
