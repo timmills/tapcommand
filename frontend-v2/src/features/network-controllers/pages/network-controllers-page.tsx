@@ -258,6 +258,8 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
 export const NetworkControllersPage = () => {
   const [tvs, setTvs] = useState<DiscoveredTV[]>([]);
   const [discovering, setDiscovering] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [lastScanTime, setLastScanTime] = useState<string | null>(null);
   const [commandInProgress, setCommandInProgress] = useState<string | null>(null);
   const [adoptionModal, setAdoptionModal] = useState<{ isOpen: boolean; tv: DiscoveredTV | null }>({
     isOpen: false,
@@ -273,6 +275,29 @@ export const NetworkControllersPage = () => {
   const [manualIP, setManualIP] = useState('');
   const [manualName, setManualName] = useState('');
   const [manualAdopting, setManualAdopting] = useState(false);
+
+  const fetchLastScanTime = async () => {
+    try {
+      const response = await apiClient.get<{ last_scan_time: string | null }>('/api/network/last-scan-time');
+      setLastScanTime(response.data.last_scan_time);
+    } catch (error) {
+      console.error('Failed to fetch last scan time:', error);
+    }
+  };
+
+  const handleScanNetwork = async () => {
+    setScanning(true);
+    try {
+      await apiClient.post('/api/network/scan/trigger', {}, { timeout: 30000 });
+      // After scan completes, refresh TV list and last scan time
+      await handleDiscover();
+      await fetchLastScanTime();
+    } catch (error) {
+      console.error('Network scan failed:', error);
+    } finally {
+      setScanning(false);
+    }
+  };
 
   const handleDiscover = async () => {
     setDiscovering(true);
@@ -411,6 +436,7 @@ export const NetworkControllersPage = () => {
     handleDiscover();
     loadVirtualControllers();
     loadVirtualDevices();
+    fetchLastScanTime();
   }, []);
 
   const getAdoptableIcon = (adoptable: string) => {
@@ -455,6 +481,11 @@ export const NetworkControllersPage = () => {
           <p className="text-sm text-slate-500">
             Discover and adopt network TVs. {tvs.filter(tv => tv.adoptable === 'ready').length} ready to adopt • {virtualControllers.length} adopted
           </p>
+          {lastScanTime && (
+            <p className="text-xs text-slate-400 mt-1">
+              Last scan: {new Date(lastScanTime).toLocaleString()}
+            </p>
+          )}
         </div>
         <div className="flex gap-2">
           <button
@@ -469,6 +500,29 @@ export const NetworkControllersPage = () => {
           </button>
           <button
             type="button"
+            onClick={handleScanNetwork}
+            disabled={scanning}
+            className="inline-flex items-center gap-1 rounded-md border border-brand-200 bg-white px-3 py-2 text-sm font-medium text-brand-700 shadow-sm transition hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {scanning ? (
+              <>
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Scanning Network...
+              </>
+            ) : (
+              <>
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Scan Network Now
+              </>
+            )}
+          </button>
+          <button
+            type="button"
             onClick={handleDiscover}
             disabled={discovering}
             className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
@@ -479,12 +533,17 @@ export const NetworkControllersPage = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Discovering...
+                Refreshing...
               </>
             ) : (
-            'Discover TVs'
-          )}
-        </button>
+              <>
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh TV List
+              </>
+            )}
+          </button>
         </div>
       </header>
 

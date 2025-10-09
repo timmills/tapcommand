@@ -257,6 +257,35 @@ async def search_vendors(query: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
 
+@router.get("/last-scan-time")
+async def get_last_scan_time(db: Session = Depends(get_db)):
+    """
+    Get timestamp of the last network scan
+    Returns the most recent last_seen timestamp from the scan cache
+    """
+    try:
+        latest_device = db.query(NetworkScanCache).order_by(
+            NetworkScanCache.last_seen.desc()
+        ).first()
+
+        if latest_device:
+            return {
+                "success": True,
+                "last_scan_time": latest_device.last_seen.isoformat() if latest_device.last_seen else None,
+                "devices_in_cache": db.query(NetworkScanCache).count()
+            }
+        else:
+            return {
+                "success": True,
+                "last_scan_time": None,
+                "devices_in_cache": 0,
+                "message": "No scans performed yet"
+            }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get last scan time: {str(e)}")
+
+
 @router.get("/stats")
 async def get_network_stats(db: Session = Depends(get_db)):
     """
