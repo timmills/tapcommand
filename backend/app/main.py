@@ -388,6 +388,22 @@ async def get_install_script():
     return {"error": "Install script not found"}
 
 
+@app.get("/install-fancy.sh")
+async def get_fancy_install_script():
+    """Serve the fancy Gum-enhanced install script for wget deployment"""
+    install_script = Path(__file__).parent.parent.parent / "install-fancy.sh"
+    if install_script.exists():
+        return FileResponse(
+            path=install_script,
+            media_type="text/x-shellscript",
+            filename="install-fancy.sh",
+            headers={
+                "Content-Disposition": "attachment; filename=install-fancy.sh"
+            }
+        )
+    return {"error": "Fancy install script not found"}
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
