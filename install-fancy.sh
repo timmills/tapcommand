@@ -418,6 +418,31 @@ WantedBy=multi-user.target
 EOF
 
     fancy_success "Backend service created"
+
+    # Get local IP for network scanner
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+    SUBNET=$(echo $LOCAL_IP | cut -d'.' -f1-3)
+
+    fancy_info "Creating network scanner service..."
+    sudo tee /etc/systemd/system/smartvenue-scanner.service > /dev/null << EOF
+[Unit]
+Description=SmartVenue Network Scanner
+After=network.target smartvenue-backend.service
+
+[Service]
+Type=simple
+User=$APP_USER
+WorkingDirectory=$INSTALL_DIR/backend
+Environment="PATH=$INSTALL_DIR/venv/bin"
+ExecStart=$INSTALL_DIR/venv/bin/python -m app.services.scheduled_network_scan --subnet $SUBNET --interval 10
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    fancy_success "Network scanner service created (scanning $SUBNET.0/24 every 10 minutes)"
     sudo systemctl daemon-reload
 }
 
@@ -506,6 +531,16 @@ start_services() {
         fancy_info "Recent logs:"
         sudo journalctl -u smartvenue-backend.service -n 20 --no-pager
         exit 1
+    fi
+
+    fancy_spin "Enabling network scanner service..." sudo systemctl enable smartvenue-scanner.service
+    fancy_spin "Starting network scanner service..." sudo systemctl start smartvenue-scanner.service
+    sleep 2
+
+    if sudo systemctl is-active --quiet smartvenue-scanner.service; then
+        fancy_success "Network scanner service started"
+    else
+        fancy_warning "Network scanner failed to start (check logs: sudo journalctl -u smartvenue-scanner.service)"
     fi
 
     fancy_spin "Restarting nginx..." sudo systemctl restart nginx

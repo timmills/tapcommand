@@ -350,26 +350,30 @@ EOF
 
     print_success "Backend service created"
 
-    # Create frontend service (for development/testing)
-    print_info "Creating frontend systemd service..."
-    sudo tee /etc/systemd/system/smartvenue-frontend.service > /dev/null << EOF
+    # Get local IP for network scanner
+    LOCAL_IP=$(hostname -I | awk '{print $1}')
+    SUBNET=$(echo $LOCAL_IP | cut -d'.' -f1-3)
+
+    print_info "Creating network scanner service..."
+    sudo tee /etc/systemd/system/smartvenue-scanner.service > /dev/null << EOF
 [Unit]
-Description=SmartVenue Frontend Development Server
-After=network.target
+Description=SmartVenue Network Scanner
+After=network.target smartvenue-backend.service
 
 [Service]
 Type=simple
 User=$APP_USER
-WorkingDirectory=$INSTALL_DIR/frontend-v2
-ExecStart=/usr/bin/npm run dev -- --host 0.0.0.0 --port $FRONTEND_PORT
+WorkingDirectory=$INSTALL_DIR/backend
+Environment="PATH=$INSTALL_DIR/venv/bin"
+ExecStart=$INSTALL_DIR/venv/bin/python -m app.services.scheduled_network_scan --subnet $SUBNET --interval 10
 Restart=always
-RestartSec=10
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-    print_success "Frontend service created"
+    print_success "Network scanner service created (scanning $SUBNET.0/24 every 10 minutes)"
 
     # Reload systemd
     sudo systemctl daemon-reload
@@ -470,6 +474,17 @@ start_services() {
         sudo journalctl -u smartvenue-backend.service -n 20 --no-pager
         print_info "Full logs: sudo journalctl -u smartvenue-backend.service -n 50"
         exit 1
+    fi
+
+    print_info "Enabling and starting network scanner service..."
+    sudo systemctl enable smartvenue-scanner.service
+    sudo systemctl start smartvenue-scanner.service
+    sleep 2
+
+    if sudo systemctl is-active --quiet smartvenue-scanner.service; then
+        print_success "Network scanner service started"
+    else
+        print_warning "Network scanner failed to start (check logs: sudo journalctl -u smartvenue-scanner.service)"
     fi
 
     print_info "Restarting nginx..."
