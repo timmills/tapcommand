@@ -39,6 +39,7 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         network_scan_count = safe_count("network_scan_cache")
         command_history_count = safe_count("command_history")
         command_queue_count = safe_count("command_queue")
+        ir_ports_count = safe_count("ir_ports")
 
         print(f"\n📊 Current database state:")
         print(f"   • Discovered devices: {discovered_count}")
@@ -49,6 +50,7 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         print(f"   • Network scan cache: {network_scan_count}")
         print(f"   • Command history: {command_history_count}")
         print(f"   • Command queue: {command_queue_count}")
+        print(f"   • IR ports: {ir_ports_count}")
 
         total_items = discovered_count + managed_count + devices_count + virtual_controller_count + virtual_device_count + network_scan_count + command_history_count + command_queue_count
         if total_items == 0:
@@ -66,6 +68,11 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         if managed_count > 0:
             cursor.execute("DELETE FROM managed_devices")
             print(f"   ✓ Removed {managed_count} managed devices")
+
+        # Delete IR ports (orphaned port configurations)
+        if ir_ports_count > 0:
+            cursor.execute("DELETE FROM ir_ports")
+            print(f"   ✓ Removed {ir_ports_count} IR port configurations")
 
         # Delete legacy devices table
         if devices_count > 0:
