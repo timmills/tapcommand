@@ -366,7 +366,7 @@ After=network.target smartvenue-backend.service
 Type=simple
 User=$APP_USER
 WorkingDirectory=$INSTALL_DIR/backend
-Environment="PATH=$INSTALL_DIR/venv/bin"
+Environment="PATH=$INSTALL_DIR/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ExecStart=$INSTALL_DIR/venv/bin/python -m app.services.scheduled_network_scan --subnet $SUBNET --interval 10
 Restart=always
 RestartSec=30
