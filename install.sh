@@ -213,11 +213,11 @@ setup_backend() {
     source venv/bin/activate
 
     print_info "Upgrading pip..."
-    pip install --upgrade pip -q
+    pip install --upgrade pip
 
-    print_info "Installing Python dependencies..."
+    print_info "Installing Python dependencies (this may take several minutes)..."
     cd backend
-    pip install -r requirements.txt -q
+    pip install -r requirements.txt
 
     print_success "Backend dependencies installed"
 
