@@ -12,6 +12,7 @@ aioesphomeapi
 esphome
 asyncio-mqtt==0.16.1
 apscheduler==3.10.4
+croniter
 pydantic-settings==2.1.0
 
 # Authentication & Security
