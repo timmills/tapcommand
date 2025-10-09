@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { DiscoveryTable } from '../components/discovery-table';
 import { useDiscoveryControls } from '../hooks/use-discovery';
-import { fetchAllDevices, type AllDevicesFilters } from '../api/discovery-api';
+import { fetchAllDevices, fetchDiscoveryStatus, type AllDevicesFilters } from '../api/discovery-api';
 import type { DiscoveredDevice } from '@/types';
 import { ControllerEditModal } from '../../devices/components/controller-edit-modal';
+import { formatDistanceToNow } from 'date-fns';
 
 export const DiscoveryPage = () => {
   const { startDiscovery, stopDiscovery } = useDiscoveryControls();
@@ -31,6 +32,13 @@ export const DiscoveryPage = () => {
     refetchInterval: 5000, // Auto-refresh every 5 seconds
   });
 
+  // Fetch discovery status for last scan time
+  const { data: statusData } = useQuery({
+    queryKey: ['discovery-status'],
+    queryFn: fetchDiscoveryStatus,
+    refetchInterval: 5000, // Auto-refresh every 5 seconds
+  });
+
   return (
     <section className="space-y-6">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -40,23 +48,30 @@ export const DiscoveryPage = () => {
             Discover ESPHome IR controllers and network devices.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => startDiscovery.mutate()}
-            disabled={startDiscovery.isPending}
-            className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
-          >
-            {startDiscovery.isPending ? 'Starting…' : 'Start discovery'}
-          </button>
-          <button
-            type="button"
-            onClick={() => stopDiscovery.mutate()}
-            disabled={stopDiscovery.isPending}
-            className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {stopDiscovery.isPending ? 'Stopping…' : 'Stop'}
-          </button>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => startDiscovery.mutate()}
+              disabled={startDiscovery.isPending}
+              className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
+            >
+              {startDiscovery.isPending ? 'Starting…' : 'Start discovery'}
+            </button>
+            <button
+              type="button"
+              onClick={() => stopDiscovery.mutate()}
+              disabled={stopDiscovery.isPending}
+              className="inline-flex items-center gap-1 rounded-md border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {stopDiscovery.isPending ? 'Stopping…' : 'Stop'}
+            </button>
+          </div>
+          {statusData?.network_scan?.last_scan_time && (
+            <p className="text-xs text-slate-500">
+              Last network scan: {formatDistanceToNow(new Date(statusData.network_scan.last_scan_time), { addSuffix: true })}
+            </p>
+          )}
         </div>
       </header>
 

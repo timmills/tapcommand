@@ -83,12 +83,33 @@ async def stop_discovery():
 
 
 @router.get("/discovery/status")
-async def get_discovery_status():
-    """Get current discovery service status"""
-    return {
+async def get_discovery_status(db: Session = Depends(get_db)):
+    """Get current discovery service status including network scan info"""
+    from ..models.network_discovery import NetworkScanCache
+    from sqlalchemy import func
+
+    # Get ESPHome discovery status
+    esphome_status = {
         "running": discovery_service.is_running(),
         "device_count": len(discovery_service.get_discovered_devices()),
         "service_type": "ESPHome mDNS Discovery"
+    }
+
+    # Get network scan status
+    network_scan_count = db.query(NetworkScanCache).filter(NetworkScanCache.is_online == True).count()
+
+    # Get last scan time (most recent updated_at from network_scan_cache)
+    last_scan_result = db.query(func.max(NetworkScanCache.updated_at)).scalar()
+
+    network_status = {
+        "device_count": network_scan_count,
+        "last_scan_time": last_scan_result.isoformat() if last_scan_result else None,
+        "service_type": "Network Sweep Scanner"
+    }
+
+    return {
+        "esphome": esphome_status,
+        "network_scan": network_status
     }
 
 

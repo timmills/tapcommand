@@ -38,6 +38,24 @@ export const stopDiscovery = async (): Promise<void> => {
   await apiClient.post('/api/v1/devices/discovery/stop');
 };
 
+export interface DiscoveryStatus {
+  esphome: {
+    running: boolean;
+    device_count: number;
+    service_type: string;
+  };
+  network_scan: {
+    device_count: number;
+    last_scan_time: string | null;
+    service_type: string;
+  };
+}
+
+export const fetchDiscoveryStatus = async (): Promise<DiscoveryStatus> => {
+  const response = await apiClient.get<DiscoveryStatus>('/api/v1/devices/discovery/status');
+  return response.data;
+};
+
 export const connectDiscoveredDevice = async (
   hostname: string,
   payload: Record<string, unknown> = {},
