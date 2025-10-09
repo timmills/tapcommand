@@ -23,42 +23,64 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
     cursor = conn.cursor()
 
     try:
-        # Get counts before cleanup
-        cursor.execute("SELECT COUNT(*) FROM discovered_devices WHERE 1=1")
-        discovered_count = cursor.fetchone()[0]
+        # Get counts before cleanup (with error handling for missing tables)
+        def safe_count(table_name):
+            try:
+                cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+                return cursor.fetchone()[0]
+            except sqlite3.Error:
+                return 0
 
-        cursor.execute("SELECT COUNT(*) FROM managed_devices WHERE 1=1")
-        managed_count = cursor.fetchone()[0]
-
-        cursor.execute("SELECT COUNT(*) FROM device_controllers WHERE 1=1")
-        controller_count = cursor.fetchone()[0]
+        discovered_count = safe_count("device_discoveries")
+        managed_count = safe_count("managed_devices")
+        virtual_controller_count = safe_count("virtual_controllers")
+        virtual_device_count = safe_count("virtual_devices")
+        network_scan_count = safe_count("network_scan_cache")
 
         print(f"\n📊 Current database state:")
         print(f"   • Discovered devices: {discovered_count}")
         print(f"   • Managed devices: {managed_count}")
-        print(f"   • Controllers: {controller_count}")
+        print(f"   • Virtual controllers: {virtual_controller_count}")
+        print(f"   • Virtual devices: {virtual_device_count}")
+        print(f"   • Network scan cache: {network_scan_count}")
 
-        if discovered_count == 0 and managed_count == 0 and controller_count == 0:
+        total_items = discovered_count + managed_count + virtual_controller_count + virtual_device_count + network_scan_count
+        if total_items == 0:
             print("\n✨ Database is already clean!")
             return
 
         print(f"\n🗑️  Removing cached data...")
 
         # Delete discovered devices
-        cursor.execute("DELETE FROM discovered_devices")
-        print(f"   ✓ Removed {discovered_count} discovered devices")
+        if discovered_count > 0:
+            cursor.execute("DELETE FROM device_discoveries")
+            print(f"   ✓ Removed {discovered_count} discovered devices")
 
         # Delete managed devices and their relationships
-        cursor.execute("DELETE FROM managed_devices")
-        print(f"   ✓ Removed {managed_count} managed devices")
+        if managed_count > 0:
+            cursor.execute("DELETE FROM managed_devices")
+            print(f"   ✓ Removed {managed_count} managed devices")
 
-        # Delete device controllers
-        cursor.execute("DELETE FROM device_controllers")
-        print(f"   ✓ Removed {controller_count} controllers")
+        # Delete virtual controllers and devices
+        if virtual_device_count > 0:
+            cursor.execute("DELETE FROM virtual_devices")
+            print(f"   ✓ Removed {virtual_device_count} virtual devices")
 
-        # Reset any cached state
-        cursor.execute("DELETE FROM device_status WHERE 1=1")
-        print(f"   ✓ Cleared device status cache")
+        if virtual_controller_count > 0:
+            cursor.execute("DELETE FROM virtual_controllers")
+            print(f"   ✓ Removed {virtual_controller_count} virtual controllers")
+
+        # Clear network scan cache
+        if network_scan_count > 0:
+            cursor.execute("DELETE FROM network_scan_cache")
+            print(f"   ✓ Cleared {network_scan_count} network scan entries")
+
+        # Reset any cached state (device_status might not exist)
+        try:
+            cursor.execute("DELETE FROM device_status")
+            print(f"   ✓ Cleared device status cache")
+        except sqlite3.Error:
+            pass
 
         # Optionally clean IR libraries (usually keep these)
         if not keep_ir_libraries:
