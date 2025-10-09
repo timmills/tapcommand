@@ -281,8 +281,12 @@ async def get_all_devices(
 
     # Get ESPHome devices
     if show_esphome:
-        esphome_filter = DeviceDiscovery.is_managed == False if not show_managed else True  # noqa: E712
-        esphome_devices = db.query(DeviceDiscovery).filter(esphome_filter).all()
+        if show_managed:
+            # Show all ESPHome devices
+            esphome_devices = db.query(DeviceDiscovery).all()
+        else:
+            # Only show unmanaged ESPHome devices
+            esphome_devices = db.query(DeviceDiscovery).filter(DeviceDiscovery.is_managed == False).all()  # noqa: E712
 
         for device in esphome_devices:
             all_devices.append(AllDevicesResponse(
