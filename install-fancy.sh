@@ -215,13 +215,15 @@ install_system_deps() {
                 python3 python3-pip python3-venv python3-dev \
                 build-essential curl git nginx sqlite3 \
                 avahi-utils libavahi-compat-libdnssd-dev \
-                nmap net-tools bc libssl-dev libffi-dev
+                nmap net-tools bc libssl-dev libffi-dev \
+                iputils-ping iproute2
     else
         sudo apt-get install -y \
             python3 python3-pip python3-venv python3-dev \
             build-essential curl git nginx sqlite3 \
             avahi-utils libavahi-compat-libdnssd-dev \
-            nmap net-tools bc libssl-dev libffi-dev
+            nmap net-tools bc libssl-dev libffi-dev \
+            iputils-ping iproute2
     fi
 
     fancy_success "System dependencies installed"

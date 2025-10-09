@@ -160,6 +160,8 @@ install_system_deps() {
         bc \
         libssl-dev \
         libffi-dev \
+        iputils-ping \
+        iproute2 \
         || { print_error "Failed to install system dependencies"; exit 1; }
 
     print_success "System dependencies installed"
