@@ -9,6 +9,7 @@ export interface AllDevicesFilters {
   show_esphome?: boolean;
   show_network?: boolean;
   show_managed?: boolean;
+  show_hidden?: boolean;
 }
 
 export const fetchDiscoveredDevices = async (): Promise<DiscoveredDevice[]> => {
@@ -23,6 +24,7 @@ export const fetchAllDevices = async (filters: AllDevicesFilters = {}): Promise<
   if (filters.show_esphome !== undefined) params.append('show_esphome', String(filters.show_esphome));
   if (filters.show_network !== undefined) params.append('show_network', String(filters.show_network));
   if (filters.show_managed !== undefined) params.append('show_managed', String(filters.show_managed));
+  if (filters.show_hidden !== undefined) params.append('show_hidden', String(filters.show_hidden));
 
   const response = await apiClient.get<DiscoveredDevice[]>(`/api/v1/management/all-devices?${params.toString()}`);
   return response.data ?? [];

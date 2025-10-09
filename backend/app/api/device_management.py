@@ -263,6 +263,7 @@ async def get_all_devices(
     show_esphome: bool = True,
     show_network: bool = False,
     show_managed: bool = False,
+    show_hidden: bool = False,
     db: Session = Depends(get_db)
 ) -> List[AllDevicesResponse]:
     """
@@ -272,6 +273,7 @@ async def get_all_devices(
         show_esphome: Include ESPHome discovered devices (default: True)
         show_network: Include network scanned devices (default: False)
         show_managed: Include managed devices in results (default: False)
+        show_hidden: Include hidden devices (default: False)
     """
     from ..models.network_discovery import NetworkScanCache
 
@@ -300,7 +302,12 @@ async def get_all_devices(
 
     # Get network scanned devices
     if show_network:
-        network_devices = db.query(NetworkScanCache).filter(NetworkScanCache.is_online == True).all()  # noqa: E712
+        # Build filter for network devices
+        network_filter = NetworkScanCache.is_online == True  # noqa: E712
+        if not show_hidden:
+            network_filter = (NetworkScanCache.is_online == True) & (NetworkScanCache.is_hidden == False)  # noqa: E712
+
+        network_devices = db.query(NetworkScanCache).filter(network_filter).all()
 
         # Get managed device MAC addresses to filter if needed
         managed_macs = set()

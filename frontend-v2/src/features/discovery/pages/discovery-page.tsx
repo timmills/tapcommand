@@ -14,12 +14,14 @@ export const DiscoveryPage = () => {
   const [showESPHome, setShowESPHome] = useState(true);
   const [showNetwork, setShowNetwork] = useState(false);
   const [showManaged, setShowManaged] = useState(false);
+  const [showHidden, setShowHidden] = useState(false);
 
   // Build filters object
   const filters: AllDevicesFilters = {
     show_esphome: showESPHome,
     show_network: showNetwork,
     show_managed: showManaged,
+    show_hidden: showHidden,
   };
 
   // Fetch devices with filters
@@ -97,6 +99,18 @@ export const DiscoveryPage = () => {
               Show Managed Devices
             </span>
           </label>
+
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={showHidden}
+              onChange={(e) => setShowHidden(e.target.checked)}
+              className="rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+            />
+            <span className="text-sm text-slate-700">
+              Show Hidden Devices
+            </span>
+          </label>
         </div>
         <p className="text-xs text-slate-500 mt-2">
           {!showESPHome && !showNetwork ? (
@@ -106,7 +120,8 @@ export const DiscoveryPage = () => {
               Showing: {[
                 showESPHome && 'ESPHome',
                 showNetwork && 'Network Scan',
-                showManaged && '(including managed)'
+                showManaged && '(including managed)',
+                showHidden && '(including hidden)'
               ].filter(Boolean).join(', ')}
             </>
           )}
