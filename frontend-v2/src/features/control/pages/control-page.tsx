@@ -101,9 +101,14 @@ export const ControlPage = () => {
   }, [rows, nameFilter, locationFilter]);
 
   useEffect(() => {
+    const validIds = new Set(displayRows.map((row) => row.id));
     setSelectedIds((prev) => {
-      const validIds = new Set(displayRows.map((row) => row.id));
-      return new Set([...prev].filter((id) => validIds.has(id)));
+      const filtered = [...prev].filter((id) => validIds.has(id));
+      // Only update if something actually changed to avoid infinite loops
+      if (filtered.length !== prev.size) {
+        return new Set(filtered);
+      }
+      return prev;
     });
   }, [displayRows]);
 

@@ -1,5 +1,6 @@
-import { RefreshCw, Trash2, Speaker } from 'lucide-react';
-import { useAudioControllers, useDeleteController, useRediscoverZones } from '../hooks/use-audio';
+import { RefreshCw, Trash2, Speaker, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { useAudioControllers, useDeleteController, useRediscoverZones, useAddController } from '../hooks/use-audio';
 import { ZoneCard } from '../components/zone-card';
 import { AmplifierInfoCards } from '../components/amplifier-info-cards';
 
@@ -7,6 +8,14 @@ export function AudioPage() {
   const { data: controllers, isLoading, isError, error } = useAudioControllers();
   const deleteController = useDeleteController();
   const rediscoverZones = useRediscoverZones();
+  const addController = useAddController();
+
+  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [manualIP, setManualIP] = useState('');
+  const [manualName, setManualName] = useState('');
+  const [manualProtocol, setManualProtocol] = useState<'bosch_aes70' | 'bosch_plena_matrix'>('bosch_aes70');
+  const [manualPort, setManualPort] = useState('65000');
+  const [manualZones, setManualZones] = useState('4');
 
   const handleDelete = (controllerId: string, controllerName: string) => {
     if (confirm(`Delete audio controller "${controllerName}"? This will remove all zones.`)) {
@@ -18,15 +27,150 @@ export function AudioPage() {
     rediscoverZones.mutate(controllerId);
   };
 
+  const handleManualAdd = () => {
+    if (!manualIP || !manualName) {
+      alert('Please enter both IP address and controller name');
+      return;
+    }
+
+    const payload: any = {
+      ip_address: manualIP,
+      controller_name: manualName,
+      protocol: manualProtocol,
+    };
+
+    // Add port if specified
+    if (manualPort) {
+      payload.port = parseInt(manualPort);
+    }
+
+    // Add total_zones for Plena Matrix
+    if (manualProtocol === 'bosch_plena_matrix' && manualZones) {
+      payload.total_zones = parseInt(manualZones);
+    }
+
+    addController.mutate(payload, {
+      onSuccess: () => {
+        setManualIP('');
+        setManualName('');
+        setManualProtocol('bosch_aes70');
+        setManualPort('65000');
+        setManualZones('4');
+        setShowManualEntry(false);
+      },
+    });
+  };
+
   return (
     <section className="space-y-6">
       {/* Page header */}
-      <header>
-        <h2 className="text-lg font-semibold text-slate-900">Audio Controllers</h2>
-        <p className="text-sm text-slate-500">
-          Manage audio amplifiers and zones
-        </p>
+      <header className="flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">Audio Controllers</h2>
+          <p className="text-sm text-slate-500">
+            Manage audio amplifiers and zones
+          </p>
+        </div>
+        <button
+          onClick={() => setShowManualEntry(!showManualEntry)}
+          className="inline-flex items-center gap-2 rounded-md bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600"
+        >
+          <Plus className="h-4 w-4" />
+          Add Manual IP
+        </button>
       </header>
+
+      {/* Manual entry form */}
+      {showManualEntry && (
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-900 mb-3">Add Audio Controller Manually</h3>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Protocol
+              </label>
+              <select
+                value={manualProtocol}
+                onChange={(e) => {
+                  const protocol = e.target.value as 'bosch_aes70' | 'bosch_plena_matrix';
+                  setManualProtocol(protocol);
+                  // Update default port based on protocol
+                  setManualPort(protocol === 'bosch_aes70' ? '65000' : '12128');
+                }}
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              >
+                <option value="bosch_aes70">Bosch Praesensa (AES70)</option>
+                <option value="bosch_plena_matrix">Bosch Plena Matrix (UDP)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                IP Address
+              </label>
+              <input
+                type="text"
+                value={manualIP}
+                onChange={(e) => setManualIP(e.target.value)}
+                placeholder="192.168.1.100"
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Controller Name
+              </label>
+              <input
+                type="text"
+                value={manualName}
+                onChange={(e) => setManualName(e.target.value)}
+                placeholder={manualProtocol === 'bosch_aes70' ? 'Bosch Praesensa' : 'Plena Matrix'}
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Port
+              </label>
+              <input
+                type="text"
+                value={manualPort}
+                onChange={(e) => setManualPort(e.target.value)}
+                placeholder={manualProtocol === 'bosch_aes70' ? '65000' : '12128'}
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+            {manualProtocol === 'bosch_plena_matrix' && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Zones
+                </label>
+                <input
+                  type="text"
+                  value={manualZones}
+                  onChange={(e) => setManualZones(e.target.value)}
+                  placeholder="4"
+                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+            )}
+          </div>
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={handleManualAdd}
+              disabled={addController.isPending}
+              className="rounded-md bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {addController.isPending ? 'Adding...' : 'Add Controller'}
+            </button>
+            <button
+              onClick={() => setShowManualEntry(false)}
+              className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Loading state */}
       {isLoading && (

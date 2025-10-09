@@ -1,5 +1,6 @@
 """Audio Amplifier Command Executors"""
 
 from .bosch_aes70 import BoschAES70Executor
+from .bosch_plena_matrix import BoschPlenaMatrixExecutor
 
-__all__ = ["BoschAES70Executor"]
+__all__ = ["BoschAES70Executor", "BoschPlenaMatrixExecutor"]

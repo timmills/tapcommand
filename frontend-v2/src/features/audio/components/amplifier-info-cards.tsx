@@ -40,6 +40,32 @@ const amplifierData: Record<string, AmplifierInfo> = {
       '📖 Open standard - no licensing fees'
     ]
   },
+  'bosch_plena_matrix': {
+    name: 'Bosch Plena Matrix',
+    protocol: 'bosch_plena_matrix (UDP)',
+    port: '12128/12129',
+    auth: 'None (optional PASS command)',
+    zoneSupport: '✅ Manual (4 zones)',
+    setupTime: '2 minutes',
+    icon: '📡',
+    implementationStatus: 'implemented',
+    setupSteps: [
+      'Ensure PLM-4P220/120 is connected to network',
+      'Select "Bosch Plena Matrix" protocol on Audio page',
+      'Enter IP address and number of zones (default 4)',
+      'Zones are created based on amplifier channels'
+    ],
+    notes: [
+      '✅ Proprietary UDP API (well-documented)',
+      '✅ No authentication required by default',
+      '✅ Real-time volume control (0-100%, -80 to +10 dB)',
+      '✅ Mute/unmute support',
+      '✅ Supports PLM-4P220, PLM-4P120 series',
+      '✅ 4 zones (standard) or 2 zones (bridged mode)',
+      '⚠️ Manual zone configuration (no auto-discovery)',
+      '📖 Commercial audio amplifier for PA systems'
+    ]
+  },
   'bosch_omneo': {
     name: 'Bosch OMNEO Network',
     protocol: 'bosch_omneo',
@@ -355,8 +381,8 @@ export const AmplifierInfoCards = ({ onSelectAmplifier }: AmplifierInfoCardsProp
       {/* Help Text */}
       <div className="rounded-lg border border-green-200 bg-green-50 p-3">
         <p className="text-xs text-green-900">
-          <strong>🎉 Ready to Use:</strong> <strong>Bosch Praesensa</strong> is fully implemented and ready to use!
-          Simply enter your amplifier's IP address and zones will be auto-discovered via AES70.
+          <strong>🎉 Ready to Use:</strong> <strong>Bosch Praesensa</strong> (AES70) and <strong>Bosch Plena Matrix</strong> (UDP) are fully implemented!
+          Select the appropriate protocol when adding your amplifier.
         </p>
       </div>
 

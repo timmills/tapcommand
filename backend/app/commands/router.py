@@ -20,7 +20,7 @@ from .executors.network import (
     VizioExecutor,
     PhilipsExecutor
 )
-from .executors.audio import BoschAES70Executor
+from .executors.audio import BoschAES70Executor, BoschPlenaMatrixExecutor
 
 
 class ProtocolRouter:
@@ -51,14 +51,9 @@ class ProtocolRouter:
 
         # Network TV Controllers
         if command.device_type == "network_tv":
-            # Samsung Legacy (pre-2016)
-            if command.protocol == "samsung_legacy":
+            # Samsung TVs (both legacy and modern WebSocket)
+            if command.protocol in ["samsung_legacy", "samsung_websocket"]:
                 return SamsungLegacyExecutor(self.db)
-
-            # Samsung Modern (2016+ Tizen)
-            elif command.protocol == "samsung_websocket":
-                # TODO: Implement SamsungWebSocketExecutor
-                return None
 
             # LG webOS
             elif command.protocol == "lg_webos":
@@ -93,6 +88,8 @@ class ProtocolRouter:
         if command.device_type == "audio_zone":
             if command.protocol == "bosch_aes70":
                 return BoschAES70Executor(self.db)
+            elif command.protocol == "bosch_plena_matrix":
+                return BoschPlenaMatrixExecutor(self.db)
 
         # No executor found
         return None

@@ -16,6 +16,8 @@ try:
     AES70_AVAILABLE = True
 except ImportError:
     AES70_AVAILABLE = False
+    RemoteDevice = None  # type: ignore
+    OcaMuteState = None  # type: ignore
     logging.warning("AES70py not installed - audio control will not be available")
 
 from ..base import CommandExecutor

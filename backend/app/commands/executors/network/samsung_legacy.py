@@ -58,10 +58,10 @@ class SamsungLegacyExecutor(CommandExecutor):
     }
 
     def can_execute(self, command: Command) -> bool:
-        """Check if this is a Samsung Legacy TV"""
+        """Check if this is a Samsung TV (legacy or websocket)"""
         return (
             command.device_type == "network_tv" and
-            command.protocol == "samsung_legacy"
+            command.protocol in ["samsung_legacy", "samsung_websocket"]
         )
 
     async def execute(self, command: Command) -> ExecutionResult:
@@ -86,13 +86,18 @@ class SamsungLegacyExecutor(CommandExecutor):
             if command.command.lower() in ["power_on", "poweron"]:
                 return await self._wake_on_lan(device, start_time)
 
-            import samsungctl
-
             # Get the KEY code for this command
             key = self.KEY_MAP.get(command.command.lower())
             if not key:
                 # Try direct KEY_ format
                 key = f"KEY_{command.command.upper()}"
+
+            # Check if device uses WebSocket (newer Samsung TVs)
+            if command.protocol == "samsung_websocket":
+                return await self._execute_websocket(device, key, command, start_time)
+
+            # Legacy method (port 55000)
+            import samsungctl
 
             # Configure Samsung remote
             config = {
@@ -127,6 +132,67 @@ class SamsungLegacyExecutor(CommandExecutor):
             return ExecutionResult(
                 success=False,
                 message=f"Samsung Legacy command '{command.command}' failed: {str(e)}",
+                error=str(e),
+                data={"execution_time_ms": execution_time_ms}
+            )
+
+    async def _execute_websocket(self, device: VirtualDevice, key: str, command: Command, start_time: float) -> ExecutionResult:
+        """
+        Execute command on Samsung TV using WebSocket (2016+ models with TokenAuthSupport)
+        """
+        try:
+            import json
+            from samsungtvws import SamsungTVWS
+
+            # Get auth token from connection_config
+            # Note: connection_config is a JSON column, already deserialized as dict
+            connection_config = device.connection_config if device.connection_config else {}
+            auth_token = connection_config.get('auth_token')  # May be None for 2016 TVs
+            port = connection_config.get('port', 8002)
+
+            # Create WebSocket connection
+            # Note: auth_token may be None for 2016 TVs (no TokenAuthSupport)
+            # Pass token directly (not token_file) to ensure it's used in the URL if present
+            tv = SamsungTVWS(
+                host=device.ip_address,
+                port=port,
+                token=auth_token,  # None is valid for 2016 TVs, required for 2017+
+                name='SmartVenue',
+                timeout=5
+            )
+
+            # Send the key command via remote control
+            # Note: samsungtvws uses shortcuts for common commands, remote.control for raw keys
+            shortcuts = tv.shortcuts()
+
+            # Map command to shortcut method if available
+            if hasattr(shortcuts, command.command.lower()):
+                # Use shortcut method (mute(), volume_up(), etc.)
+                method = getattr(shortcuts, command.command.lower())
+                method()
+            else:
+                # Fall back to sending raw key code
+                tv.remote.control(key)
+
+            execution_time_ms = int((time.time() - start_time) * 1000)
+
+            return ExecutionResult(
+                success=True,
+                message=f"Samsung WebSocket command '{command.command}' sent successfully",
+                data={
+                    "execution_time_ms": execution_time_ms,
+                    "device": device.device_name,
+                    "ip": device.ip_address,
+                    "key": key,
+                    "method": "websocket"
+                }
+            )
+
+        except Exception as e:
+            execution_time_ms = int((time.time() - start_time) * 1000)
+            return ExecutionResult(
+                success=False,
+                message=f"Samsung WebSocket command '{command.command}' failed: {str(e)}",
                 error=str(e),
                 data={"execution_time_ms": execution_time_ms}
             )

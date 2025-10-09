@@ -13,6 +13,7 @@ from datetime import datetime
 from ..db.database import get_db
 from ..models.virtual_controller import VirtualController, VirtualDevice
 from ..services.aes70_discovery import AES70DiscoveryService, discover_and_create_audio_controller
+from ..services.plena_matrix_discovery import PlenaMatrixDiscoveryService, discover_and_create_plena_matrix_controller
 from ..services.command_queue import CommandQueueService
 
 router = APIRouter(prefix="/api/audio", tags=["audio"])
@@ -22,7 +23,9 @@ router = APIRouter(prefix="/api/audio", tags=["audio"])
 class AudioControllerCreate(BaseModel):
     ip_address: str
     controller_name: str
-    port: int = 65000
+    protocol: str = "bosch_aes70"  # "bosch_aes70" or "bosch_plena_matrix"
+    port: Optional[int] = None  # Will default based on protocol
+    total_zones: Optional[int] = None  # For Plena Matrix (default 4)
     venue_name: Optional[str] = None
     location: Optional[str] = None
 
@@ -74,23 +77,52 @@ async def discover_audio_controller(
     db: Session = Depends(get_db)
 ):
     """
-    Add a Bosch Praesensa controller and discover zones
+    Add an audio amplifier and discover zones
+
+    Supports:
+    - Bosch Praesensa (AES70/OMNEO) - port 65000
+    - Bosch Plena Matrix (UDP API) - port 12128
 
     This will:
     1. Create a Virtual Controller for the amplifier
-    2. Connect via AES70 protocol
+    2. Connect via appropriate protocol
     3. Discover all configured zones
     4. Create Virtual Devices for each zone
     """
 
     try:
-        controller, devices = await discover_and_create_audio_controller(
-            ip_address=controller_data.ip_address,
-            controller_name=controller_data.controller_name,
-            port=controller_data.port,
-            venue_name=controller_data.venue_name,
-            location=controller_data.location
-        )
+        # Route to appropriate discovery service based on protocol
+        if controller_data.protocol == "bosch_plena_matrix":
+            # Plena Matrix discovery
+            port = controller_data.port or 12128
+            total_zones = controller_data.total_zones or 4
+
+            controller, devices = await discover_and_create_plena_matrix_controller(
+                ip_address=controller_data.ip_address,
+                controller_name=controller_data.controller_name,
+                port=port,
+                total_zones=total_zones,
+                venue_name=controller_data.venue_name,
+                location=controller_data.location
+            )
+
+        elif controller_data.protocol == "bosch_aes70":
+            # Praesensa AES70 discovery
+            port = controller_data.port or 65000
+
+            controller, devices = await discover_and_create_audio_controller(
+                ip_address=controller_data.ip_address,
+                controller_name=controller_data.controller_name,
+                port=port,
+                venue_name=controller_data.venue_name,
+                location=controller_data.location
+            )
+
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Unsupported protocol: {controller_data.protocol}"
+            )
 
         # Format response
         zones = []

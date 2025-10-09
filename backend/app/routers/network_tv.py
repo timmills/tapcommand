@@ -9,6 +9,11 @@ from pydantic import BaseModel
 from typing import Optional, List
 from sqlalchemy.orm import Session
 import samsungctl
+import websocket
+import json
+import base64
+import ssl
+import requests
 
 from ..db.database import get_db
 from ..models.network_discovery import NetworkScanCache
@@ -16,6 +21,121 @@ from ..services.device_scanner_config import get_ports_for_device_type
 from ..services.tv_confidence_scorer import tv_confidence_scorer
 
 router = APIRouter(prefix="/api/network-tv", tags=["network-tv"])
+
+
+async def _get_samsung_token(ip: str, db: Session):
+    """
+    Detect Samsung TV connection method and acquire authentication token
+
+    Returns:
+        {
+            "success": bool,
+            "token": str (if success),
+            "port": int (if success),
+            "method": str (if success) - "websocket" or "legacy",
+            "protocol": str (if success) - "samsung_websocket" or "samsung_legacy",
+            "message": str
+        }
+    """
+    try:
+        # Step 1: Check if TV supports token authentication
+        device_info_url = f"http://{ip}:8001/api/v2/"
+        try:
+            response = requests.get(device_info_url, timeout=3)
+            device_info = response.json()
+            token_auth_support = device_info.get('device', {}).get('TokenAuthSupport') == 'true'
+        except:
+            token_auth_support = False
+
+        # Step 2: Try WebSocket connection (port 8001 or 8002)
+        if token_auth_support:
+            # Use secure WebSocket (port 8002) for TVs with TokenAuthSupport
+            port = 8002
+            protocol_prefix = 'wss'
+        else:
+            # Try non-secure WebSocket (port 8001) first
+            port = 8001
+            protocol_prefix = 'ws'
+
+        name = base64.b64encode('SmartVenue'.encode()).decode()
+        url = f'{protocol_prefix}://{ip}:{port}/api/v2/channels/samsung.remote.control?name={name}'
+
+        # Create SSL context for secure connections
+        sslopt = {"cert_reqs": ssl.CERT_NONE} if protocol_prefix == 'wss' else None
+
+        # Try to connect and get token
+        try:
+            ws = websocket.create_connection(url, timeout=10, sslopt=sslopt)
+
+            # Wait for response with token
+            response = ws.recv()
+            data = json.loads(response)
+
+            ws.close()
+
+            # Extract token from response
+            if 'data' in data and 'token' in data['data']:
+                token = data['data']['token']
+                return {
+                    "success": True,
+                    "token": token,
+                    "port": port,
+                    "method": "websocket",
+                    "protocol": "samsung_websocket",
+                    "message": f"Token acquired successfully via WebSocket (port {port})"
+                }
+            elif 'event' in data and data['event'] == 'ms.channel.connect':
+                # Older Samsung TVs (2016 models without TokenAuthSupport) connect without returning a token
+                # They still work via WebSocket but don't need/provide tokens
+                return {
+                    "success": True,
+                    "token": None,  # No token needed for this TV
+                    "port": port,
+                    "method": "websocket",
+                    "protocol": "samsung_websocket",
+                    "message": f"WebSocket connected successfully on port {port} (no token required for this model)"
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": "WebSocket connected but no token received. Permission may have been denied on TV."
+                }
+
+        except Exception as ws_error:
+            # WebSocket failed, try legacy method (port 55000)
+            try:
+                import socket
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(3)
+                result = sock.connect_ex((ip, 55000))
+                sock.close()
+
+                if result == 0:
+                    # Port 55000 is open, use legacy protocol (no token needed)
+                    return {
+                        "success": True,
+                        "token": None,
+                        "port": 55000,
+                        "method": "legacy",
+                        "protocol": "samsung_legacy",
+                        "message": "Legacy protocol detected (port 55000, no token required)"
+                    }
+                else:
+                    return {
+                        "success": False,
+                        "message": f"Could not connect via WebSocket or Legacy protocol. WebSocket error: {str(ws_error)}"
+                    }
+            except Exception as legacy_error:
+                return {
+                    "success": False,
+                    "message": f"Failed to detect connection method. WebSocket: {str(ws_error)}, Legacy: {str(legacy_error)}"
+                }
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Error detecting Samsung TV connection method: {str(e)}"
+        }
 
 
 class TVInfo(BaseModel):
@@ -443,29 +563,53 @@ async def adopt_device(ip: str, request: Request, db: Session = Depends(get_db))
         db.add(virtual_controller)
         db.flush()  # Get the controller ID
 
+        # Detect connection method and get token if needed for Samsung TVs
+        connection_config = {
+            "ip": ip,
+            "port": tv_info.get('port'),
+            "protocol": tv_info['protocol'],
+            "vendor": device.vendor,
+            "model": tv_info.get('model', 'Unknown')
+        }
+
+        protocol = tv_info['protocol']
+
+        # For Samsung TVs, detect if they need a token
+        if 'samsung' in tv_info['protocol']:
+            token_result = await _get_samsung_token(ip, db)
+            if token_result['success']:
+                connection_config['auth_token'] = token_result['token']
+                connection_config['port'] = token_result['port']
+                connection_config['method'] = token_result['method']
+                protocol = token_result['protocol']  # Use detected protocol (samsung_websocket or samsung_legacy)
+            else:
+                # Token acquisition failed - don't adopt yet
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Failed to acquire authentication token: {token_result['message']}. Please ensure the TV is on and accept the permission dialog on screen."
+                )
+
         # Create Virtual Device on port 1
         port_id = f"{controller_id}-1"
 
         # Use the same custom name for both controller and device
         device_name = controller_name
 
+        # Normalize device_type to "network_tv" for all network TVs
+        # (device_type_guess might be "samsung_tv_legacy", "samsung_tv_tizen", etc.)
+        device_type = "network_tv"
+
         virtual_device = VirtualDevice(
             controller_id=virtual_controller.id,
             port_number=1,
             port_id=port_id,
             device_name=device_name,
-            device_type=tv_info['device_type'],
+            device_type=device_type,
             ip_address=ip,
             mac_address=device.mac_address,
-            port=tv_info.get('port'),
-            protocol=tv_info['protocol'],
-            connection_config={
-                "ip": ip,
-                "port": tv_info.get('port'),
-                "protocol": tv_info['protocol'],
-                "vendor": device.vendor,
-                "model": tv_info.get('model', 'Unknown')
-            },
+            port=connection_config.get('port'),
+            protocol=protocol,
+            connection_config=connection_config,
             is_active=True,
             is_online=(tv_info.get('port') is not None),
             capabilities={

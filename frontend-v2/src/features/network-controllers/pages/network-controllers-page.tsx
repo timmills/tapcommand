@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiClient } from '@/lib/axios';
 import { BrandInfoCards } from '../components/brand-info-cards';
 import { VirtualDeviceIRFallbackModal } from '@/features/devices/components/virtual-device-ir-fallback-modal';
 import type { ManagedDevice } from '@/types/api';
@@ -73,7 +73,7 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
       setControllerName(tv.name || '');
 
       // Load available IR controllers
-      axios.get<ManagedDevice[]>('http://localhost:8000/api/v1/management/managed')
+      apiClient.get<ManagedDevice[]>('/api/v1/management/managed')
         .then(response => {
           const irControllers = response.data.filter(d => d.device_type === 'ir_controller');
           setAvailableIRControllers(irControllers);
@@ -95,12 +95,12 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
       // If user wants to link IR, do it after adoption
       if (linkIR && selectedIRController) {
         // Get the newly adopted virtual controller
-        const vcsResponse = await axios.get('http://localhost:8000/api/virtual-controllers/');
+        const vcsResponse = await apiClient.get('/api/virtual-controllers/');
         const newVC = vcsResponse.data.find((vc: any) => vc.controller_id.includes(tv.mac.slice(-6).toLowerCase()));
 
         if (newVC) {
           // Link IR fallback
-          await axios.post(`http://localhost:8000/api/hybrid-devices/${newVC.id}/link-ir-fallback`, {
+          await apiClient.post(`/api/hybrid-devices/${newVC.id}/link-ir-fallback`, {
             ir_controller_hostname: selectedIRController,
             ir_port: selectedIRPort,
             power_on_method: 'hybrid',
@@ -269,11 +269,15 @@ export const NetworkControllersPage = () => {
   const [deletingController, setDeletingController] = useState<string | null>(null);
   const [unlinkingIR, setUnlinkingIR] = useState<number | null>(null);
   const [editingVirtualDevice, setEditingVirtualDevice] = useState<VirtualDevice | null>(null);
+  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [manualIP, setManualIP] = useState('');
+  const [manualName, setManualName] = useState('');
+  const [manualAdopting, setManualAdopting] = useState(false);
 
   const handleDiscover = async () => {
     setDiscovering(true);
     try {
-      const response = await axios.get<DiscoveredTV[]>('http://localhost:8000/api/network-tv/discover', {
+      const response = await apiClient.get<DiscoveredTV[]>('/api/network-tv/discover', {
         timeout: 10000 // 10 second timeout for discovery
       });
       setTvs(response.data);
@@ -287,7 +291,7 @@ export const NetworkControllersPage = () => {
   const handleCommand = async (ip: string, command: string) => {
     setCommandInProgress(`${ip}-${command}`);
     try {
-      await axios.post('http://localhost:8000/api/network-tv/command', {
+      await apiClient.post('/api/network-tv/command', {
         ip,
         command,
       });
@@ -304,7 +308,7 @@ export const NetworkControllersPage = () => {
       if (controllerName) {
         payload['controller_name'] = controllerName;
       }
-      await axios.post(`http://localhost:8000/api/network-tv/adopt/${ip}`, payload);
+      await apiClient.post(`/api/network-tv/adopt/${ip}`, payload);
       // Refresh all lists
       await handleDiscover();
       await loadVirtualControllers();
@@ -315,9 +319,29 @@ export const NetworkControllersPage = () => {
     }
   };
 
+  const handleManualAdopt = async () => {
+    if (!manualIP) {
+      alert('Please enter an IP address');
+      return;
+    }
+
+    setManualAdopting(true);
+    try {
+      await handleAdopt(manualIP, manualName ||undefined);
+      setManualIP('');
+      setManualName('');
+      setShowManualEntry(false);
+    } catch (error) {
+      console.error('Manual adoption failed:', error);
+      alert('Failed to adopt device. Please check the IP address and try again.');
+    } finally {
+      setManualAdopting(false);
+    }
+  };
+
   const loadVirtualControllers = async () => {
     try {
-      const response = await axios.get<VirtualController[]>('http://localhost:8000/api/virtual-controllers/');
+      const response = await apiClient.get<VirtualController[]>('/api/virtual-controllers/');
       setVirtualControllers(response.data);
     } catch (error) {
       console.error('Failed to load virtual controllers:', error);
@@ -326,7 +350,7 @@ export const NetworkControllersPage = () => {
 
   const loadVirtualDevices = async () => {
     try {
-      const response = await axios.get<VirtualDevice[]>('http://localhost:8000/api/virtual-controllers/devices/all');
+      const response = await apiClient.get<VirtualDevice[]>('/api/virtual-controllers/devices/all');
       setVirtualDevices(response.data);
     } catch (error) {
       console.error('Failed to load virtual devices:', error);
@@ -336,7 +360,7 @@ export const NetworkControllersPage = () => {
   const handleHideDevice = async (mac: string) => {
     setHidingDevice(mac);
     try {
-      await axios.post(`http://localhost:8000/api/network-tv/hide/${mac}`);
+      await apiClient.post(`/api/network-tv/hide/${mac}`);
       // Refresh discovery list
       await handleDiscover();
     } catch (error) {
@@ -353,7 +377,7 @@ export const NetworkControllersPage = () => {
 
     setDeletingController(controllerId);
     try {
-      await axios.delete(`http://localhost:8000/api/virtual-controllers/${controllerId}`);
+      await apiClient.delete(`/api/virtual-controllers/${controllerId}`);
       // Refresh all lists
       await loadVirtualControllers();
       await loadVirtualDevices();
@@ -372,7 +396,7 @@ export const NetworkControllersPage = () => {
 
     setUnlinkingIR(deviceId);
     try {
-      await axios.delete(`http://localhost:8000/api/v1/hybrid-devices/${deviceId}/unlink-ir-fallback`);
+      await apiClient.delete(`/api/v1/hybrid-devices/${deviceId}/unlink-ir-fallback`);
       // Refresh virtual devices to show updated status
       await loadVirtualDevices();
     } catch (error) {
@@ -432,25 +456,85 @@ export const NetworkControllersPage = () => {
             Discover and adopt network TVs. {tvs.filter(tv => tv.adoptable === 'ready').length} ready to adopt • {virtualControllers.length} adopted
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleDiscover}
-          disabled={discovering}
-          className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
-        >
-          {discovering ? (
-            <>
-              <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-              </svg>
-              Discovering...
-            </>
-          ) : (
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setShowManualEntry(!showManualEntry)}
+            className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Manual IP
+          </button>
+          <button
+            type="button"
+            onClick={handleDiscover}
+            disabled={discovering}
+            className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
+          >
+            {discovering ? (
+              <>
+                <svg className="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Discovering...
+              </>
+            ) : (
             'Discover TVs'
           )}
         </button>
+        </div>
       </header>
+
+      {/* Manual entry form */}
+      {showManualEntry && (
+        <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-900 mb-3">Add TV Manually</h3>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                IP Address *
+              </label>
+              <input
+                type="text"
+                value={manualIP}
+                onChange={(e) => setManualIP(e.target.value)}
+                placeholder="192.168.1.100"
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Controller Name (Optional)
+              </label>
+              <input
+                type="text"
+                value={manualName}
+                onChange={(e) => setManualName(e.target.value)}
+                placeholder="Living Room TV"
+                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              />
+            </div>
+          </div>
+          <div className="mt-4 flex gap-2">
+            <button
+              onClick={handleManualAdopt}
+              disabled={manualAdopting}
+              className="rounded-md bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {manualAdopting ? 'Adopting...' : 'Adopt TV'}
+            </button>
+            <button
+              onClick={() => setShowManualEntry(false)}
+              className="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Discovered TVs Section - MOVED TO TOP */}
       <div className="space-y-3">

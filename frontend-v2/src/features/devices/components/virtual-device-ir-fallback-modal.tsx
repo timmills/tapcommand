@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { apiClient } from '@/lib/axios';
 import { useManagedDevices } from '../hooks/use-managed-devices';
 import type { ManagedDevice } from '@/types';
 
@@ -77,7 +77,7 @@ export const VirtualDeviceIRFallbackModal = ({
   const handleSave = async () => {
     setSaving(true);
     try {
-      await axios.post(`http://localhost:8000/api/v1/hybrid-devices/${device.id}/link-ir-fallback`, {
+      await apiClient.post(`/api/v1/hybrid-devices/${device.id}/link-ir-fallback`, {
         ir_controller_hostname: selectedController,
         ir_port: selectedPort,
         power_on_method: powerOnMethod,
@@ -101,7 +101,7 @@ export const VirtualDeviceIRFallbackModal = ({
 
     setSaving(true);
     try {
-      await axios.delete(`http://localhost:8000/api/v1/hybrid-devices/${device.id}/unlink-ir-fallback`);
+      await apiClient.delete(`/api/v1/hybrid-devices/${device.id}/unlink-ir-fallback`);
 
       setIsEditing(false);
       onSaved?.();

@@ -133,3 +133,27 @@ export function useRediscoverZones() {
     },
   });
 }
+
+// Add controller manually
+export function useAddController() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: {
+      ip_address: string;
+      controller_name: string;
+      port?: number;
+      venue_name?: string;
+      location?: string;
+    }) => audioApi.addController(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      toast.success('Audio controller added successfully');
+    },
+    onError: (error) => {
+      toast.error('Failed to add controller', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}

@@ -75,4 +75,16 @@ export const audioApi = {
   rediscoverZones: async (controllerId: string): Promise<void> => {
     await apiClient.post(`/api/audio/controllers/${controllerId}/rediscover`);
   },
+
+  // Add controller manually
+  addController: async (data: {
+    ip_address: string;
+    controller_name: string;
+    port?: number;
+    venue_name?: string;
+    location?: string;
+  }): Promise<AudioController> => {
+    const response = await apiClient.post('/api/audio/controllers/discover', data);
+    return response.data;
+  },
 };

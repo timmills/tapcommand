@@ -133,7 +133,10 @@
       "WebFetch(domain:aes70py.org)",
       "WebFetch(domain:manuals.plus)",
       "Bash(pip freeze)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(do echo:*)",
+      "WebFetch(domain:stackoverflow.com)",
+      "Bash(/bashes)"
     ],
     "deny": [],
     "ask": []

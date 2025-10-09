@@ -13,6 +13,28 @@ interface BrandInfo {
 }
 
 const brandData: Record<string, BrandInfo> = {
+  'samsung_websocket': {
+    name: 'Samsung Modern (2016+)',
+    protocol: 'samsung_websocket',
+    port: '8001/8002',
+    auth: 'Auth token (auto)',
+    powerOn: '✅ WOL (10-20s)',
+    setupTime: '2 minutes',
+    icon: '📺',
+    setupSteps: [
+      'Click "Adopt" in SmartVenue',
+      'WATCH THE TV SCREEN - permission dialog appears',
+      'Press "Allow" within 30 seconds',
+      'Token saved automatically - no more prompts!'
+    ],
+    notes: [
+      '✅ One-time permission during adoption',
+      '✅ Token saved permanently',
+      '✅ Fast response, full control',
+      '⚠️ Must accept within 30 seconds',
+      '⚠️ If denied, must reset TV device list'
+    ]
+  },
   'samsung_legacy': {
     name: 'Samsung Legacy (2011-2015)',
     protocol: 'samsung_legacy',

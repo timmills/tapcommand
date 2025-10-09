@@ -1,9 +1,11 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from .core.config import settings
 from .db.database import create_tables, init_database
@@ -44,9 +46,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+# Store the main event loop for use in sync callbacks
+_main_loop = None
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan events"""
+    global _main_loop
+    _main_loop = asyncio.get_running_loop()
+
     # Startup
     logger.info("Starting SmartVenue backend...")
 
@@ -192,8 +200,11 @@ def on_device_discovered(device):
                 except Exception as e:
                     logger.debug(f"Failed to fetch capabilities for {device.hostname}: {e}")
 
-            # Schedule the async task
-            asyncio.create_task(fetch_caps())
+            # Schedule the async task in the main event loop
+            if _main_loop is not None:
+                asyncio.run_coroutine_threadsafe(fetch_caps(), _main_loop)
+            else:
+                logger.warning(f"Cannot schedule capability fetch for {device.hostname} - main loop not available")
 
         db.commit()
         logger.info(f"Saved {device.hostname} to DeviceDiscovery table")
@@ -359,6 +370,22 @@ async def health_check():
         "service": settings.PROJECT_NAME,
         "version": settings.PROJECT_VERSION
     }
+
+
+@app.get("/install.sh")
+async def get_install_script():
+    """Serve the install script for wget deployment"""
+    install_script = Path(__file__).parent.parent.parent / "install.sh"
+    if install_script.exists():
+        return FileResponse(
+            path=install_script,
+            media_type="text/x-shellscript",
+            filename="install.sh",
+            headers={
+                "Content-Disposition": "attachment; filename=install.sh"
+            }
+        )
+    return {"error": "Install script not found"}
 
 
 if __name__ == "__main__":

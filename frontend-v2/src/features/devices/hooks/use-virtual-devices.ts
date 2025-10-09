@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { apiClient } from '@/lib/axios';
 
 interface VirtualDevice {
   id: number;
@@ -21,7 +21,7 @@ interface VirtualDevice {
 }
 
 async function fetchVirtualDevices(): Promise<VirtualDevice[]> {
-  const response = await axios.get('http://localhost:8000/api/virtual-controllers/devices/all');
+  const response = await apiClient.get('/api/virtual-controllers/devices/all');
   return response.data;
 }
 

@@ -309,8 +309,10 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
       >
         <form className="flex h-full flex-col" onSubmit={handleSubmit}>
           <header className="border-b border-slate-200 px-6 py-4">
-            <h3 className="text-lg font-semibold text-slate-900">Edit controller</h3>
-            <p className="text-sm text-slate-500">Hostname {device.hostname}</p>
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-slate-900">Edit Controller</h3>
+              <p className="text-sm text-slate-500">{device.hostname}</p>
+            </div>
             {brandSummary.length ? (
               <p className="mt-2 text-xs text-slate-500">Capabilities: {brandSummary.join(', ')}</p>
             ) : null}
@@ -319,95 +321,108 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <section className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="flex flex-col text-sm font-medium text-slate-700">
-                  Controller name
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                    Controller name
+                  </label>
                   <input
                     type="text"
                     value={deviceName}
                     onChange={(event) => setDeviceName(event.target.value)}
-                    className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
-                </label>
-                <label className="flex flex-col text-sm font-medium text-slate-700">
-                  Location
-                  <div className="relative mt-1">
-                    <input
-                      type="text"
-                      value={location}
-                      onChange={(event) => setLocation(event.target.value)}
-                      onFocus={() => setShowLocationDropdown(true)}
-                      onBlur={() => setTimeout(() => setShowLocationDropdown(false), 200)}
-                      placeholder="Select existing or enter new location"
-                      className="w-full rounded-md border border-slate-300 px-3 py-2 pr-8 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    />
-                    {existingLocations.length > 0 && (
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                        <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    )}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-3">
+                    <label className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                      Location
+                    </label>
+                    <div className="relative flex-1">
+                      <input
+                        type="text"
+                        value={location}
+                        onChange={(event) => setLocation(event.target.value)}
+                        onFocus={() => setShowLocationDropdown(true)}
+                        onBlur={() => setTimeout(() => setShowLocationDropdown(false), 200)}
+                        placeholder="Select existing or enter new location"
+                        className="w-full rounded-md border border-slate-300 px-3 py-2 pr-8 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      />
+                      {existingLocations.length > 0 && (
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                          <svg className="h-4 w-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      )}
 
-                    {/* Dropdown with existing locations */}
-                    {showLocationDropdown && existingLocations.length > 0 && (
-                      <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 shadow-lg">
-                        {existingLocations
-                          .filter((loc) => {
-                            // Show all locations if input is empty or show filtered results
-                            if (!location.trim()) return true;
-                            return loc.toLowerCase().includes(location.toLowerCase());
-                          })
-                          .map((loc) => (
-                            <button
-                              key={loc}
-                              type="button"
-                              onClick={() => {
-                                setLocation(loc);
-                                setShowLocationDropdown(false);
-                              }}
-                              className="w-full px-3 py-2 text-left text-sm text-slate-900 hover:bg-brand-50 hover:text-brand-700"
-                            >
-                              {loc}
-                            </button>
-                          ))}
-                        {location.trim() && !existingLocations.some((loc) => loc.toLowerCase() === location.toLowerCase()) && (
-                          <div className="border-t border-slate-200 px-3 py-2 text-xs text-slate-500">
-                            Press Enter to create "{location}"
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      {/* Dropdown with existing locations */}
+                      {showLocationDropdown && existingLocations.length > 0 && (
+                        <div className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-slate-200 bg-white py-1 shadow-lg">
+                          {existingLocations
+                            .filter((loc) => {
+                              // Show all locations if input is empty or show filtered results
+                              if (!location.trim()) return true;
+                              return loc.toLowerCase().includes(location.toLowerCase());
+                            })
+                            .map((loc) => (
+                              <button
+                                key={loc}
+                                type="button"
+                                onClick={() => {
+                                  setLocation(loc);
+                                  setShowLocationDropdown(false);
+                                }}
+                                className="w-full px-3 py-2 text-left text-sm text-slate-900 hover:bg-brand-50 hover:text-brand-700"
+                              >
+                                {loc}
+                              </button>
+                            ))}
+                          {location.trim() && !existingLocations.some((loc) => loc.toLowerCase() === location.toLowerCase()) && (
+                            <div className="border-t border-slate-200 px-3 py-2 text-xs text-slate-500">
+                              Press Enter to create "{location}"
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   {existingLocations.length > 0 && (
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="text-xs text-slate-500 pl-24">
                       {existingLocations.length} existing location{existingLocations.length === 1 ? '' : 's'}
                     </p>
                   )}
-                </label>
-                <label className="flex flex-col text-sm font-medium text-slate-700">
-                  Notes
-                  <textarea
-                    value={notes}
-                    onChange={(event) => setNotes(event.target.value)}
-                    rows={3}
-                    className="mt-1 resize-none rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  />
-                </label>
+                </div>
               </div>
 
-              <label className="flex flex-col text-sm font-medium text-slate-700">
-                API key
-                <input
-                  type="text"
-                  value={apiKeyInput}
-                  onChange={(event) => setApiKeyInput(event.target.value)}
-                  placeholder={globalApiKey ? `${globalApiKey} (application key)` : 'Uses application key'}
-                  className="mt-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                />
-                <span className="mt-1 text-xs text-slate-500">
-                  Leave blank to use the application API key. Enter a custom key to override it for this controller.
-                </span>
-              </label>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                    Notes
+                  </label>
+                  <input
+                    type="text"
+                    value={notes}
+                    onChange={(event) => setNotes(event.target.value)}
+                    className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label className="text-sm font-medium text-slate-700 whitespace-nowrap">
+                    API key
+                  </label>
+                  <input
+                    type="text"
+                    value={apiKeyInput}
+                    onChange={(event) => setApiKeyInput(event.target.value)}
+                    placeholder={globalApiKey ? `${globalApiKey} (application key)` : 'Uses application key'}
+                    className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  />
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-500">
+                Leave API key blank to use the application API key. Enter a custom key to override it for this controller.
+              </p>
 
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-slate-900">Ports</h4>
@@ -435,78 +450,45 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
                               <p className="text-xs text-slate-500">{capability.brand}</p>
                             ) : null}
                           </div>
-                          <label className="flex items-center gap-2 text-xs font-medium text-slate-600">
-                            <input
-                              type="checkbox"
-                              checked={port.is_active}
-                              onChange={(event) => handlePortToggle(port.port_number, event.target.checked)}
-                              className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-                            />
-                            Active
-                          </label>
+                          <div className="flex items-center gap-2">
+                            <PortAvailableCommandsInline libraryId={capability?.lib} />
+                            <label className="flex items-center gap-2 text-xs font-medium text-slate-600 whitespace-nowrap">
+                              <input
+                                type="checkbox"
+                                checked={port.is_active}
+                                onChange={(event) => handlePortToggle(port.port_number, event.target.checked)}
+                                className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                              />
+                              Active
+                            </label>
+                          </div>
                         </div>
 
                         <div className="mt-2 grid gap-2 md:grid-cols-2">
-                          <label className="flex flex-col text-xs font-medium text-slate-600">
-                            Connected device
+                          <div className="flex items-center gap-2">
+                            <label className="text-xs font-medium text-slate-600 whitespace-nowrap">
+                              Connected device
+                            </label>
                             <input
                               type="text"
                               value={port.connected_device_name}
                               onChange={(event) => handlePortNameChange(port.port_number, event.target.value)}
                               placeholder={`Port ${port.port_number}`}
-                              className="mt-1 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                              className="flex-1 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                             />
-                          </label>
-                        </div>
-
-                        <div className="mt-2 grid gap-2 md:grid-cols-2">
-                          <div className="flex flex-col gap-2 text-xs font-medium text-slate-600">
-                            <span>Tags</span>
-                            {tagsLoading ? (
-                              <span className="text-slate-500">Loading tags…</span>
-                            ) : tagOptions.length ? (
-                              <div className="flex flex-wrap gap-2">
-                                {tagOptions.map((tag) => {
-                                  const checked = port.tag_ids.includes(tag.id);
-                                  return (
-                                    <label
-                                      key={tag.id}
-                                      className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium shadow-sm transition ${
-                                        checked
-                                          ? 'border-brand-200 bg-brand-50 text-brand-700'
-                                          : 'border-slate-200 bg-white text-slate-600 hover:border-brand-200'
-                                      }`}
-                                      style={tag.color ? { borderColor: checked ? tag.color : undefined } : undefined}
-                                    >
-                                      <input
-                                        type="checkbox"
-                                        checked={checked}
-                                        onChange={(event) =>
-                                          handlePortTagToggle(port.port_number, tag.id, event.target.checked)
-                                        }
-                                        className="h-3.5 w-3.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-                                      />
-                                      <span>{tag.name}</span>
-                                    </label>
-                                  );
-                                })}
-                              </div>
-                            ) : (
-                              <span className="text-slate-500">
-                                No tags yet. Manage tags under Settings → Tags.
-                              </span>
-                            )}
                           </div>
-                          <div className="flex flex-col gap-2 text-xs font-medium text-slate-600">
-                            <label className="flex flex-col">
-                              Default channel
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                              <label className="text-xs font-medium text-slate-600 whitespace-nowrap">
+                                Default channel
+                              </label>
                               <select
                                 value={selectValue}
                                 onChange={(event) =>
                                   handlePortDefaultChannelSelect(port.port_number, event.target.value)
                                 }
                                 disabled={channelsLoading}
-                                className="mt-1 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                                className="w-40 rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-900 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                               >
                                 <option value="">No default channel</option>
                                 {needsFallbackOption ? (
@@ -529,7 +511,7 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
 
                                 <option value="__custom__">Custom value…</option>
                               </select>
-                            </label>
+                            </div>
                             {isCustomChannel ? (
                               <input
                                 type="text"
@@ -542,6 +524,44 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
                               />
                             ) : null}
                           </div>
+                        </div>
+
+                        <div className="mt-2 flex items-start gap-2 text-xs font-medium text-slate-600">
+                          <span className="whitespace-nowrap pt-1">Tags</span>
+                          {tagsLoading ? (
+                            <span className="text-slate-500">Loading tags…</span>
+                          ) : tagOptions.length ? (
+                            <div className="flex flex-wrap gap-2">
+                              {tagOptions.map((tag) => {
+                                const checked = port.tag_ids.includes(tag.id);
+                                return (
+                                  <label
+                                    key={tag.id}
+                                    className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium shadow-sm transition ${
+                                      checked
+                                        ? 'border-brand-200 bg-brand-50 text-brand-700'
+                                        : 'border-slate-200 bg-white text-slate-600 hover:border-brand-200'
+                                    }`}
+                                    style={tag.color ? { borderColor: checked ? tag.color : undefined } : undefined}
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={checked}
+                                      onChange={(event) =>
+                                        handlePortTagToggle(port.port_number, tag.id, event.target.checked)
+                                      }
+                                      className="h-3.5 w-3.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
+                                    />
+                                    <span>{tag.name}</span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <span className="text-slate-500">
+                              No tags yet. Manage tags under Settings → Tags.
+                            </span>
+                          )}
                         </div>
 
                         {capability?.functions && capability.functions.length ? (
@@ -559,8 +579,6 @@ const ManagedControllerModal = ({ device, open, onClose, onSaved }: ManagedModal
                             ) : null}
                           </div>
                         ) : null}
-
-                        <PortAvailableCommands libraryId={capability?.lib} />
                       </div>
                     );
                   })}
@@ -795,6 +813,69 @@ const DiscoveryControllerModal = ({ discovered, open, onClose, onSaved }: Discov
           </footer>
         </div>
       </div>
+    </div>
+  );
+};
+
+// Inline version for port header
+const PortAvailableCommandsInline = ({ libraryId }: { libraryId?: number }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { data: libraryCommands, isLoading } = useLibraryCommands(libraryId);
+
+  if (!libraryId || isLoading || !libraryCommands || !libraryCommands.commands.length) {
+    return null;
+  }
+
+  const { library, commands } = libraryCommands;
+  const libraryName = library.brand && library.model
+    ? `${library.brand} ${library.model}`
+    : library.brand || library.model || library.name;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+      >
+        Commands ({commands.length})
+      </button>
+
+      {isExpanded ? (
+        <div className="absolute right-0 top-full z-10 mt-1 w-80 rounded-md border border-slate-200 bg-white shadow-lg">
+          <div className="border-b border-slate-200 px-3 py-2">
+            <p className="text-xs font-medium text-slate-700">
+              {libraryName}
+            </p>
+          </div>
+          <div className="max-h-60 overflow-y-auto px-3 py-2">
+            <div className="space-y-1">
+              {commands.map((cmd) => (
+                <div
+                  key={cmd.id}
+                  className="flex items-center justify-between rounded px-2 py-1 text-xs hover:bg-slate-50"
+                >
+                  <span className="font-medium text-slate-700">
+                    {cmd.display_name || cmd.name}
+                  </span>
+                  <span className="text-slate-500">
+                    {cmd.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-slate-200 px-3 py-2">
+            <button
+              type="button"
+              onClick={() => setIsExpanded(false)}
+              className="text-xs text-slate-600 hover:text-slate-900"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

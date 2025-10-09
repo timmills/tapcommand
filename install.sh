@@ -15,12 +15,14 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-INSTALL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+INSTALL_DIR="${SCRIPT_DIR}/smartvenue"
 APP_USER="${SUDO_USER:-$USER}"
 PYTHON_VERSION="3.12"
 NODE_VERSION="22"
 BACKEND_PORT="8000"
 FRONTEND_PORT="5173"
+REPO_URL="https://github.com/yourusername/smartvenue.git"  # TODO: Update with actual repo
 
 #######################################################################
 # Helper Functions
@@ -79,6 +81,36 @@ check_ubuntu() {
 }
 
 #######################################################################
+# Repository Clone
+#######################################################################
+
+clone_repository() {
+    print_header "Cloning SmartVenue Repository"
+
+    if [[ -d "$INSTALL_DIR" ]]; then
+        print_warning "Directory $INSTALL_DIR already exists"
+        read -p "Remove and re-clone? (y/N): " -n 1 -r
+        echo
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            print_info "Removing existing directory..."
+            rm -rf "$INSTALL_DIR"
+        else
+            print_info "Using existing directory"
+            return
+        fi
+    fi
+
+    print_info "Cloning repository from $REPO_URL..."
+    if ! git clone "$REPO_URL" "$INSTALL_DIR"; then
+        print_error "Failed to clone repository"
+        print_info "Make sure git is installed and the repository URL is correct"
+        exit 1
+    fi
+
+    print_success "Repository cloned successfully"
+}
+
+#######################################################################
 # System Dependency Installation
 #######################################################################
 
@@ -103,6 +135,9 @@ install_system_deps() {
         libavahi-compat-libdnssd-dev \
         nmap \
         net-tools \
+        bc \
+        libssl-dev \
+        libffi-dev \
         || { print_error "Failed to install system dependencies"; exit 1; }
 
     print_success "System dependencies installed"
@@ -148,9 +183,8 @@ install_node() {
 setup_backend() {
     print_header "Setting Up Backend"
 
-    cd "$INSTALL_DIR/backend"
-
-    print_info "Creating Python virtual environment..."
+    print_info "Creating Python virtual environment in $INSTALL_DIR..."
+    cd "$INSTALL_DIR"
     python3 -m venv venv
 
     print_info "Activating virtual environment..."
@@ -160,6 +194,7 @@ setup_backend() {
     pip install --upgrade pip -q
 
     print_info "Installing Python dependencies..."
+    cd backend
     pip install -r requirements.txt -q
 
     print_success "Backend dependencies installed"
@@ -275,8 +310,8 @@ After=network.target
 Type=simple
 User=$APP_USER
 WorkingDirectory=$INSTALL_DIR/backend
-Environment="PATH=$INSTALL_DIR/backend/venv/bin"
-ExecStart=$INSTALL_DIR/backend/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port $BACKEND_PORT
+Environment="PATH=$INSTALL_DIR/venv/bin"
+ExecStart=$INSTALL_DIR/venv/bin/uvicorn app.main:app --host 0.0.0.0 --port $BACKEND_PORT
 Restart=always
 RestartSec=10
 
@@ -468,6 +503,7 @@ main() {
     install_system_deps
     check_python_version
     install_node
+    clone_repository
     setup_backend
     setup_frontend
     setup_database

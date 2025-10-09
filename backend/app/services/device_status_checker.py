@@ -128,7 +128,7 @@ class DeviceStatusChecker:
             check_result = await self._check_roku_status(device)
         elif protocol == "lg_webos":
             check_result = await self._check_webos_status(device)
-        elif protocol == "samsung_tizen":
+        elif protocol == "samsung_tizen" or protocol == "samsung_websocket":
             check_result = await self._check_samsung_tizen_status(device)
         elif protocol == "samsung_legacy":
             check_result = await self._check_ping_only(device)
@@ -236,12 +236,52 @@ class DeviceStatusChecker:
         """
         Check Samsung Tizen (2016+) device status
 
-        Tizen uses WebSocket for communication
+        Tizen uses WebSocket for communication with token
         """
-        # TODO: Implement WebSocket status check
-        # For now, fall back to ping
-        result = await self._check_ping_only(device)
-        result["check_method"] = "tizen_stub"
+        import json
+
+        result = {
+            "is_online": False,
+            "power_state": "unknown",
+            "check_method": "samsung_websocket"
+        }
+
+        try:
+            # Get connection config with token
+            connection_config = json.loads(device.connection_config) if device.connection_config else {}
+            auth_token = connection_config.get('auth_token')
+            port = connection_config.get('port', 8002)
+
+            # Try REST API first (quick check if TV is responsive)
+            import requests
+            device_info_url = f"http://{device.ip_address}:8001/api/v2/"
+            response = requests.get(device_info_url, timeout=2)
+
+            if response.status_code == 200:
+                result["is_online"] = True
+                result["power_state"] = "on"  # If REST API responds, TV is on
+
+                # Try to get more detailed info if token available
+                if auth_token:
+                    # Could query WebSocket for more details if needed
+                    pass
+            else:
+                # REST API failed, try ping as fallback
+                ping_result = await self._check_ping_only(device)
+                result["is_online"] = ping_result["is_online"]
+                result["power_state"] = "standby" if ping_result["is_online"] else "off"
+
+        except Exception as e:
+            # If REST API fails, fall back to ping
+            try:
+                ping_result = await self._check_ping_only(device)
+                result["is_online"] = ping_result["is_online"]
+                # If ping works but REST doesn't, TV might be in standby
+                result["power_state"] = "standby" if ping_result["is_online"] else "off"
+            except:
+                result["is_online"] = False
+                result["power_state"] = "off"
+
         return result
 
     async def _check_ping_only(self, device: VirtualDevice) -> Dict[str, Any]:
