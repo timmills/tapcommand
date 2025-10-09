@@ -238,6 +238,105 @@ async def get_discovered_devices(db: Session = Depends(get_db)):
     return db.query(DeviceDiscovery).filter(DeviceDiscovery.is_managed == False).all()  # noqa: E712
 
 
+class AllDevicesResponse(BaseModel):
+    """Combined response for both ESPHome and network-scanned devices"""
+    source: str  # "esphome" or "network_scan"
+    id: int
+    hostname: Optional[str]
+    mac_address: str
+    ip_address: str
+    friendly_name: Optional[str]
+    device_type: Optional[str]
+    vendor: Optional[str] = None
+    is_online: bool = True
+    is_managed: bool = False
+    firmware_version: Optional[str] = None
+    response_time_ms: Optional[float] = None
+    last_seen: datetime
+
+    class Config:
+        from_attributes = True
+
+
+@router.get("/all-devices")
+async def get_all_devices(
+    show_esphome: bool = True,
+    show_network: bool = False,
+    show_managed: bool = False,
+    db: Session = Depends(get_db)
+) -> List[AllDevicesResponse]:
+    """
+    Get all devices from both ESPHome discovery and network scan
+
+    Args:
+        show_esphome: Include ESPHome discovered devices (default: True)
+        show_network: Include network scanned devices (default: False)
+        show_managed: Include managed devices in results (default: False)
+    """
+    from ..models.network_discovery import NetworkScanCache
+
+    all_devices = []
+
+    # Get ESPHome devices
+    if show_esphome:
+        esphome_filter = DeviceDiscovery.is_managed == False if not show_managed else True  # noqa: E712
+        esphome_devices = db.query(DeviceDiscovery).filter(esphome_filter).all()
+
+        for device in esphome_devices:
+            all_devices.append(AllDevicesResponse(
+                source="esphome",
+                id=device.id,
+                hostname=device.hostname,
+                mac_address=device.mac_address,
+                ip_address=device.ip_address,
+                friendly_name=device.friendly_name,
+                device_type=device.device_type,
+                vendor=None,
+                is_online=True,
+                is_managed=device.is_managed,
+                firmware_version=device.firmware_version,
+                last_seen=device.last_seen
+            ))
+
+    # Get network scanned devices
+    if show_network:
+        network_devices = db.query(NetworkScanCache).filter(NetworkScanCache.is_online == True).all()  # noqa: E712
+
+        # Get managed device MAC addresses to filter if needed
+        managed_macs = set()
+        if not show_managed:
+            managed_devices = db.query(ManagedDevice.mac_address).all()
+            managed_macs = {mac for (mac,) in managed_devices if mac}
+
+            # Also get virtual device MACs
+            from ..models.virtual_controller import VirtualDevice
+            virtual_macs = db.query(VirtualDevice.mac_address).all()
+            managed_macs.update({mac for (mac,) in virtual_macs if mac})
+
+        for device in network_devices:
+            # Skip if managed and we're not showing managed
+            if not show_managed and device.mac_address in managed_macs:
+                continue
+
+            all_devices.append(AllDevicesResponse(
+                source="network_scan",
+                id=device.id,
+                hostname=device.hostname,
+                mac_address=device.mac_address,
+                ip_address=device.ip_address,
+                friendly_name=device.hostname,  # Use hostname as friendly name
+                device_type=device.device_type_guess,
+                vendor=device.vendor,
+                is_online=device.is_online,
+                is_managed=False,  # Network scan doesn't track managed status
+                firmware_version=None,
+                response_time_ms=device.response_time_ms,
+                last_seen=device.last_seen
+            ))
+
+    return all_devices
+
+
 @router.get("/available-channels", response_model=List[ChannelOption])
 async def get_available_channels(db: Session = Depends(get_db)):
     """Return the list of visible channels that can be assigned as defaults."""

@@ -5,10 +5,26 @@ interface DiscoveryServiceResponse {
   devices: DiscoveredDevice[];
 }
 
+export interface AllDevicesFilters {
+  show_esphome?: boolean;
+  show_network?: boolean;
+  show_managed?: boolean;
+}
+
 export const fetchDiscoveredDevices = async (): Promise<DiscoveredDevice[]> => {
   // Use database-backed discovery endpoint instead of in-memory mDNS-only endpoint
   // This ensures we see devices that have been discovered but may not be actively broadcasting mDNS
   const response = await apiClient.get<DiscoveredDevice[]>('/api/v1/management/discovered');
+  return response.data ?? [];
+};
+
+export const fetchAllDevices = async (filters: AllDevicesFilters = {}): Promise<DiscoveredDevice[]> => {
+  const params = new URLSearchParams();
+  if (filters.show_esphome !== undefined) params.append('show_esphome', String(filters.show_esphome));
+  if (filters.show_network !== undefined) params.append('show_network', String(filters.show_network));
+  if (filters.show_managed !== undefined) params.append('show_managed', String(filters.show_managed));
+
+  const response = await apiClient.get<DiscoveredDevice[]>(`/api/v1/management/all-devices?${params.toString()}`);
   return response.data ?? [];
 };
 
