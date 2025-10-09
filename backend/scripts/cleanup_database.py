@@ -88,11 +88,15 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
             cursor.execute("DELETE FROM ir_libraries WHERE 1=1")
             print(f"   ✓ Removed IR libraries and commands")
         else:
-            cursor.execute("SELECT COUNT(*) FROM ir_libraries")
-            lib_count = cursor.fetchone()[0]
-            cursor.execute("SELECT COUNT(*) FROM ir_commands")
-            cmd_count = cursor.fetchone()[0]
-            print(f"   ℹ️  Kept {lib_count} IR libraries with {cmd_count} commands")
+            lib_count = safe_count("ir_libraries")
+            cmd_count = safe_count("ir_commands")
+            if lib_count > 0 or cmd_count > 0:
+                print(f"   ℹ️  Kept {lib_count} IR libraries with {cmd_count} commands")
+
+        # Always keep channels
+        channel_count = safe_count("channels")
+        if channel_count > 0:
+            print(f"   ℹ️  Kept {channel_count} channels")
 
         conn.commit()
         print(f"\n✅ Database cleanup completed successfully!")
