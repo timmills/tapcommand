@@ -23,27 +23,19 @@ const getApiBaseUrl = (): string => {
     return envUrl;
   }
 
-  // Auto-detect based on current hostname
-  const hostname = window.location.hostname;
-
-  // Tailscale network (100.x.x.x)
-  if (hostname.startsWith('100.')) {
-    return 'http://100.93.158.19:8000';
-  }
-
-  // Local network (192.168.x.x)
-  if (hostname.startsWith('192.168.')) {
-    return 'http://192.168.101.153:8000';
-  }
-
-  // Localhost
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:8000';
-  }
-
-  // Default: use same host as frontend with port 8000
+  // When using nginx proxy, just use same origin (no port needed)
+  // Nginx will proxy /api requests to backend on port 8000
   const protocol = window.location.protocol;
-  return `${protocol}//${hostname}:8000`;
+  const hostname = window.location.hostname;
+  const port = window.location.port;
+
+  // If accessing on port 80 (default http) or 443 (https), use relative URL
+  if (!port || port === '80' || port === '443') {
+    return `${protocol}//${hostname}`;
+  }
+
+  // Otherwise use the same port (e.g., dev server on 5173)
+  return `${protocol}//${hostname}:${port}`;
 };
 
 export const API_BASE_URL = getApiBaseUrl();

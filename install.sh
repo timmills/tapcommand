@@ -241,6 +241,12 @@ setup_frontend() {
         exit 1
     fi
 
+    print_info "Setting permissions for nginx..."
+    # Make home directory executable so nginx can traverse to dist
+    chmod o+x "$HOME"
+    # Make dist directory readable by nginx
+    chmod -R o+rX dist/
+
     print_success "Frontend built successfully"
 }
 
@@ -483,7 +489,7 @@ verify_installation() {
     # Check backend health
     print_info "Checking backend health..."
     sleep 2
-    if curl -sf http://localhost:$BACKEND_PORT/api/health > /dev/null 2>&1; then
+    if curl -sf http://localhost:$BACKEND_PORT/health > /dev/null 2>&1; then
         print_success "Backend is responding"
     else
         print_warning "Backend health check failed (might still be starting)"
