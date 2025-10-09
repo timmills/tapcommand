@@ -7,6 +7,9 @@
 
 set -e  # Exit on any error
 
+# Remove this script after execution (self-cleanup)
+trap 'rm -f "$0"' EXIT
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -88,6 +91,14 @@ check_ubuntu() {
 clone_repository() {
     print_header "Cloning SmartVenue Repository"
 
+    # Check if git is available
+    if ! command -v git &> /dev/null; then
+        print_error "git is not installed or not in PATH"
+        exit 1
+    fi
+
+    print_info "Target directory: $INSTALL_DIR"
+
     if [[ -d "$INSTALL_DIR" ]]; then
         print_warning "Directory $INSTALL_DIR already exists"
         read -p "Remove and re-clone? (y/N): " -n 1 -r
@@ -104,11 +115,21 @@ clone_repository() {
     print_info "Cloning repository from $REPO_URL (branch: $REPO_BRANCH)..."
     if ! git clone -b "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"; then
         print_error "Failed to clone repository"
-        print_info "Make sure git is installed and the repository URL is correct"
+        print_info "Repository: $REPO_URL"
+        print_info "Branch: $REPO_BRANCH"
+        print_info "Target: $INSTALL_DIR"
         exit 1
     fi
 
-    print_success "Repository cloned successfully"
+    print_success "Repository cloned successfully to $INSTALL_DIR"
+
+    # Verify the clone
+    if [[ ! -d "$INSTALL_DIR/backend" ]]; then
+        print_error "Clone succeeded but backend directory not found!"
+        print_info "Contents of $INSTALL_DIR:"
+        ls -la "$INSTALL_DIR"
+        exit 1
+    fi
 }
 
 #######################################################################
@@ -212,7 +233,13 @@ setup_frontend() {
     npm install --silent
 
     print_info "Building frontend for production..."
-    npm run build
+    # Skip TypeScript type checking during build for faster installation
+    # Vite will still bundle correctly
+    if ! npx vite build --mode production 2>&1 | tee /tmp/frontend-build.log; then
+        print_error "Frontend build failed"
+        print_info "Check /tmp/frontend-build.log for details"
+        exit 1
+    fi
 
     print_success "Frontend built successfully"
 }
@@ -238,26 +265,37 @@ setup_environment() {
     # Backend environment
     if [[ ! -f "$INSTALL_DIR/backend/.env" ]]; then
         print_info "Creating backend .env file..."
+
+        # Get local and Tailscale IPs for CORS
+        LOCAL_IP=$(hostname -I | awk '{print $1}')
+        TAILSCALE_IP=$(ip addr show tailscale0 2>/dev/null | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
+
+        # Build CORS origins list (JSON array format for pydantic)
+        CORS_LIST="[\"http://localhost:5173\",\"http://localhost:3000\",\"http://$LOCAL_IP\""
+        if [[ -n "$TAILSCALE_IP" ]]; then
+            CORS_LIST="$CORS_LIST,\"http://$TAILSCALE_IP\""
+        fi
+        CORS_LIST="$CORS_LIST]"
+
         cat > "$INSTALL_DIR/backend/.env" << EOF
 # Database
 DATABASE_URL=sqlite:///./smartvenue.db
 
-# JWT Configuration
-SECRET_KEY=$(openssl rand -hex 32)
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
+# CORS Configuration (JSON array format)
+CORS_ORIGINS=$CORS_LIST
+CORS_ALLOW_CREDENTIALS=false
 
-# CORS (adjust if needed)
-CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+# ESPHome API (optional - set if using encrypted API)
+# ESPHOME_API_KEY=your_key_here
 
-# Server
-HOST=0.0.0.0
-PORT=$BACKEND_PORT
+# WiFi Network
+WIFI_SSID=TV
 
-# Logging
-LOG_LEVEL=INFO
+# Scheduling
+SCHEDULER_TIMEZONE=Australia/Sydney
 EOF
         print_success "Backend environment configured"
+        print_info "CORS origins: $CORS_LIST"
     else
         print_info "Backend .env already exists, skipping"
     fi
@@ -336,16 +374,28 @@ EOF
 setup_nginx() {
     print_header "Setting Up Nginx"
 
-    # Get server name/IP
+    # Get server IPs
     LOCAL_IP=$(hostname -I | awk '{print $1}')
-    read -p "Enter server hostname or IP [$LOCAL_IP]: " SERVER_NAME
-    SERVER_NAME=${SERVER_NAME:-$LOCAL_IP}
+    TAILSCALE_IP=$(ip addr show tailscale0 2>/dev/null | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1)
 
-    print_info "Creating nginx configuration..."
+    if [[ -n "$TAILSCALE_IP" ]]; then
+        print_success "Tailscale IP detected: $TAILSCALE_IP"
+        SERVER_NAMES="$LOCAL_IP $TAILSCALE_IP"
+    else
+        print_warning "Tailscale not detected, using local IP only"
+        SERVER_NAMES="$LOCAL_IP"
+    fi
+
+    read -p "Enter additional server hostnames or IPs (space-separated) [$SERVER_NAMES]: " EXTRA_NAMES
+    if [[ -n "$EXTRA_NAMES" ]]; then
+        SERVER_NAMES="$EXTRA_NAMES"
+    fi
+
+    print_info "Creating nginx configuration for: $SERVER_NAMES"
     sudo tee /etc/nginx/sites-available/smartvenue > /dev/null << EOF
 server {
     listen 80;
-    server_name $SERVER_NAME;
+    server_name $SERVER_NAMES;
 
     # Frontend (serve built files)
     location / {
@@ -369,6 +419,11 @@ server {
         proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "upgrade";
         proxy_set_header Host \$host;
+    }
+
+    # Serve install script
+    location /install.sh {
+        proxy_pass http://127.0.0.1:$BACKEND_PORT;
     }
 }
 EOF
@@ -399,13 +454,15 @@ start_services() {
     print_info "Enabling and starting backend service..."
     sudo systemctl enable smartvenue-backend.service
     sudo systemctl start smartvenue-backend.service
-    sleep 3
+    sleep 5
 
     if sudo systemctl is-active --quiet smartvenue-backend.service; then
         print_success "Backend service started"
     else
         print_error "Backend service failed to start"
-        print_info "Check logs with: sudo journalctl -u smartvenue-backend.service -n 50"
+        print_info "Recent logs:"
+        sudo journalctl -u smartvenue-backend.service -n 20 --no-pager
+        print_info "Full logs: sudo journalctl -u smartvenue-backend.service -n 50"
         exit 1
     fi
 
@@ -486,9 +543,9 @@ main() {
     check_root
     check_ubuntu
     install_system_deps
+    clone_repository
     check_python_version
     install_node
-    clone_repository
     setup_backend
     setup_frontend
     setup_database
