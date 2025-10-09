@@ -33,6 +33,7 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
 
         discovered_count = safe_count("device_discoveries")
         managed_count = safe_count("managed_devices")
+        devices_count = safe_count("devices")  # Legacy devices table
         virtual_controller_count = safe_count("virtual_controllers")
         virtual_device_count = safe_count("virtual_devices")
         network_scan_count = safe_count("network_scan_cache")
@@ -42,13 +43,14 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         print(f"\n📊 Current database state:")
         print(f"   • Discovered devices: {discovered_count}")
         print(f"   • Managed devices: {managed_count}")
+        print(f"   • Legacy devices: {devices_count}")
         print(f"   • Virtual controllers: {virtual_controller_count}")
         print(f"   • Virtual devices: {virtual_device_count}")
         print(f"   • Network scan cache: {network_scan_count}")
         print(f"   • Command history: {command_history_count}")
         print(f"   • Command queue: {command_queue_count}")
 
-        total_items = discovered_count + managed_count + virtual_controller_count + virtual_device_count + network_scan_count + command_history_count + command_queue_count
+        total_items = discovered_count + managed_count + devices_count + virtual_controller_count + virtual_device_count + network_scan_count + command_history_count + command_queue_count
         if total_items == 0:
             print("\n✨ Database is already clean!")
             return
@@ -64,6 +66,11 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         if managed_count > 0:
             cursor.execute("DELETE FROM managed_devices")
             print(f"   ✓ Removed {managed_count} managed devices")
+
+        # Delete legacy devices table
+        if devices_count > 0:
+            cursor.execute("DELETE FROM devices")
+            print(f"   ✓ Removed {devices_count} legacy devices")
 
         # Delete virtual controllers and devices
         if virtual_device_count > 0:
