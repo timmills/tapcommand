@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, timezone
 
 from ..db.database import get_db
 from ..models.device_management import ManagedDevice, IRPort, DeviceDiscovery, DeviceTag
@@ -376,7 +376,7 @@ async def sync_discovered_devices(db: Session = Depends(get_db)):
         if existing:
             # Update existing entry
             existing.ip_address = device.ip_address
-            existing.last_seen = datetime.now()
+            existing.last_seen = datetime.now(timezone.utc)
             existing.firmware_version = device.version
             existing.discovery_properties = device.properties
         else:
@@ -632,7 +632,7 @@ async def manage_device(
         device_record.mac_address = canonical_mac or device_record.mac_address
         device_record.ip_address = discovered.ip_address
         device_record.is_online = True
-        device_record.last_seen = datetime.now()
+        device_record.last_seen = datetime.now(timezone.utc)
         device_record.firmware_version = discovered.firmware_version
         device_record.friendly_name = discovered.friendly_name or device_record.friendly_name
         if capabilities_snapshot:
@@ -962,7 +962,7 @@ async def check_device_health(device_id: int, db: Session = Depends(get_db)):
         # Update last_seen to now for clarity
         device = db.query(ManagedDevice).filter(ManagedDevice.id == device_id).first()
         if device:
-            device.last_seen = datetime.now()
+            device.last_seen = datetime.now(timezone.utc)
             device.is_online = result.is_online
             db.commit()
 

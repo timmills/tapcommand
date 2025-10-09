@@ -6,7 +6,7 @@ import asyncio
 import subprocess
 import re
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Dict, Optional
 import logging
 
@@ -247,8 +247,13 @@ class NetworkSweepService:
             # Parse nmap output for online hosts
             online_hosts = []
             for line in output.split('\n'):
-                # Look for lines like "Nmap scan report for 192.168.101.50"
-                match = re.search(r'Nmap scan report for (\d+\.\d+\.\d+\.\d+)', line)
+                # Look for lines like:
+                # "Nmap scan report for 192.168.101.50"
+                # "Nmap scan report for hostname (192.168.101.50)"
+                # Match IP in parentheses first, then standalone IP
+                match = re.search(r'Nmap scan report for .+?\((\d+\.\d+\.\d+\.\d+)\)', line)
+                if not match:
+                    match = re.search(r'Nmap scan report for (\d+\.\d+\.\d+\.\d+)', line)
                 if match:
                     ip = match.group(1)
                     online_hosts.append({'ip': ip, 'online': True, 'response_time_ms': None})
@@ -308,7 +313,7 @@ class NetworkSweepService:
                 'response_time_ms': host['response_time_ms'],
                 'device_type_guess': device_type_final,
                 'scan_id': scan_id,
-                'last_seen': datetime.now(),
+                'last_seen': datetime.now(timezone.utc),
                 # Additional port scan info (not in DB model yet, but added to response)
                 '_port_scan_display_name': display_name,
                 '_port_scan_ports': port_scan_info['open_ports'] if port_scan_info else []

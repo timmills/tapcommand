@@ -128,7 +128,7 @@ def on_device_discovered(device):
     from .models.device import Device
     from .services.esphome_client import esphome_manager
     from .services.settings_service import settings_service
-    from datetime import datetime
+    from datetime import datetime, timezone
 
     db = SessionLocal()
     try:
@@ -140,7 +140,7 @@ def on_device_discovered(device):
         if existing:
             # Update existing record
             existing.ip_address = device.ip_address
-            existing.last_seen = datetime.now()
+            existing.last_seen = datetime.now(timezone.utc)
             existing.firmware_version = device.version
             existing.discovery_properties = device.properties
         else:
@@ -176,7 +176,7 @@ def on_device_discovered(device):
                         dev_rec = db_async.query(Device).filter(Device.hostname == device.hostname).first()
                         if dev_rec:
                             dev_rec.capabilities = capabilities
-                            dev_rec.last_seen = datetime.now()
+                            dev_rec.last_seen = datetime.now(timezone.utc)
                             dev_rec.is_online = True
                         else:
                             dev_rec = Device(
