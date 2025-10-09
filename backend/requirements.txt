@@ -7,8 +7,8 @@ python-multipart==0.0.6
 aiofiles==23.2.1
 python-dotenv==1.0.0
 zeroconf==0.131.0
-aioesphomeapi==18.5.1
-esphome==2024.12.2
+aioesphomeapi
+esphome
 asyncio-mqtt==0.16.1
 apscheduler==3.10.4
 pydantic-settings==2.1.0
