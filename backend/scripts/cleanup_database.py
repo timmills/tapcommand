@@ -36,6 +36,8 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         virtual_controller_count = safe_count("virtual_controllers")
         virtual_device_count = safe_count("virtual_devices")
         network_scan_count = safe_count("network_scan_cache")
+        command_history_count = safe_count("command_history")
+        command_queue_count = safe_count("command_queue")
 
         print(f"\n📊 Current database state:")
         print(f"   • Discovered devices: {discovered_count}")
@@ -43,8 +45,10 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         print(f"   • Virtual controllers: {virtual_controller_count}")
         print(f"   • Virtual devices: {virtual_device_count}")
         print(f"   • Network scan cache: {network_scan_count}")
+        print(f"   • Command history: {command_history_count}")
+        print(f"   • Command queue: {command_queue_count}")
 
-        total_items = discovered_count + managed_count + virtual_controller_count + virtual_device_count + network_scan_count
+        total_items = discovered_count + managed_count + virtual_controller_count + virtual_device_count + network_scan_count + command_history_count + command_queue_count
         if total_items == 0:
             print("\n✨ Database is already clean!")
             return
@@ -74,6 +78,15 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
         if network_scan_count > 0:
             cursor.execute("DELETE FROM network_scan_cache")
             print(f"   ✓ Cleared {network_scan_count} network scan entries")
+
+        # Clear command queue and history
+        if command_queue_count > 0:
+            cursor.execute("DELETE FROM command_queue")
+            print(f"   ✓ Cleared {command_queue_count} queued commands")
+
+        if command_history_count > 0:
+            cursor.execute("DELETE FROM command_history")
+            print(f"   ✓ Cleared {command_history_count} command history entries")
 
         # Reset any cached state (device_status might not exist)
         try:
