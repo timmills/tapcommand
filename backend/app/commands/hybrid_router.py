@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 from .models import Command, ExecutionResult
 from .executors.base import CommandExecutor
 from .router import ProtocolRouter
-from ..models.virtual_controller import VirtualDevice
+from ..models.virtual_controller import VirtualDevice, VirtualController
 from ..models.device_management import ManagedDevice
 from ..services.esphome_client import esphome_manager
 
@@ -173,14 +173,23 @@ class HybridCommandRouter:
         """
         Attempt power-on via network (WOL or protocol-specific power-on)
         """
+        # Get VirtualController to get controller_id
+        vc = self.db.query(VirtualController).filter(VirtualController.id == device.controller_id).first()
+        if not vc:
+            return ExecutionResult(
+                success=False,
+                message=f"Virtual controller not found for device {device.device_name}",
+                error="CONTROLLER_NOT_FOUND",
+                data={"execution_time_ms": int((time.time() - start_time) * 1000)}
+            )
+
         # Create command object for network executor
         cmd = Command(
+            controller_id=vc.controller_id,
             device_type="network_tv",
             protocol=device.protocol,
             command="power_on",
-            device_name=device.device_name,
-            ip_address=device.ip_address,
-            mac_address=device.mac_address
+            parameters=None
         )
 
         # Get appropriate executor
@@ -232,15 +241,23 @@ class HybridCommandRouter:
     ) -> ExecutionResult:
         """Send command via network executor"""
 
+        # Get VirtualController to get controller_id
+        vc = self.db.query(VirtualController).filter(VirtualController.id == device.controller_id).first()
+        if not vc:
+            return ExecutionResult(
+                success=False,
+                message=f"Virtual controller not found for device {device.device_name}",
+                error="CONTROLLER_NOT_FOUND",
+                data={"execution_time_ms": int((time.time() - start_time) * 1000)}
+            )
+
         # Create command object
         cmd = Command(
+            controller_id=vc.controller_id,
             device_type="network_tv",
             protocol=device.protocol,
             command=command,
-            device_name=device.device_name,
-            ip_address=device.ip_address,
-            mac_address=device.mac_address,
-            **kwargs
+            parameters=kwargs if kwargs else None
         )
 
         # Get executor

@@ -18,6 +18,7 @@ from ..models.virtual_controller import VirtualController, VirtualDevice
 from .command_queue import CommandQueueService
 from .esphome_client import ESPHomeClient
 from ..commands.router import ProtocolRouter
+from ..commands.hybrid_router import HybridCommandRouter
 from ..commands.models import Command as ExecutorCommand
 
 logger = logging.getLogger(__name__)
@@ -132,6 +133,7 @@ class CommandQueueProcessor:
             device_type = None
             protocol = None
             controller_id = cmd.hostname
+            virtual_device = None  # Track if this is a virtual device with hybrid config
 
             # Check if it's a Virtual Controller (network TV or audio)
             if cmd.hostname.startswith('nw-') or cmd.hostname.startswith('aud-'):
@@ -152,6 +154,7 @@ class CommandQueueProcessor:
                         # - audio_zone for Audio Zones
                         device_type = vd.device_type
                         protocol = vd.protocol
+                        virtual_device = vd  # Store for hybrid routing check
                     else:
                         CommandQueueService.mark_failed(
                             db, cmd.id, f"Virtual device port {cmd.port} not found", retry=False
@@ -173,40 +176,84 @@ class CommandQueueProcessor:
                 device_type = device.device_type or "universal"
                 protocol = None  # IR doesn't use protocol
 
-            # Create ExecutorCommand from queue command
-            # Note: Network TVs don't use ports - each Virtual Device is a single device
-            # Only IR controllers use ports (physical IR blaster ports 1-5)
-            parameters = {}
-            if cmd.channel:
-                parameters['channel'] = cmd.channel
-            if cmd.digit is not None:
-                parameters['digit'] = cmd.digit
-
-            executor_cmd = ExecutorCommand(
-                controller_id=controller_id,
-                command=cmd.command,
-                device_type=device_type,
-                protocol=protocol,
-                parameters=parameters if parameters else None
-            )
-
-            # Get appropriate executor via protocol router
-            router = ProtocolRouter(db)
-            executor = router.get_executor(executor_cmd)
-
-            if not executor:
-                CommandQueueService.mark_failed(
-                    db, cmd.id,
-                    f"No executor found for device_type={device_type}, protocol={protocol}",
-                    retry=False
+            # Check if this is a hybrid device that should use HybridCommandRouter
+            use_hybrid_router = False
+            if virtual_device:
+                # Use hybrid router if:
+                # 1. Device has power_on_method set to 'hybrid' or 'ir'
+                # 2. Device has control_strategy set to 'hybrid_ir_fallback' or 'ir_only'
+                # 3. Device has IR fallback configured
+                has_ir_fallback = (
+                    virtual_device.fallback_ir_controller is not None and
+                    virtual_device.fallback_ir_port is not None
                 )
-                logger.error(f"No executor for {device_type}/{protocol}")
-                return
 
-            # Execute command
+                power_on_method = virtual_device.power_on_method
+                control_strategy = virtual_device.control_strategy
+
+                use_hybrid_router = (
+                    has_ir_fallback and (
+                        power_on_method in ['hybrid', 'ir'] or
+                        control_strategy in ['hybrid_ir_fallback', 'ir_only']
+                    )
+                )
+
+            # Execute command based on routing strategy
             start_time = time.time()
-            result = await executor.execute(executor_cmd)
-            execution_time_ms = int((time.time() - start_time) * 1000)
+
+            if use_hybrid_router:
+                # Use HybridCommandRouter for devices with hybrid/IR configuration
+                logger.debug(f"Using HybridCommandRouter for {cmd.hostname} (method={virtual_device.power_on_method}, strategy={virtual_device.control_strategy})")
+                hybrid_router = HybridCommandRouter(db)
+
+                # Build kwargs for command
+                kwargs = {}
+                if cmd.channel:
+                    kwargs['channel'] = cmd.channel
+                if cmd.digit is not None:
+                    kwargs['digit'] = cmd.digit
+
+                result = await hybrid_router.execute_hybrid_command(
+                    device=virtual_device,
+                    command=cmd.command,
+                    **kwargs
+                )
+                execution_time_ms = int((time.time() - start_time) * 1000)
+            else:
+                # Use standard ProtocolRouter for direct network/IR commands
+                # Create ExecutorCommand from queue command
+                # Note: Network TVs don't use ports - each Virtual Device is a single device
+                # Only IR controllers use ports (physical IR blaster ports 1-5)
+                parameters = {}
+                if cmd.channel:
+                    parameters['channel'] = cmd.channel
+                if cmd.digit is not None:
+                    parameters['digit'] = cmd.digit
+
+                executor_cmd = ExecutorCommand(
+                    controller_id=controller_id,
+                    command=cmd.command,
+                    device_type=device_type,
+                    protocol=protocol,
+                    parameters=parameters if parameters else None
+                )
+
+                # Get appropriate executor via protocol router
+                router = ProtocolRouter(db)
+                executor = router.get_executor(executor_cmd)
+
+                if not executor:
+                    CommandQueueService.mark_failed(
+                        db, cmd.id,
+                        f"No executor found for device_type={device_type}, protocol={protocol}",
+                        retry=False
+                    )
+                    logger.error(f"No executor for {device_type}/{protocol}")
+                    return
+
+                # Execute command
+                result = await executor.execute(executor_cmd)
+                execution_time_ms = int((time.time() - start_time) * 1000)
 
             if result.success:
                 # Mark as completed
@@ -227,9 +274,12 @@ class CommandQueueProcessor:
                             db.commit()
                             logger.debug(f"Updated channel cache for {vd.device_name}: {cmd.channel}")
 
+                # Log with appropriate router/executor name
+                router_name = "HybridCommandRouter" if use_hybrid_router else (executor.__class__.__name__ if 'executor' in locals() else "Unknown")
+                method_used = result.data.get('method', 'unknown') if result.data else 'unknown'
                 logger.info(
                     f"✓ Worker {worker_id} completed command {cmd.id} "
-                    f"in {execution_time_ms}ms via {executor.__class__.__name__}"
+                    f"in {execution_time_ms}ms via {router_name} (method: {method_used})"
                 )
             else:
                 # Command failed
