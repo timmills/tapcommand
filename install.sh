@@ -22,7 +22,8 @@ PYTHON_VERSION="3.12"
 NODE_VERSION="22"
 BACKEND_PORT="8000"
 FRONTEND_PORT="5173"
-REPO_URL="https://github.com/yourusername/smartvenue.git"  # TODO: Update with actual repo
+REPO_URL="https://github.com/timmills/smartvenue-device-management.git"
+REPO_BRANCH="release"
 
 #######################################################################
 # Helper Functions
@@ -100,8 +101,8 @@ clone_repository() {
         fi
     fi
 
-    print_info "Cloning repository from $REPO_URL..."
-    if ! git clone "$REPO_URL" "$INSTALL_DIR"; then
+    print_info "Cloning repository from $REPO_URL (branch: $REPO_BRANCH)..."
+    if ! git clone -b "$REPO_BRANCH" "$REPO_URL" "$INSTALL_DIR"; then
         print_error "Failed to clone repository"
         print_info "Make sure git is installed and the repository URL is correct"
         exit 1
@@ -221,30 +222,14 @@ setup_database() {
 
     cd "$INSTALL_DIR/backend"
 
+    # Database should be included in the release branch
     if [[ -f "smartvenue.db" ]]; then
-        print_warning "Database already exists at backend/smartvenue.db"
-        read -p "Keep existing database? (Y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Nn]$ ]]; then
-            print_info "Backing up existing database..."
-            mv smartvenue.db "smartvenue.db.backup.$(date +%Y%m%d_%H%M%S)"
-            print_success "Database backed up"
-        else
-            print_success "Keeping existing database"
-            return
-        fi
-    fi
-
-    if [[ -f "smartvenue_template.db" ]]; then
-        print_info "Using template database..."
-        cp smartvenue_template.db smartvenue.db
-        print_success "Database initialized from template"
+        print_success "Database found in repository"
+        chmod 664 smartvenue.db
     else
-        print_info "No template found - database will be created on first run"
+        print_warning "No database found in repository"
+        print_info "Database will be created on first run"
     fi
-
-    # Set proper permissions
-    chmod 664 smartvenue.db 2>/dev/null || true
 }
 
 setup_environment() {
