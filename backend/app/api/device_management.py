@@ -217,6 +217,9 @@ class DiscoveredDeviceResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat() + 'Z' if v.tzinfo is None else v.isoformat()
+        }
 
 
 class ChannelOption(BaseModel):
@@ -256,6 +259,9 @@ class AllDevicesResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        json_encoders = {
+            datetime: lambda v: v.isoformat() + 'Z' if v.tzinfo is None else v.isoformat()
+        }
 
 
 @router.get("/all-devices")
