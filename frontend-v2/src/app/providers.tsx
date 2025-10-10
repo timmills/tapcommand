@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { createQueryClient } from './queryClient';
 import { router } from './router';
+import { AuthProvider } from '../features/auth/context/auth-context';
 
 interface AppProvidersProps {
   children?: ReactNode;
@@ -15,8 +16,10 @@ export const AppProviders = ({ children }: AppProvidersProps) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      {children}
+      <AuthProvider>
+        <RouterProvider router={router} />
+        {children}
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

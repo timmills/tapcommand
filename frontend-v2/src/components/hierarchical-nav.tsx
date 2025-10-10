@@ -11,6 +11,7 @@ import {
   Users,
   Activity,
 } from 'lucide-react';
+import { useAuth, type UserRole } from '@/features/auth/context/auth-context';
 
 interface NavItem {
   label: string;
@@ -23,7 +24,7 @@ interface NavGroup {
   icon: React.ElementType;
   defaultOpen?: boolean;
   items: NavItem[];
-  restricted?: boolean; // For role-based access control
+  requiresRole?: UserRole; // Minimum role required to see this group
 }
 
 const navigationGroups: NavGroup[] = [
@@ -51,6 +52,7 @@ const navigationGroups: NavGroup[] = [
     label: 'Discovery & Setup',
     icon: Wifi,
     defaultOpen: false,
+    requiresRole: 'administrator', // Administrator+ can run discovery
     items: [
       { label: 'Discovery', to: '/discovery' },
     ],
@@ -59,6 +61,7 @@ const navigationGroups: NavGroup[] = [
     label: 'Infrared (IR)',
     icon: Zap,
     defaultOpen: false,
+    requiresRole: 'administrator', // Administrator+ can manage IR tools
     items: [
       { label: 'IR Libraries', to: '/ir-libraries' },
       { label: 'IR Capture', to: '/ir-capture' },
@@ -70,6 +73,7 @@ const navigationGroups: NavGroup[] = [
     label: 'Configuration',
     icon: Settings,
     defaultOpen: false,
+    requiresRole: 'operator', // Operator+ can manage schedules and config
     items: [
       { label: 'Schedules', to: '/schedules' },
       { label: 'Tags', to: '/tags' },
@@ -80,7 +84,7 @@ const navigationGroups: NavGroup[] = [
     label: 'Administration',
     icon: Users,
     defaultOpen: false,
-    restricted: true, // Could be hidden based on user role
+    requiresRole: 'superadmin', // Super Admin only
     items: [
       { label: 'Users', to: '/users' },
       { label: 'Backups', to: '/backups' },
@@ -90,6 +94,7 @@ const navigationGroups: NavGroup[] = [
     label: 'Advanced',
     icon: Activity,
     defaultOpen: false,
+    requiresRole: 'administrator', // Administrator+ can access diagnostics
     items: [
       { label: 'Queue Diagnostics', to: '/queue-diagnostics' },
       { label: 'Documentation', to: '/documentation' },
@@ -98,9 +103,18 @@ const navigationGroups: NavGroup[] = [
 ];
 
 export const HierarchicalNav = () => {
+  const { hasRole } = useAuth();
   const [openGroups, setOpenGroups] = useState<Set<string>>(
     new Set(navigationGroups.filter(g => g.defaultOpen).map(g => g.label))
   );
+
+  // Filter groups based on user role
+  const visibleGroups = navigationGroups.filter(group => {
+    // If no role requirement, show to everyone
+    if (!group.requiresRole) return true;
+    // Otherwise check if user has required role
+    return hasRole(group.requiresRole);
+  });
 
   const toggleGroup = (label: string) => {
     setOpenGroups(prev => {
@@ -122,7 +136,7 @@ export const HierarchicalNav = () => {
       </div>
 
       <nav className="mt-2 px-2 pb-4">
-        {navigationGroups.map((group) => {
+        {visibleGroups.map((group) => {
           const isOpen = openGroups.has(group.label);
           const Icon = group.icon;
 
@@ -134,7 +148,7 @@ export const HierarchicalNav = () => {
               >
                 <Icon className="h-4 w-4 flex-shrink-0 text-slate-500" />
                 <span className="flex-1 text-left">{group.label}</span>
-                {group.restricted && (
+                {group.requiresRole && (
                   <span className="text-xs text-slate-400">🔒</span>
                 )}
                 {isOpen ? (

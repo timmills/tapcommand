@@ -1,16 +1,15 @@
 import { useManagedDevices } from '@/features/devices/hooks/use-managed-devices';
 import { PlayCircle, Radio, Tv, Volume2, Calendar, Zap, HelpCircle } from 'lucide-react';
+import { useAuth } from '@/features/auth/context/auth-context';
 
 export const OverviewPage = () => {
   const { data: devices } = useManagedDevices();
+  const { role, hasRole } = useAuth();
 
   // Calculate stats
   const irControllers = devices?.filter(d => !d.hostname.startsWith('nw-')) || [];
   const tvControllers = devices?.filter(d => d.hostname.startsWith('nw-')) || [];
   const totalPorts = irControllers.reduce((acc, d) => acc + d.ir_ports.filter(p => p.is_active).length, 0);
-
-  // Mock user role - in production, this would come from auth context
-  const userRole = 'admin'; // Can be: 'staff', 'manager', 'admin'
 
   return (
     <div className="space-y-8">
@@ -173,14 +172,14 @@ export const OverviewPage = () => {
         </div>
       </div>
 
-      {/* Manager/Admin Sections */}
-      {(userRole === 'manager' || userRole === 'admin') && (
+      {/* Operator+ Sections */}
+      {hasRole('operator') && (
         <>
-          {/* System Architecture - Manager+ */}
+          {/* System Architecture - Operator+ */}
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-8">
             <div className="flex items-start gap-3">
               <div className="rounded-lg bg-blue-600 px-2 py-1 text-xs font-semibold text-white">
-                MANAGER+
+                OPERATOR+
               </div>
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-blue-900">System Architecture</h2>
@@ -231,14 +230,14 @@ export const OverviewPage = () => {
         </>
       )}
 
-      {/* Admin-Only Technical Details */}
-      {userRole === 'admin' && (
+      {/* Administrator+ Technical Details */}
+      {hasRole('administrator') && (
         <>
-          {/* Technical Configuration - Admin Only */}
+          {/* Technical Configuration - Administrator+ */}
           <div className="rounded-lg border border-rose-200 bg-rose-50 p-8">
             <div className="flex items-start gap-3">
               <div className="rounded-lg bg-rose-600 px-2 py-1 text-xs font-semibold text-white">
-                ADMIN ONLY
+                ADMINISTRATOR+
               </div>
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-rose-900">Technical Details</h2>
