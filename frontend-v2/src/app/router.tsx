@@ -20,43 +20,17 @@ import { NetworkControllersPage } from '../features/network-controllers/pages/ne
 import { AudioPage } from '../features/audio/pages/audio-page';
 import { DocumentationPage } from '../features/documentation/pages/documentation-page';
 import { BackupsPage } from '../features/backups/pages/backups-page';
-import { NavTestPage } from '../features/nav-test/pages/nav-test-page';
-import { TestNavLayout } from '../routes/test-nav-layout';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <Navigate to="controllers" replace /> },
+      { index: true, element: <Navigate to="connected-devices" replace /> },
       { path: 'controllers', element: <ControllersPage /> },
       { path: 'network-controllers', element: <NetworkControllersPage /> },
       { path: 'connected-devices', element: <ConnectedDevicesPage /> },
       { path: 'devices', element: <Navigate to="../controllers" replace /> },
-      { path: 'discovery', element: <DiscoveryPage /> },
-      { path: 'ir-libraries', element: <IRLibrariesPage /> },
-      { path: 'ir-capture', element: <IRCapturePage /> },
-      { path: 'templates', element: <TemplatesPage /> },
-      { path: 'ir-commands', element: <IRCommandsPage /> },
-      { path: 'schedules', element: <SchedulesPage /> },
-      { path: 'tags', element: <TagsPage /> },
-      { path: 'queue-diagnostics', element: <QueueDiagnosticsPage /> },
-      { path: 'audio', element: <AudioPage /> },
-      { path: 'documentation', element: <DocumentationPage /> },
-      { path: 'backups', element: <BackupsPage /> },
-      { path: 'settings', element: <SettingsPage /> },
-      { path: 'users', element: <UsersPage /> },
-    ],
-  },
-  {
-    path: '/nav-test',
-    element: <TestNavLayout />,
-    children: [
-      { index: true, element: <Navigate to="connected-devices" replace /> },
-      { path: 'overview', element: <NavTestPage /> },
-      { path: 'controllers', element: <ControllersPage /> },
-      { path: 'network-controllers', element: <NetworkControllersPage /> },
-      { path: 'connected-devices', element: <ConnectedDevicesPage /> },
       { path: 'discovery', element: <DiscoveryPage /> },
       { path: 'ir-libraries', element: <IRLibrariesPage /> },
       { path: 'ir-capture', element: <IRCapturePage /> },

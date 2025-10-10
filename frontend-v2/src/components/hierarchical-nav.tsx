@@ -7,13 +7,9 @@ import {
   Radio,
   Wifi,
   Zap,
-  Calendar,
-  Tag,
   Settings,
   Users,
-  Database,
   Activity,
-  BookOpen
 } from 'lucide-react';
 
 interface NavItem {
@@ -37,8 +33,7 @@ const navigationGroups: NavGroup[] = [
     defaultOpen: true,
     items: [
       { label: 'Control', to: '/control' },
-      { label: 'Connected Devices', to: '/nav-test/connected-devices' },
-      { label: 'Overview', to: '/nav-test/overview' },
+      { label: 'Connected Devices', to: '/connected-devices' },
     ],
   },
   {
@@ -46,9 +41,9 @@ const navigationGroups: NavGroup[] = [
     icon: Radio,
     defaultOpen: true,
     items: [
-      { label: 'IR Controllers', to: '/nav-test/controllers' },
-      { label: 'TV Controllers', to: '/nav-test/network-controllers' },
-      { label: 'Audio Controllers', to: '/nav-test/audio' },
+      { label: 'IR Controllers', to: '/controllers' },
+      { label: 'TV Controllers', to: '/network-controllers' },
+      { label: 'Audio Controllers', to: '/audio' },
     ],
   },
   {
@@ -56,7 +51,7 @@ const navigationGroups: NavGroup[] = [
     icon: Wifi,
     defaultOpen: false,
     items: [
-      { label: 'Discovery', to: '/nav-test/discovery' },
+      { label: 'Discovery', to: '/discovery' },
     ],
   },
   {
@@ -64,10 +59,10 @@ const navigationGroups: NavGroup[] = [
     icon: Zap,
     defaultOpen: false,
     items: [
-      { label: 'IR Libraries', to: '/nav-test/ir-libraries' },
-      { label: 'IR Capture', to: '/nav-test/ir-capture' },
-      { label: 'IR Commands', to: '/nav-test/ir-commands' },
-      { label: 'IR Builder', to: '/nav-test/templates' },
+      { label: 'IR Libraries', to: '/ir-libraries' },
+      { label: 'IR Capture', to: '/ir-capture' },
+      { label: 'IR Commands', to: '/ir-commands' },
+      { label: 'IR Builder', to: '/templates' },
     ],
   },
   {
@@ -75,9 +70,9 @@ const navigationGroups: NavGroup[] = [
     icon: Settings,
     defaultOpen: false,
     items: [
-      { label: 'Schedules', to: '/nav-test/schedules' },
-      { label: 'Tags', to: '/nav-test/tags' },
-      { label: 'Channels', to: '/nav-test/settings' },
+      { label: 'Schedules', to: '/schedules' },
+      { label: 'Tags', to: '/tags' },
+      { label: 'Channels', to: '/settings' },
     ],
   },
   {
@@ -86,8 +81,8 @@ const navigationGroups: NavGroup[] = [
     defaultOpen: false,
     restricted: true, // Could be hidden based on user role
     items: [
-      { label: 'Users', to: '/nav-test/users' },
-      { label: 'Backups', to: '/nav-test/backups' },
+      { label: 'Users', to: '/users' },
+      { label: 'Backups', to: '/backups' },
     ],
   },
   {
@@ -95,8 +90,8 @@ const navigationGroups: NavGroup[] = [
     icon: Activity,
     defaultOpen: false,
     items: [
-      { label: 'Queue Diagnostics', to: '/nav-test/queue-diagnostics' },
-      { label: 'Documentation', to: '/nav-test/documentation' },
+      { label: 'Queue Diagnostics', to: '/queue-diagnostics' },
+      { label: 'Documentation', to: '/documentation' },
     ],
   },
 ];
