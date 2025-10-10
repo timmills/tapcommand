@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
     path: '/nav-test',
     element: <TestNavLayout />,
     children: [
-      { index: true, element: <Navigate to="controllers" replace /> },
+      { index: true, element: <Navigate to="connected-devices" replace /> },
       { path: 'overview', element: <NavTestPage /> },
       { path: 'controllers', element: <ControllersPage /> },
       { path: 'network-controllers', element: <NetworkControllersPage /> },

@@ -37,6 +37,7 @@ const navigationGroups: NavGroup[] = [
     defaultOpen: true,
     items: [
       { label: 'Control', to: '/control' },
+      { label: 'Connected Devices', to: '/nav-test/connected-devices' },
       { label: 'Overview', to: '/nav-test/overview' },
     ],
   },
@@ -48,7 +49,6 @@ const navigationGroups: NavGroup[] = [
       { label: 'IR Controllers', to: '/nav-test/controllers' },
       { label: 'TV Controllers', to: '/nav-test/network-controllers' },
       { label: 'Audio Controllers', to: '/nav-test/audio' },
-      { label: 'Connected Devices', to: '/nav-test/connected-devices' },
     ],
   },
   {
