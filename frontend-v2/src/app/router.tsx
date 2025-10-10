@@ -20,6 +20,7 @@ import { NetworkControllersPage } from '../features/network-controllers/pages/ne
 import { AudioPage } from '../features/audio/pages/audio-page';
 import { DocumentationPage } from '../features/documentation/pages/documentation-page';
 import { BackupsPage } from '../features/backups/pages/backups-page';
+import { OverviewPage } from '../features/overview/pages/overview-page';
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <Navigate to="connected-devices" replace /> },
+      { path: 'overview', element: <OverviewPage /> },
       { path: 'controllers', element: <ControllersPage /> },
       { path: 'network-controllers', element: <NetworkControllersPage /> },
       { path: 'connected-devices', element: <ConnectedDevicesPage /> },

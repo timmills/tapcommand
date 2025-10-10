@@ -32,6 +32,7 @@ const navigationGroups: NavGroup[] = [
     icon: LayoutDashboard,
     defaultOpen: true,
     items: [
+      { label: 'Overview', to: '/overview' },
       { label: 'Control', to: '/control' },
       { label: 'Connected Devices', to: '/connected-devices' },
     ],
