@@ -1,10 +1,10 @@
 import { useManagedDevices } from '@/features/devices/hooks/use-managed-devices';
-import { PlayCircle, Radio, Tv, Volume2, Calendar, Zap, HelpCircle } from 'lucide-react';
+import { PlayCircle, Radio, Tv, Volume2, Calendar, Zap, HelpCircle, Users, Shield } from 'lucide-react';
 import { useAuth } from '@/features/auth/context/auth-context';
 
 export const OverviewPage = () => {
   const { data: devices } = useManagedDevices();
-  const { role, hasRole } = useAuth();
+  const { hasRole } = useAuth();
 
   // Calculate stats
   const irControllers = devices?.filter(d => !d.hostname.startsWith('nw-')) || [];
@@ -312,6 +312,111 @@ export const OverviewPage = () => {
                 <a href="/backups" className="mt-2 inline-block text-sm font-medium text-brand-600 hover:text-brand-700">
                   Manage Backups →
                 </a>
+              </div>
+            </div>
+          </div>
+
+          {/* User Management - Administrator+ */}
+          <div className="rounded-lg border border-rose-200 bg-rose-50 p-8">
+            <div className="flex items-start gap-3">
+              <div className="rounded-lg bg-rose-600 px-2 py-1 text-xs font-semibold text-white">
+                ADMINISTRATOR+
+              </div>
+              <div className="flex-1">
+                <h2 className="text-xl font-semibold text-rose-900">User Management</h2>
+                <p className="mt-2 text-sm text-rose-700">
+                  Managing users, roles, and permissions in SmartVenue
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div className="rounded-lg bg-white p-4">
+                <div className="flex items-center gap-3">
+                  <Users className="h-5 w-5 text-brand-600" />
+                  <h3 className="font-semibold text-slate-900">Creating Users</h3>
+                </div>
+                <p className="mt-2 text-sm text-slate-600">
+                  Navigate to <strong>Users</strong> in the sidebar and click <strong>Create User</strong>. You'll need to provide:
+                </p>
+                <ul className="mt-2 space-y-1 text-sm text-slate-600">
+                  <li>• <strong>Username:</strong> Unique identifier for login (cannot be changed later)</li>
+                  <li>• <strong>Email:</strong> User's email address</li>
+                  <li>• <strong>Password:</strong> Must be at least 8 characters</li>
+                  <li>• <strong>Full Name:</strong> Optional display name</li>
+                </ul>
+                <p className="mt-2 text-sm text-slate-600">
+                  By default, new users are marked to change their password on first login for security.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-white p-4">
+                <div className="flex items-center gap-3">
+                  <Shield className="h-5 w-5 text-brand-600" />
+                  <h3 className="font-semibold text-slate-900">Roles & Permissions</h3>
+                </div>
+                <p className="mt-2 text-sm text-slate-600">
+                  SmartVenue uses role-based access control with four system roles:
+                </p>
+                <div className="mt-3 space-y-2">
+                  <div className="flex items-start gap-2">
+                    <div className="mt-0.5 h-2 w-2 rounded-full bg-red-500"></div>
+                    <div>
+                      <strong className="text-sm text-slate-900">Super Admin</strong>
+                      <p className="text-sm text-slate-600">Full system access including user management, system settings, and all features</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="mt-0.5 h-2 w-2 rounded-full bg-orange-500"></div>
+                    <div>
+                      <strong className="text-sm text-slate-900">Administrator</strong>
+                      <p className="text-sm text-slate-600">Can manage devices, IR libraries, schedules, and view technical details</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="mt-0.5 h-2 w-2 rounded-full bg-blue-500"></div>
+                    <div>
+                      <strong className="text-sm text-slate-900">Operator</strong>
+                      <p className="text-sm text-slate-600">Can control devices, manage schedules, and view system architecture</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="mt-0.5 h-2 w-2 rounded-full bg-green-500"></div>
+                    <div>
+                      <strong className="text-sm text-slate-900">Viewer</strong>
+                      <p className="text-sm text-slate-600">Read-only access to view devices and schedules</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-lg bg-white p-4">
+                <h3 className="font-semibold text-slate-900">Assigning Roles</h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  When creating or editing a user, select one or more roles to grant permissions. Users can have multiple
+                  roles, and their effective permissions are the union of all assigned roles. For administrators, assign the
+                  <strong> Super Admin</strong> role.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-white p-4">
+                <h3 className="font-semibold text-slate-900">Custom Roles</h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Switch to the <strong>Roles & Permissions</strong> tab on the Users page to create custom roles with
+                  specific permissions. This allows fine-grained access control for specialized workflows.
+                </p>
+              </div>
+
+              <div className="rounded-lg bg-white p-4">
+                <h3 className="font-semibold text-slate-900">Password Recovery</h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  If a user is locked out, administrators can reset their password from the user edit modal. For emergency
+                  access recovery, system administrators can use the command-line password reset tool:
+                </p>
+                <pre className="mt-2 rounded bg-slate-900 px-3 py-2 text-xs text-slate-100">./reset-password.sh username</pre>
+                <p className="mt-2 text-sm text-slate-600">
+                  See <code className="rounded bg-slate-100 px-1 py-0.5 text-xs">PASSWORD_RECOVERY.md</code> for details.
+                </p>
               </div>
             </div>
           </div>
