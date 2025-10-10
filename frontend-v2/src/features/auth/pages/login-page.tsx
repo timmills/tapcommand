@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Tv2, Lock, User, Loader2, Sparkles } from 'lucide-react';
 import { authApi, tokenStorage } from '@/lib/api/auth';
+import { useAuth } from '../context/auth-context';
 
 export const LoginPage = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ export const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,6 +20,9 @@ export const LoginPage = () => {
     try {
       const response = await authApi.login({ username, password });
       tokenStorage.setTokens(response.access_token, response.refresh_token);
+
+      // Notify AuthContext to refetch user
+      login();
 
       // Redirect to home page after successful login
       navigate('/');
