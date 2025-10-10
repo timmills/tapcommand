@@ -26,7 +26,6 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isActive, setIsActive] = useState(true);
-  const [isSuperuser, setIsSuperuser] = useState(false);
   const [mustChangePassword, setMustChangePassword] = useState(true);
   const [selectedRoles, setSelectedRoles] = useState<number[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -45,7 +44,6 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
       setEmail(user.email);
       setFullName(user.full_name ?? '');
       setIsActive(user.is_active);
-      setIsSuperuser(user.is_superuser);
       setMustChangePassword(user.must_change_password);
       setSelectedRoles(user.roles.map((r) => r.id));
       setPassword('');
@@ -57,7 +55,6 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
       setPassword('');
       setConfirmPassword('');
       setIsActive(true);
-      setIsSuperuser(false);
       setMustChangePassword(true);
       setSelectedRoles([]);
     }
@@ -92,13 +89,12 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
     try {
       if (isEditing) {
         // Update existing user
-        const updatedUser = await updateUser.mutateAsync({
+        await updateUser.mutateAsync({
           userId: user.id,
           data: {
             email,
             full_name: fullName || undefined,
             is_active: isActive,
-            is_superuser: isSuperuser,
           },
         });
 
@@ -140,7 +136,6 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
           email,
           password,
           full_name: fullName || undefined,
-          is_superuser: isSuperuser,
           must_change_password: mustChangePassword,
           role_ids: selectedRoles,
         });
@@ -171,22 +166,24 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
         </h3>
 
         <form onSubmit={handleSubmit} className="mt-4 space-y-4">
-          {/* Username (only for new users) */}
-          {!isEditing && (
-            <div>
-              <label className="block text-sm font-medium text-slate-700">
-                Username <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="johndoe"
-              />
-            </div>
-          )}
+          {/* Username */}
+          <div>
+            <label className="block text-sm font-medium text-slate-700">
+              Username {!isEditing && <span className="text-rose-500">*</span>}
+            </label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required={!isEditing}
+              disabled={isEditing}
+              className="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
+              placeholder="johndoe"
+            />
+            {isEditing && (
+              <p className="mt-1 text-xs text-slate-500">Username cannot be changed after creation</p>
+            )}
+          </div>
 
           {/* Email */}
           <div>
@@ -260,6 +257,9 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
           {/* Roles */}
           <div>
             <label className="block text-sm font-medium text-slate-700">Roles</label>
+            <p className="mt-1 text-xs text-slate-500">
+              Assign the "Super Admin" role for full system access
+            </p>
             <div className="mt-2 space-y-2">
               {AVAILABLE_ROLES.map((role) => (
                 <label key={role.id} className="flex items-center">
@@ -289,20 +289,6 @@ export const UserEditModal = ({ user, open, onClose, onSaved }: UserEditModalPro
               />
               <span className="ml-2 text-sm font-medium text-slate-700">Active</span>
               <span className="ml-2 text-xs text-slate-500">(User can log in and access the system)</span>
-            </label>
-          </div>
-
-          {/* Superuser */}
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={isSuperuser}
-                onChange={(e) => setIsSuperuser(e.target.checked)}
-                className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-              />
-              <span className="ml-2 text-sm font-medium text-slate-700">Superuser</span>
-              <span className="ml-2 text-xs text-slate-500">(Full administrative access)</span>
             </label>
           </div>
 

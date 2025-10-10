@@ -74,7 +74,7 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
                 </div>
               </td>
               <td className="whitespace-nowrap px-6 py-4">
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col gap-1">
                   {user.is_active ? (
                     <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                       Active
@@ -82,11 +82,6 @@ export const UsersTable = ({ users, onEdit, onDelete }: UsersTableProps) => {
                   ) : (
                     <span className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
                       Inactive
-                    </span>
-                  )}
-                  {user.is_superuser && (
-                    <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800">
-                      Superuser
                     </span>
                   )}
                   {user.must_change_password && (
