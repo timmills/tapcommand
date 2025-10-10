@@ -411,7 +411,7 @@ const ControlCard = ({
   selected,
   onToggle,
   onTagSelect,
-  onLocationSelect,
+  onLocationSelect: _onLocationSelect,
 }: {
   row: PortRow;
   channels: ChannelOption[];
@@ -862,7 +862,7 @@ function buildRows(controllers: ManagedDevice[], tags: DeviceTag[], virtualDevic
   return rows;
 }
 
-function formatChannelLabel(channel: ChannelOption): string {
+function _formatChannelLabel(channel: ChannelOption): string {
   const parts = [channel.channel_name];
   if (channel.lcn) parts.push(`LCN ${channel.lcn}`);
   if (channel.foxtel_number) parts.push(`Foxtel ${channel.foxtel_number}`);

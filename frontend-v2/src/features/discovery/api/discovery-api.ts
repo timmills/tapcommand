@@ -1,9 +1,6 @@
 import { apiClient } from '@/lib/axios';
 import type { DiscoveredDevice } from '@/types';
 
-interface DiscoveryServiceResponse {
-  devices: DiscoveredDevice[];
-}
 
 export interface AllDevicesFilters {
   show_esphome?: boolean;

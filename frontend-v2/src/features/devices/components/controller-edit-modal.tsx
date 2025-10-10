@@ -880,7 +880,7 @@ const PortAvailableCommandsInline = ({ libraryId }: { libraryId?: number }) => {
   );
 };
 
-const PortAvailableCommands = ({ libraryId }: { libraryId?: number }) => {
+const _PortAvailableCommands = ({ libraryId }: { libraryId?: number }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { data: libraryCommands, isLoading } = useLibraryCommands(libraryId);
 

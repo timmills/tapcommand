@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/lib/axios';
 import { useManagedDevices } from '../hooks/use-managed-devices';
-import type { ManagedDevice } from '@/types';
 
 interface VirtualDevice {
   id: number;

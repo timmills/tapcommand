@@ -269,7 +269,7 @@ export const NetworkControllersPage = () => {
   const [virtualDevices, setVirtualDevices] = useState<VirtualDevice[]>([]);
   const [hidingDevice, setHidingDevice] = useState<string | null>(null);
   const [deletingController, setDeletingController] = useState<string | null>(null);
-  const [unlinkingIR, setUnlinkingIR] = useState<number | null>(null);
+  const [_unlinkingIR, _setUnlinkingIR] = useState<number | null>(null);
   const [editingVirtualDevice, setEditingVirtualDevice] = useState<VirtualDevice | null>(null);
   const [showManualEntry, setShowManualEntry] = useState(false);
   const [manualIP, setManualIP] = useState('');
@@ -414,12 +414,12 @@ export const NetworkControllersPage = () => {
     }
   };
 
-  const handleUnlinkIR = async (deviceId: number) => {
+  const _handleUnlinkIR = async (deviceId: number) => {
     if (!confirm('Are you sure you want to remove the IR fallback for this TV?')) {
       return;
     }
 
-    setUnlinkingIR(deviceId);
+    _setUnlinkingIR(deviceId);
     try {
       await apiClient.delete(`/api/v1/hybrid-devices/${deviceId}/unlink-ir-fallback`);
       // Refresh virtual devices to show updated status
@@ -427,7 +427,7 @@ export const NetworkControllersPage = () => {
     } catch (error) {
       console.error('Failed to unlink IR controller:', error);
     } finally {
-      setUnlinkingIR(null);
+      _setUnlinkingIR(null);
     }
   };
 

@@ -187,7 +187,7 @@ interface BrandInfoCardsProps {
   onSelectBrand?: (protocol: string) => void;
 }
 
-export const BrandInfoCards = ({ onSelectBrand }: BrandInfoCardsProps) => {
+export const BrandInfoCards = ({ onSelectBrand: _onSelectBrand }: BrandInfoCardsProps) => {
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
   const [showComparison, setShowComparison] = useState(false);
 

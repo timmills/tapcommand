@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { usersApi, type User, type CreateUserRequest, type UpdateUserRequest, type UserSearchParams, type PasswordResetRequest } from '@/lib/api/users';
+import { usersApi, type CreateUserRequest, type UpdateUserRequest, type UserSearchParams, type PasswordResetRequest } from '@/lib/api/users';
 
 // Query keys
 export const userKeys = {

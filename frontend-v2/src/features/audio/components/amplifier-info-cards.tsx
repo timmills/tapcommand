@@ -186,7 +186,7 @@ interface AmplifierInfoCardsProps {
   onSelectAmplifier?: (protocol: string) => void;
 }
 
-export const AmplifierInfoCards = ({ onSelectAmplifier }: AmplifierInfoCardsProps) => {
+export const AmplifierInfoCards = ({ onSelectAmplifier: _onSelectAmplifier }: AmplifierInfoCardsProps) => {
   const [expandedAmplifier, setExpandedAmplifier] = useState<string | null>(null);
   const [showComparison, setShowComparison] = useState(false);
   const [filterStatus, setFilterStatus] = useState<'all' | 'implemented' | 'planned' | 'future'>('all');

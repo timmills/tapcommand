@@ -114,7 +114,7 @@ export function DocumentationPage() {
                     <h3 className="text-xs font-semibold uppercase text-slate-600">{category}</h3>
                   </div>
                   <div className="divide-y divide-slate-100">
-                    {categoryFiles.map((file) => (
+                    {categoryFiles?.map((file) => (
                       <button
                         key={file.path}
                         onClick={() => setSelectedFile(file.path)}
