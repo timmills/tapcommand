@@ -25,7 +25,7 @@ PYTHON_VERSION="3.12"
 NODE_VERSION="22"
 BACKEND_PORT="8000"
 FRONTEND_PORT="5173"
-REPO_URL="https://github.com/timmills/tapcommand-device-management.git"
+REPO_URL="https://github.com/timmills/tapcommand.git"
 REPO_BRANCH="release"
 
 #######################################################################
