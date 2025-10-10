@@ -41,6 +41,10 @@ ENV/
 !smartvenue_template.db
 !backend/smartvenue_template.db
 
+# Exception: Allow tapcommand database for deployments
+!tapcommand.db
+!backend/tapcommand.db
+
 # Environment variables
 .env
 .env.local
