@@ -603,6 +603,24 @@ verify_installation() {
     fi
 }
 
+run_health_check() {
+    echo ""
+    if fancy_confirm "Would you like to run a comprehensive health check now?"; then
+        fancy_header "Running Health Check"
+
+        if [[ -f "$INSTALL_DIR/health-check.sh" ]]; then
+            cd "$INSTALL_DIR"
+            chmod +x health-check.sh
+            ./health-check.sh
+        else
+            fancy_warning "Health check script not found in repository"
+            fancy_info "You can run it later with: cd $INSTALL_DIR && ./health-check.sh"
+        fi
+    else
+        fancy_info "You can run a health check anytime with: cd $INSTALL_DIR && ./health-check.sh"
+    fi
+}
+
 #######################################################################
 # Main Installation Flow
 #######################################################################
@@ -653,6 +671,7 @@ main() {
     setup_nginx
     start_services
     verify_installation
+    run_health_check
 }
 
 # Run main installation
