@@ -17,6 +17,7 @@ const navigation = [
   { label: 'Documentation', to: '/documentation' },
   { label: 'Tags', to: '/tags' },
   { label: 'Channels', to: '/settings' },
+  { label: 'Backups', to: '/backups' },
   { label: 'Users', to: '/users' },
 ];
 

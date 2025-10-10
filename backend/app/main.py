@@ -30,13 +30,15 @@ from .api.hybrid_devices import router as hybrid_devices_router
 from .commands.api import router as unified_commands_router
 from .routers.audio_controllers import router as audio_controllers_router
 from .routers.documentation import router as documentation_router
+from .routers.backups import router as backups_router
 from .services.discovery import discovery_service
 from .services.device_health import health_checker
 from .services.queue_processor import start_queue_processor, stop_queue_processor
 from .services.history_cleanup import start_history_cleanup, stop_history_cleanup
-from .services.schedule_processor import start_schedule_processor, stop_schedule_processor
+from .services.schedule_processor import start_schedule_processor, stop_schedule_processor, schedule_processor
 from .services.device_status_checker import status_checker
 from .services.tv_status_poller import tv_status_poller
+from .services.backup_service import setup_backup_scheduler
 
 # Configure logging
 logging.basicConfig(
@@ -97,6 +99,10 @@ async def lifespan(app: FastAPI):
     # Start TV status polling service
     await tv_status_poller.start()
     logger.info("TV status polling service started")
+
+    # Setup backup scheduler
+    setup_backup_scheduler(schedule_processor.scheduler)
+    logger.info("Backup scheduler configured")
 
     yield
 
@@ -346,6 +352,12 @@ app.include_router(
 # Include documentation router
 app.include_router(
     documentation_router
+)
+
+# Include backup management router
+app.include_router(
+    backups_router,
+    prefix=f"{settings.API_V1_STR}"
 )
 
 # Mount static files for channel icons

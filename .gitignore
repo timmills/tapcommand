@@ -103,3 +103,7 @@ secrets.yaml
 # Ignore nested git repos
 data/Flipper-IRDB/
 temp.tif
+
+# Backups - keep locally only, never commit to git
+backups/
+*.db.gz
