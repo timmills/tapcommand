@@ -19,6 +19,7 @@ const navigation = [
   { label: 'Channels', to: '/settings' },
   { label: 'Backups', to: '/backups' },
   { label: 'Users', to: '/users' },
+  { label: '🧪 Nav Test', to: '/nav-test' },
 ];
 
 export const RootLayout = () => {
