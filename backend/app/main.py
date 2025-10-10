@@ -22,6 +22,7 @@ from .routers.ir_capture import router as ir_capture_router
 from .routers.schedules import router as schedules_router
 from .routers.auth import router as auth_router
 from .routers.users import router as users_router
+from .routers.roles import router as roles_router, permissions_router
 from .routers.network_tv import router as network_tv_router
 from .routers.network_discovery import router as network_discovery_router
 from .routers.virtual_controllers import router as virtual_controllers_router
@@ -310,6 +311,18 @@ app.include_router(
 # Include user management router (standalone - does not enforce auth on other endpoints)
 app.include_router(
     users_router,
+    prefix=f"{settings.API_V1_STR}"
+)
+
+# Include roles management router (standalone - does not enforce auth on other endpoints)
+app.include_router(
+    roles_router,
+    prefix=f"{settings.API_V1_STR}"
+)
+
+# Include permissions router
+app.include_router(
+    permissions_router,
     prefix=f"{settings.API_V1_STR}"
 )
 
