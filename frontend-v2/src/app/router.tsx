@@ -52,7 +52,8 @@ export const router = createBrowserRouter([
     path: '/nav-test',
     element: <TestNavLayout />,
     children: [
-      { index: true, element: <NavTestPage /> },
+      { index: true, element: <Navigate to="controllers" replace /> },
+      { path: 'overview', element: <NavTestPage /> },
       { path: 'controllers', element: <ControllersPage /> },
       { path: 'network-controllers', element: <NetworkControllersPage /> },
       { path: 'connected-devices', element: <ConnectedDevicesPage /> },

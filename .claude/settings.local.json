@@ -136,7 +136,19 @@
       "Bash(git mv:*)",
       "Bash(do echo:*)",
       "WebFetch(domain:stackoverflow.com)",
-      "Bash(/bashes)"
+      "Bash(/bashes)",
+      "Bash(git merge:*)",
+      "WebFetch(domain:100.93.158.19)",
+      "Bash(systemctl cat:*)",
+      "Bash(systemctl status:*)",
+      "Bash(systemctl:*)",
+      "Bash(ip neigh:*)",
+      "Bash(host:*)",
+      "Bash(do ping:*)",
+      "Read(//var/log/**)",
+      "Bash(git fetch:*)",
+      "Bash(gum:*)",
+      "Bash(./health-check.sh:*)"
     ],
     "deny": [],
     "ask": []
