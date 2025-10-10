@@ -64,7 +64,7 @@ def download_and_process_image(url, output_path, target_size=(64, 64)):
 def download_channel_icons():
     """Download all channel icons from the database"""
     # Database and output paths
-    db_path = "smartvenue.db"
+    db_path = "tapcommand.db"
     icons_dir = Path("static/channel-icons")
     icons_dir.mkdir(parents=True, exist_ok=True)
 

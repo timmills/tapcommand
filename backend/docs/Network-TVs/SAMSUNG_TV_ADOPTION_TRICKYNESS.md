@@ -18,8 +18,8 @@ The **trickiest part** is the modern TV token authentication - you only get **on
 
 When adopting a modern Samsung TV (2017+):
 
-1. SmartVenue connects via WebSocket
-2. TV shows permission dialog: **"Allow SmartVenue to control this TV?"**
+1. TapCommand connects via WebSocket
+2. TV shows permission dialog: **"Allow TapCommand to control this TV?"**
 3. You have **30 seconds** to press "Allow"
 4. If you press "Allow" → Token saved, adoption succeeds ✅
 5. If you press "Deny" or timeout → Adoption fails ❌
@@ -28,19 +28,19 @@ When adopting a modern Samsung TV (2017+):
 
 **If the TV's "Access Notification" setting is "First time only" (the default), and you deny or timeout, you're locked out permanently until you reset the TV's device list.**
 
-The TV remembers your first response and won't show the dialog again. SmartVenue can't re-pair without user intervention on the TV itself.
+The TV remembers your first response and won't show the dialog again. TapCommand can't re-pair without user intervention on the TV itself.
 
 ### The Solution
 
 **Before adopting a Samsung TV:**
 1. Go to TV: **Settings → General → External Device Manager → Device Connection Manager**
-2. Check **Device List** - if SmartVenue is listed as "Denied", delete it
+2. Check **Device List** - if TapCommand is listed as "Denied", delete it
 3. Set **Access Notification** to **"First time only"**
 4. Be ready to press "Allow" within 30 seconds when adopting
 
 **If you get locked out:**
 1. Go to TV's **Device Connection Manager → Device List**
-2. Find **SmartVenue** and delete it
+2. Find **TapCommand** and delete it
 3. Try adoption again
 
 ---
@@ -101,7 +101,7 @@ The TV remembers your first response and won't show the dialog again. SmartVenue
 2. **Adoption Phase** (when user clicks "Adopt"):
    ```python
    # Connect to secure WebSocket
-   name = base64.b64encode('SmartVenue'.encode()).decode()
+   name = base64.b64encode('TapCommand'.encode()).decode()
    url = f'wss://{ip}:8002/api/v2/channels/samsung.remote.control?name={name}'
 
    ws = websocket.create_connection(url, timeout=10, sslopt={"cert_reqs": ssl.CERT_NONE})
@@ -132,7 +132,7 @@ The TV remembers your first response and won't show the dialog again. SmartVenue
        host=device.ip_address,
        port=8002,
        token='14781540',  # From database
-       name='SmartVenue'
+       name='TapCommand'
    )
 
    tv.shortcuts().send_key('KEY_VOLUP')  # No permission prompt!
@@ -169,7 +169,7 @@ tv = SamsungTVWS(
     host=device.ip_address,
     port=8002,
     token=auth_token,  # MUST pass token here
-    name='SmartVenue'
+    name='TapCommand'
 )
 ```
 
@@ -223,7 +223,7 @@ async def _get_samsung_token(ip: str, db: Session):
         protocol_prefix = 'ws'
 
     # Step 3: Connect and wait for response
-    name = base64.b64encode('SmartVenue'.encode()).decode()
+    name = base64.b64encode('TapCommand'.encode()).decode()
     url = f'{protocol_prefix}://{ip}:{port}/api/v2/channels/samsung.remote.control?name={name}'
 
     ws = websocket.create_connection(
@@ -347,7 +347,7 @@ async def _check_samsung_tizen_status(self, device: VirtualDevice):
 
 📺 LOOK AT YOUR TV SCREEN
 A permission dialog should appear on the TV asking:
-"Allow SmartVenue to control this TV?"
+"Allow TapCommand to control this TV?"
 
 ⏱️ Press "Allow" within 30 seconds
 
@@ -373,11 +373,11 @@ Possible causes:
 • You didn't press "Allow" within 30 seconds
 • You pressed "Deny" on the TV
 • TV's "Access Notification" is set to "Never"
-• SmartVenue is in TV's denied devices list
+• TapCommand is in TV's denied devices list
 
 To fix:
 1. Go to TV: Settings → General → External Device Manager → Device Connection Manager
-2. In Device List, find "SmartVenue" and delete it
+2. In Device List, find "TapCommand" and delete it
 3. Set "Access Notification" to "First time only"
 4. Try adopting again (be ready to press Allow!)
 ```
@@ -426,7 +426,7 @@ tv = SamsungTVWS(
     host='192.168.101.52',
     port=8002,
     token='14781540',  # Use saved token
-    name='SmartVenue'
+    name='TapCommand'
 )
 
 # Should work WITHOUT permission prompt
@@ -453,24 +453,24 @@ nc -zv TV_IP 55000
 ### Backend
 
 **Token acquisition**:
-- `/home/coastal/smartvenue/backend/app/routers/network_tv.py` - `_get_samsung_token()` function
+- `/home/coastal/tapcommand/backend/app/routers/network_tv.py` - `_get_samsung_token()` function
 
 **Adoption flow**:
-- `/home/coastal/smartvenue/backend/app/routers/network_tv.py` - `adopt_device()` endpoint
+- `/home/coastal/tapcommand/backend/app/routers/network_tv.py` - `adopt_device()` endpoint
 
 **Command execution**:
-- `/home/coastal/smartvenue/backend/app/commands/executors/network/samsung_legacy.py` - `_execute_websocket()` method
+- `/home/coastal/tapcommand/backend/app/commands/executors/network/samsung_legacy.py` - `_execute_websocket()` method
 
 **Status polling**:
-- `/home/coastal/smartvenue/backend/app/services/device_status_checker.py` - `_check_samsung_tizen_status()` method
+- `/home/coastal/tapcommand/backend/app/services/device_status_checker.py` - `_check_samsung_tizen_status()` method
 
 ### Frontend
 
 **Brand info cards**:
-- `/home/coastal/smartvenue/frontend-v2/src/features/network-controllers/components/brand-info-cards.tsx`
+- `/home/coastal/tapcommand/frontend-v2/src/features/network-controllers/components/brand-info-cards.tsx`
 
 **Network controllers page**:
-- `/home/coastal/smartvenue/frontend-v2/src/features/network-controllers/pages/network-controllers-page.tsx`
+- `/home/coastal/tapcommand/frontend-v2/src/features/network-controllers/pages/network-controllers-page.tsx`
 
 ---
 

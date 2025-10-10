@@ -1,10 +1,10 @@
 # Remote Device Access Functions
 
-This document describes how to access and control functions on remote SmartVenue ESPHome devices.
+This document describes how to access and control functions on remote TapCommand ESPHome devices.
 
 ## Overview
 
-SmartVenue uses ESPHome-based controllers to manage IR devices in hospitality environments. Each controller exposes services that can be called remotely via the ESPHome API.
+TapCommand uses ESPHome-based controllers to manage IR devices in hospitality environments. Each controller exposes services that can be called remotely via the ESPHome API.
 
 ## Prerequisites
 
@@ -14,13 +14,13 @@ SmartVenue uses ESPHome-based controllers to manage IR devices in hospitality en
 
 ## Getting the API Key
 
-The ESPHome API key is stored in the SmartVenue database:
+The ESPHome API key is stored in the TapCommand database:
 
 ```python
 import sqlite3
 
 # Connect to database
-conn = sqlite3.connect('/home/coastal/smartvenue/backend/smartvenue.db')
+conn = sqlite3.connect('/home/coastal/tapcommand/backend/tapcommand.db')
 cursor = conn.cursor()
 
 # Get API key
@@ -77,7 +77,7 @@ from aioesphomeapi import APIClient
 
 async def control_device_example():
     # Get API key from database
-    conn = sqlite3.connect('/home/coastal/smartvenue/backend/smartvenue.db')
+    conn = sqlite3.connect('/home/coastal/tapcommand/backend/tapcommand.db')
     cursor = conn.cursor()
     cursor.execute("SELECT value FROM application_settings WHERE key = 'esphome_api_key'")
     api_key = cursor.fetchone()[0]
@@ -119,7 +119,7 @@ asyncio.run(control_device_example())
 ```python
 async def power_off_device(hostname, port=1):
     # Get API key
-    conn = sqlite3.connect('/home/coastal/smartvenue/backend/smartvenue.db')
+    conn = sqlite3.connect('/home/coastal/tapcommand/backend/tapcommand.db')
     cursor = conn.cursor()
     cursor.execute("SELECT value FROM application_settings WHERE key = 'esphome_api_key'")
     api_key = cursor.fetchone()[0]
@@ -146,7 +146,7 @@ asyncio.run(power_off_device('ir-dc4516.local', 1))
 ```python
 async def change_channel(hostname, port, channel):
     # Get API key
-    conn = sqlite3.connect('/home/coastal/smartvenue/backend/smartvenue.db')
+    conn = sqlite3.connect('/home/coastal/tapcommand/backend/tapcommand.db')
     cursor = conn.cursor()
     cursor.execute("SELECT value FROM application_settings WHERE key = 'esphome_api_key'")
     api_key = cursor.fetchone()[0]
@@ -175,7 +175,7 @@ To find available devices on the network:
 
 ```python
 # Check managed devices in database
-conn = sqlite3.connect('/home/coastal/smartvenue/backend/smartvenue.db')
+conn = sqlite3.connect('/home/coastal/tapcommand/backend/tapcommand.db')
 cursor = conn.cursor()
 cursor.execute("SELECT hostname, device_name, is_online FROM managed_devices WHERE is_online = 1")
 devices = cursor.fetchall()
@@ -226,9 +226,9 @@ This ensures reliable channel changing across different TV models and brands.
 3. **Intermittent failures**: Add retry logic with exponential backoff
 4. **Channel changes fail**: Some TVs require longer delays between digits
 
-## Integration with SmartVenue Backend
+## Integration with TapCommand Backend
 
-The SmartVenue backend provides REST API endpoints that internally use these ESPHome functions:
+The TapCommand backend provides REST API endpoints that internally use these ESPHome functions:
 
 - `POST /api/devices/{device_id}/ir/power/{port}` - Power control
 - `POST /api/devices/{device_id}/ir/channel/{port}` - Channel control

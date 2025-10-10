@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #######################################################################
-# SmartVenue Health Check & Auto-Fix Script
+# TapCommand Health Check & Auto-Fix Script
 # Verifies all services and dependencies are running correctly
 #######################################################################
 
@@ -9,10 +9,10 @@
 set +e
 
 # Configuration
-INSTALL_DIR="/home/coastal/smartvenue"
+INSTALL_DIR="/home/coastal/tapcommand"
 BACKEND_PORT="8000"
 EXPECTED_WORKERS=3
-LOG_FILE="/tmp/smartvenue-health-check.log"
+LOG_FILE="/tmp/tapcommand-health-check.log"
 
 # Colors for fallback
 RED='\033[0;31m'
@@ -47,7 +47,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         --help|-h)
-            echo "SmartVenue Health Check Script"
+            echo "TapCommand Health Check Script"
             echo ""
             echo "Usage: $0 [OPTIONS]"
             echo ""
@@ -214,12 +214,12 @@ check_file_structure() {
     fi
 
     # Database
-    if [ -f "$INSTALL_DIR/backend/smartvenue.db" ]; then
-        DB_SIZE=$(du -h "$INSTALL_DIR/backend/smartvenue.db" | cut -f1)
+    if [ -f "$INSTALL_DIR/backend/tapcommand.db" ]; then
+        DB_SIZE=$(du -h "$INSTALL_DIR/backend/tapcommand.db" | cut -f1)
         check_pass "Database exists ($DB_SIZE)"
 
         # Check if writable
-        if [ -w "$INSTALL_DIR/backend/smartvenue.db" ]; then
+        if [ -w "$INSTALL_DIR/backend/tapcommand.db" ]; then
             check_pass "Database is writable"
         else
             check_fail "Database is not writable"
@@ -252,7 +252,7 @@ check_configuration() {
         if [ "$FIX_MODE" = true ]; then
             check_fix "Creating default .env file..."
             cat > "$INSTALL_DIR/backend/.env" << 'EOF'
-DATABASE_URL=sqlite:///./smartvenue.db
+DATABASE_URL=sqlite:///./tapcommand.db
 CORS_ORIGINS=["http://localhost:5173","http://localhost:3000"]
 CORS_ALLOW_CREDENTIALS=false
 WIFI_SSID=TV
@@ -322,8 +322,8 @@ check_queue_processor() {
     fi
 
     # Check logs for worker startup
-    if journalctl -u smartvenue-backend -n 100 --no-pager 2>/dev/null | grep -q "Worker.*started"; then
-        WORKER_COUNT=$(journalctl -u smartvenue-backend -n 100 --no-pager 2>/dev/null | grep -c "Worker.*started")
+    if journalctl -u tapcommand-backend -n 100 --no-pager 2>/dev/null | grep -q "Worker.*started"; then
+        WORKER_COUNT=$(journalctl -u tapcommand-backend -n 100 --no-pager 2>/dev/null | grep -c "Worker.*started")
         if [ "$WORKER_COUNT" -ge "$EXPECTED_WORKERS" ]; then
             check_pass "Queue workers started ($WORKER_COUNT workers)"
         else
@@ -403,13 +403,13 @@ check_network_scanner() {
 check_database_health() {
     fancy_section "Database Health"
 
-    if [ ! -f "$INSTALL_DIR/backend/smartvenue.db" ]; then
+    if [ ! -f "$INSTALL_DIR/backend/tapcommand.db" ]; then
         check_warn "Database not found"
         return
     fi
 
     # Check database size
-    DB_SIZE_BYTES=$(stat -f%z "$INSTALL_DIR/backend/smartvenue.db" 2>/dev/null || stat -c%s "$INSTALL_DIR/backend/smartvenue.db" 2>/dev/null)
+    DB_SIZE_BYTES=$(stat -f%z "$INSTALL_DIR/backend/tapcommand.db" 2>/dev/null || stat -c%s "$INSTALL_DIR/backend/tapcommand.db" 2>/dev/null)
     DB_SIZE_MB=$((DB_SIZE_BYTES / 1024 / 1024))
 
     if [ "$DB_SIZE_MB" -lt 1 ]; then
@@ -423,7 +423,7 @@ check_database_health() {
     # Try to query database
     if command -v sqlite3 &> /dev/null; then
         # Count devices
-        DEVICE_COUNT=$(sqlite3 "$INSTALL_DIR/backend/smartvenue.db" "SELECT COUNT(*) FROM devices;" 2>/dev/null || echo "0")
+        DEVICE_COUNT=$(sqlite3 "$INSTALL_DIR/backend/tapcommand.db" "SELECT COUNT(*) FROM devices;" 2>/dev/null || echo "0")
         if [ "$DEVICE_COUNT" -gt 0 ]; then
             check_pass "Devices in database: $DEVICE_COUNT"
         else
@@ -431,7 +431,7 @@ check_database_health() {
         fi
 
         # Check virtual controllers
-        VC_COUNT=$(sqlite3 "$INSTALL_DIR/backend/smartvenue.db" "SELECT COUNT(*) FROM virtual_controllers;" 2>/dev/null || echo "0")
+        VC_COUNT=$(sqlite3 "$INSTALL_DIR/backend/tapcommand.db" "SELECT COUNT(*) FROM virtual_controllers;" 2>/dev/null || echo "0")
         if [ "$VC_COUNT" -gt 0 ]; then
             check_pass "Virtual controllers: $VC_COUNT"
         fi
@@ -640,12 +640,12 @@ main() {
                 --margin "1 0" \
                 --width 70 \
                 --align center \
-                "🏥 SmartVenue Health Check" \
+                "🏥 TapCommand Health Check" \
                 "" \
                 "System Verification & Auto-Fix"
         else
             echo "╔══════════════════════════════════════════════════════════════════╗"
-            echo "║            🏥 SmartVenue Health Check                           ║"
+            echo "║            🏥 TapCommand Health Check                           ║"
             echo "║               System Verification & Auto-Fix                    ║"
             echo "╚══════════════════════════════════════════════════════════════════╝"
         fi

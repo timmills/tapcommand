@@ -54,7 +54,7 @@ last_ip_address: String    -- Previous IP for tracking
 ```
 2-minute mDNS monitoring session:
 - Total devices discovered: 14 ESPHome devices
-- IR devices: 2 (ir-dcf89f, smartvenue-ir-prototype)
+- IR devices: 2 (ir-dcf89f, tapcommand-ir-prototype)
 - Announcements: Only during browser startup
 - Updates/refreshes: 0 during observation
 - Pattern: Devices announce once, then silent

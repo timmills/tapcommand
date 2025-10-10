@@ -2,7 +2,7 @@
 Security utilities for authentication and authorization.
 
 Provides password hashing, JWT token generation/validation,
-and token utilities for the SmartVenue application.
+and token utilities for the TapCommand application.
 """
 
 from datetime import datetime, timedelta

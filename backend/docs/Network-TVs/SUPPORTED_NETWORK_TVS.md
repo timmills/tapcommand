@@ -3,7 +3,7 @@
 **Last Updated:** October 6, 2025
 **Total Brands Supported:** 7
 
-SmartVenue supports network control for major TV brands. This allows faster response times, status feedback, and more reliable control compared to IR.
+TapCommand supports network control for major TV brands. This allows faster response times, status feedback, and more reliable control compared to IR.
 
 ---
 
@@ -160,7 +160,7 @@ SmartVenue supports network control for major TV brands. This allows faster resp
 1. Enable IP Control in TV settings
 2. Go to: Settings → Network → IP Control → Authentication
 3. Set Pre-Shared Key (PSK) - e.g., "0000"
-4. Store PSK in SmartVenue credentials
+4. Store PSK in TapCommand credentials
 5. Some models require Simple IP Control on port 20060
 
 **IRCC Codes:** Pre-mapped for all common commands.
@@ -227,7 +227,7 @@ Roku supports discrete `PowerOn` and `PowerOff` commands over the network.
 1. Use `pyvizio` CLI to pair
 2. TV displays 4-digit code
 3. Enter code to get auth token
-4. Store token in SmartVenue
+4. Store token in TapCommand
 5. Token persists until TV is factory reset
 
 **Pairing Required:** Must pair to get auth token first.
@@ -312,7 +312,7 @@ Before adopting a network TV:
 ### Configuration
 - [ ] TV settings: Network control enabled
 - [ ] Authentication completed (if required)
-- [ ] Credentials stored in SmartVenue
+- [ ] Credentials stored in TapCommand
 - [ ] Test connection successful
 
 ### Testing
@@ -350,7 +350,7 @@ Allow these ports for TV control:
 ### Network Topology
 
 **Requirements:**
-- TV and SmartVenue on same subnet (recommended)
+- TV and TapCommand on same subnet (recommended)
 - Low latency (< 10ms ping time)
 - Reliable network (no packet loss)
 - Static IP for each TV (DHCP reservation)

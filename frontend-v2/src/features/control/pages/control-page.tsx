@@ -219,7 +219,7 @@ export const ControlPage = () => {
             onTouchCancel={handlePressEnd}
             onContextMenu={(e) => e.preventDefault()}
           >
-            SmartVenue
+            TapCommand
             {holdProgress > 0 && (
               <div
                 className="absolute bottom-0 left-0 h-0.5 bg-slate-400 transition-all"

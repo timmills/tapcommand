@@ -167,7 +167,7 @@ class LGWebOSExecutor(CommandExecutor):
                 media.fast_forward()
 
             elif cmd_lower in ["home"]:
-                system.notify("SmartVenue - Home")  # Placeholder
+                system.notify("TapCommand - Home")  # Placeholder
 
             # Navigation keys
             elif cmd_lower == "up":

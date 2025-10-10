@@ -18,7 +18,7 @@ from app.db.database import Base, engine, create_tables, init_database, SessionL
 def create_template_database():
     """Create a clean template database"""
 
-    template_path = Path(__file__).parent / "smartvenue_template.db"
+    template_path = Path(__file__).parent / "tapcommand_template.db"
 
     # Remove existing template if it exists
     if template_path.exists():
@@ -57,7 +57,7 @@ def create_template_database():
         db.close()
 
     print("\n✓ Template database is ready for deployment")
-    print(f"  Installers will copy this to smartvenue.db on first install")
+    print(f"  Installers will copy this to tapcommand.db on first install")
 
 
 if __name__ == "__main__":

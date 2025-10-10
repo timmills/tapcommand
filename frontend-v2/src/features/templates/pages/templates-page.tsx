@@ -12,7 +12,7 @@ export const TemplatesPage = () => {
         <div>
           <h2 className="text-lg font-semibold text-slate-900">IR Controller Builder</h2>
           <p className="text-sm text-slate-500">
-            Browse and manage SmartVenue IR controller templates before compiling new firmware builds.
+            Browse and manage TapCommand IR controller templates before compiling new firmware builds.
           </p>
         </div>
       </header>

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# SmartVenue Backend Startup Script
+# TapCommand Backend Startup Script
 
-echo "Starting SmartVenue Backend..."
+echo "Starting TapCommand Backend..."
 
 # Check if virtual environment exists
 if [ ! -d "../venv" ]; then

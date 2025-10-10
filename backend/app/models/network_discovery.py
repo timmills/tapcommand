@@ -83,7 +83,7 @@ class NetworkTVCredentials(Base):
     ssl_enabled = Column(Boolean, default=False)
 
     # Additional config (protocol-specific)
-    extra_config = Column(JSON, nullable=True)  # {"name": "SmartVenue", "timeout": 3, etc.}
+    extra_config = Column(JSON, nullable=True)  # {"name": "TapCommand", "timeout": 3, etc.}
 
     # Status
     is_paired = Column(Boolean, default=False)

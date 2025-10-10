@@ -26,7 +26,7 @@ python3 venue_tv_discovery_enhanced.py
 ```
 
 ### 2. **1,730 TV MAC Prefixes from Database** ✨
-- Automatically loads from SmartVenue database
+- Automatically loads from TapCommand database
 - Comprehensive coverage of **27 TV manufacturers**:
 
   **International Brands (10):**
@@ -60,7 +60,7 @@ python3 venue_tv_discovery_enhanced.py
   - **Kogan**: 1 prefix
   - **JVC**: 1 prefix
 
-- Falls back to built-in database if SmartVenue DB not available
+- Falls back to built-in database if TapCommand DB not available
 
 ### 3. **Command-Line Options**
 
@@ -132,7 +132,7 @@ Auto-detected subnet: 192.168.101.0/24
 Scan 192.168.101.0/24? [Y/n]: y
 
 ======================================================================
-SmartVenue Network TV Discovery
+TapCommand Network TV Discovery
 ======================================================================
 
 Scanning for: Samsung, LG, Sony, Philips, Roku, Vizio,
@@ -219,7 +219,7 @@ sudo apt-get install nmap -y
 ```
 
 ### Database (for enhanced MAC lookup)
-- Uses `/backend/smartvenue.db` if available
+- Uses `/backend/tapcommand.db` if available
 - Falls back to built-in database if not found
 
 ## Benefits Over Previous Versions
@@ -242,7 +242,7 @@ sudo apt-get install nmap -y
 ## Recommended for Production
 
 ✅ Use `venue_tv_discovery_enhanced.py` for all onsite surveys
-✅ Copy entire `/home/coastal/smartvenue` directory to USB
+✅ Copy entire `/home/coastal/tapcommand` directory to USB
 ✅ Database will automatically be used if present
 ✅ Works standalone if database not available
 

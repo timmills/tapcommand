@@ -1,4 +1,4 @@
-# SmartVenue Frontend v2
+# TapCommand Frontend v2
 
 A fresh React + TypeScript interface built with Vite, TanStack Query, Zustand, Tailwind CSS, and React Router. This
 project pairs with the existing FastAPI backend to provide modern device management, discovery, and template tooling.

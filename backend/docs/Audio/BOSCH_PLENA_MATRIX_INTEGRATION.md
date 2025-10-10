@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SmartVenue system now supports **Bosch Plena Matrix** commercial audio amplifiers via the UDP API protocol.
+The TapCommand system now supports **Bosch Plena Matrix** commercial audio amplifiers via the UDP API protocol.
 
 ### Supported Models
 
@@ -68,7 +68,7 @@ Each Plena Matrix amplifier can control multiple zones:
 
 ### 1. Network Configuration
 
-Ensure the Plena Matrix amplifier is on the same network as the SmartVenue backend:
+Ensure the Plena Matrix amplifier is on the same network as the TapCommand backend:
 
 ```bash
 # Test connectivity

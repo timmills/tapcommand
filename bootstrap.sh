@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #######################################################################
-# SmartVenue Bootstrap Script
+# TapCommand Bootstrap Script
 # Minimal script to prepare a fresh Ubuntu 24 server for installation
 # Run this FIRST, then clone the repo and run install.sh
 #######################################################################
@@ -28,7 +28,7 @@ print_info() {
 
 echo ""
 echo "======================================="
-echo " SmartVenue Bootstrap"
+echo " TapCommand Bootstrap"
 echo "======================================="
 echo ""
 
@@ -56,9 +56,9 @@ print_success "Bootstrap complete!"
 echo ""
 print_info "Next steps:"
 echo "  1. Clone the repository:"
-echo "     git clone -b release <your-repo-url> /opt/smartvenue"
+echo "     git clone -b release <your-repo-url> /opt/tapcommand"
 echo ""
 echo "  2. Run the full installer:"
-echo "     cd /opt/smartvenue"
+echo "     cd /opt/tapcommand"
 echo "     ./install.sh"
 echo ""

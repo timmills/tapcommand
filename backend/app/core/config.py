@@ -8,12 +8,12 @@ BACKEND_ROOT = Path(__file__).resolve().parent.parent.parent
 class Settings(BaseSettings):
     # API Settings
     API_V1_STR: str = "/api/v1"
-    PROJECT_NAME: str = "SmartVenue"
+    PROJECT_NAME: str = "TapCommand"
     PROJECT_VERSION: str = "1.0.0"
 
     # Database - using absolute path to ensure consistency
-    DATABASE_URL: str = "sqlite:////home/coastal/smartvenue/backend/smartvenue.db"
-    SQLITE_DATABASE_PATH: str = str(BACKEND_ROOT / "smartvenue.db")
+    DATABASE_URL: str = "sqlite:////home/coastal/tapcommand/backend/tapcommand.db"
+    SQLITE_DATABASE_PATH: str = str(BACKEND_ROOT / "tapcommand.db")
 
     # ESPHome Discovery
     MDNS_SERVICE_TYPE: str = "_esphomelib._tcp.local."

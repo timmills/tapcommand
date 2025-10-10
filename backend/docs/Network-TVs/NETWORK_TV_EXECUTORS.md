@@ -29,7 +29,7 @@ pip install samsungctl
 
 # Configuration
 config = {
-    "name": "SmartVenue",
+    "name": "TapCommand",
     "host": "192.168.1.100",
     "port": 55000,
     "method": "legacy",

@@ -28,7 +28,7 @@ def backup_database():
         return None
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    backup_path = db_path.parent / f"smartvenue_backup_{timestamp}.db"
+    backup_path = db_path.parent / f"tapcommand_backup_{timestamp}.db"
 
     print(f"Creating backup: {backup_path}")
     shutil.copy2(db_path, backup_path)
@@ -179,7 +179,7 @@ def verify_migration():
 def main():
     """Main migration process"""
     print("\n" + "="*70)
-    print(" SmartVenue Database Migration Utility")
+    print(" TapCommand Database Migration Utility")
     print("="*70)
 
     # Check if database exists

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Virtual Controller Adoption System allows network-discovered TVs and streaming devices to be adopted into the SmartVenue control system. When a device is adopted, a Virtual Controller is automatically created and the device is mapped to port 1 of that controller.
+The Virtual Controller Adoption System allows network-discovered TVs and streaming devices to be adopted into the TapCommand control system. When a device is adopted, a Virtual Controller is automatically created and the device is mapped to port 1 of that controller.
 
 ## Architecture
 

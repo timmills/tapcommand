@@ -1,4 +1,4 @@
-# SmartVenue Dynamic ESPHome Migration Plan
+# TapCommand Dynamic ESPHome Migration Plan
 
 ## 1. Project Snapshot
 - **Stack**: FastAPI backend (`backend/app`), React/Vite frontend (`frontend/`), SQLite via SQLAlchemy models (`backend/app/models`).

@@ -42,7 +42,7 @@ export const API_BASE_URL = getApiBaseUrl();
 export const WS_BASE_URL = ensureEnv('VITE_WS_BASE_URL', API_BASE_URL.replace('http', 'ws'));
 
 // Log the detected URLs for debugging
-console.log('[SmartVenue] API Configuration:', {
+console.log('[TapCommand] API Configuration:', {
   hostname: window.location.hostname,
   API_BASE_URL,
   WS_BASE_URL,

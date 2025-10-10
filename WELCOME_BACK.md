@@ -33,7 +33,7 @@ While you were out, I completed the **entire backend implementation** for the hy
 
 ### Step 1: Pull Latest Code
 ```bash
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 git checkout feature/hybrid-ir-network-control
 git pull origin feature/hybrid-ir-network-control
 ```
@@ -150,7 +150,7 @@ Look for these new endpoints:
 ### No Competitor Has This
 
 - **Other systems:** IR-only OR network-only with limitations
-- **SmartVenue:** Hybrid approach = reliable + fast + informative
+- **TapCommand:** Hybrid approach = reliable + fast + informative
 
 ---
 
@@ -212,7 +212,7 @@ When frontend is done, test these scenarios:
 ### Migration Fails?
 ```bash
 # Check if already applied
-sqlite3 backend/smartvenue.db "PRAGMA table_info(virtual_devices)" | grep fallback
+sqlite3 backend/tapcommand.db "PRAGMA table_info(virtual_devices)" | grep fallback
 ```
 
 ### Backend Won't Start?

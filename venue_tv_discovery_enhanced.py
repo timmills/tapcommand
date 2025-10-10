@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SmartVenue Network TV Discovery Tool - Enhanced Version
+TapCommand Network TV Discovery Tool - Enhanced Version
 =======================================================
 
 Features:
@@ -54,8 +54,8 @@ class Colors:
 
 # Load MAC prefixes from database if available, otherwise use built-in
 def load_mac_prefixes_from_db():
-    """Try to load MAC prefixes from SmartVenue database"""
-    db_path = os.path.join(os.path.dirname(__file__), 'backend', 'smartvenue.db')
+    """Try to load MAC prefixes from TapCommand database"""
+    db_path = os.path.join(os.path.dirname(__file__), 'backend', 'tapcommand.db')
 
     if not os.path.exists(db_path):
         return None
@@ -391,7 +391,7 @@ def test_samsung_modern_api(ip: str) -> Optional[Dict]:
 async def discover_tvs(subnet: str, start: int, end: int, use_nmap: bool) -> List[Dict]:
     """Main discovery"""
     print(f"\n{Colors.HEADER}{'='*70}{Colors.ENDC}")
-    print(f"{Colors.HEADER}{Colors.BOLD}SmartVenue Network TV Discovery{Colors.ENDC}")
+    print(f"{Colors.HEADER}{Colors.BOLD}TapCommand Network TV Discovery{Colors.ENDC}")
     print(f"{Colors.HEADER}{'='*70}{Colors.ENDC}\n")
 
     print(f"{Colors.OKCYAN}Scanning for 27 TV brands:{Colors.ENDC}")
@@ -529,7 +529,7 @@ def save_reports(tvs: List[Dict]):
         print(f"{Colors.OKGREEN}[✓] CSV report: {csv_file}{Colors.ENDC}")
 
 def main():
-    parser = argparse.ArgumentParser(description='SmartVenue TV Discovery - Enhanced')
+    parser = argparse.ArgumentParser(description='TapCommand TV Discovery - Enhanced')
     parser.add_argument('--subnet', help='Subnet to scan (e.g., 192.168.1)')
     parser.add_argument('--range', default='1-254', help='IP range (default: 1-254)')
     parser.add_argument('--no-interactive', action='store_true', help='Skip interactive prompts')

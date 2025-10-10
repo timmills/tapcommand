@@ -16,7 +16,7 @@ from app.models.virtual_controller import VirtualDevice, VirtualController
 from app.db.database import Base
 
 # Create test database
-engine = create_engine('sqlite:///smartvenue.db')
+engine = create_engine('sqlite:///tapcommand.db')
 SessionLocal = sessionmaker(bind=engine)
 
 async def test_status_check():

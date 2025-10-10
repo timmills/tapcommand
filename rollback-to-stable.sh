@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# SmartVenue Safe Rollback Script
+# TapCommand Safe Rollback Script
 # Returns to guaranteed working state from September 2025
 
-echo "🛡️ SmartVenue Safe Rollback Script"
+echo "🛡️ TapCommand Safe Rollback Script"
 echo "=================================="
 echo ""
 
@@ -28,7 +28,7 @@ case $choice in
         echo "Switching to stable branch..."
         git checkout stable-working-sept-2025
         echo "Restoring database backup..."
-        cp backup-database-sept-2025.db backend/smartvenue.db
+        cp backup-database-sept-2025.db backend/tapcommand.db
         echo "✅ Now on stable working state with database restored"
         echo "Your application should work exactly as before analysis"
         ;;
@@ -38,7 +38,7 @@ case $choice in
         if [ "$confirm" = "YES" ]; then
             git reset --hard stable-working-sept-2025
             echo "Restoring database backup..."
-            cp backup-database-sept-2025.db backend/smartvenue.db
+            cp backup-database-sept-2025.db backend/tapcommand.db
             echo "✅ Branch reset to stable state with database restored"
         else
             echo "❌ Reset cancelled"
@@ -49,7 +49,7 @@ case $choice in
         git checkout stable-working-sept-2025
         git checkout -b "$branch_name"
         echo "Restoring database backup..."
-        cp backup-database-sept-2025.db backend/smartvenue.db
+        cp backup-database-sept-2025.db backend/tapcommand.db
         echo "✅ Created new branch '$branch_name' from stable state with database restored"
         ;;
     4)

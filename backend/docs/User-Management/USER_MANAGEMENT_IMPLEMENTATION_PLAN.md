@@ -1,8 +1,8 @@
-# SmartVenue User Management & Access Control Implementation Plan
+# TapCommand User Management & Access Control Implementation Plan
 
 ## Executive Summary
 
-This document outlines the complete implementation plan for adding enterprise-grade user management and role-based access control (RBAC) to the SmartVenue IR Control System. The system currently has no authentication or authorization, making this a critical security enhancement.
+This document outlines the complete implementation plan for adding enterprise-grade user management and role-based access control (RBAC) to the TapCommand IR Control System. The system currently has no authentication or authorization, making this a critical security enhancement.
 
 ---
 
@@ -645,7 +645,7 @@ ROLES = {
 # Default admin user (password: admin - MUST BE CHANGED)
 DEFAULT_ADMIN = {
     'username': 'admin',
-    'email': 'admin@smartvenue.local',
+    'email': 'admin@tapcommand.local',
     'password': 'admin',  # Will be hashed
     'full_name': 'System Administrator',
     'is_superuser': True,
@@ -676,7 +676,7 @@ Response (200 OK):
     "user": {
         "id": 1,
         "username": "admin",
-        "email": "admin@smartvenue.local",
+        "email": "admin@tapcommand.local",
         "full_name": "System Administrator",
         "roles": ["Super Admin"],
         "permissions": ["*"]
@@ -729,7 +729,7 @@ Response (200 OK):
 {
     "id": 1,
     "username": "admin",
-    "email": "admin@smartvenue.local",
+    "email": "admin@tapcommand.local",
     "full_name": "System Administrator",
     "is_active": true,
     "is_superuser": true,
@@ -780,7 +780,7 @@ Response (200 OK):
         {
             "id": 1,
             "username": "admin",
-            "email": "admin@smartvenue.local",
+            "email": "admin@tapcommand.local",
             "full_name": "System Administrator",
             "is_active": true,
             "is_superuser": true,
@@ -1729,7 +1729,7 @@ Example modifications:
 ### File Structure
 
 ```
-smartvenue/
+tapcommand/
 ├── backend/
 │   ├── app/
 │   │   ├── api/
@@ -1812,14 +1812,14 @@ python backend/migrations/add_user_management.py
 python backend/app/db/seed_auth.py
 
 # Verify migration
-sqlite3 backend/smartvenue.db ".schema users"
+sqlite3 backend/tapcommand.db ".schema users"
 ```
 
 ---
 
 ## Conclusion
 
-This implementation plan provides a comprehensive, secure, and scalable user management and access control system for SmartVenue. The phased approach ensures systematic implementation with proper testing at each stage.
+This implementation plan provides a comprehensive, secure, and scalable user management and access control system for TapCommand. The phased approach ensures systematic implementation with proper testing at each stage.
 
 **Key Benefits**:
 - ✅ Enterprise-grade security
@@ -1840,5 +1840,5 @@ This implementation plan provides a comprehensive, secure, and scalable user man
 
 **Document Version**: 1.0
 **Last Updated**: 2025-10-03
-**Author**: SmartVenue Development Team
+**Author**: TapCommand Development Team
 **Status**: Ready for Implementation

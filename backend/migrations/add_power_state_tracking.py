@@ -9,7 +9,7 @@ from pathlib import Path
 
 def migrate():
     """Add power state tracking columns to port_status table"""
-    db_path = Path(__file__).parent.parent / "smartvenue.db"
+    db_path = Path(__file__).parent.parent / "tapcommand.db"
 
     if not db_path.exists():
         print(f"Database not found at {db_path}")

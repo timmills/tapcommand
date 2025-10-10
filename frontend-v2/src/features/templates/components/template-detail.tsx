@@ -563,7 +563,7 @@ export const TemplateDetail = ({ templateId }: TemplateDetailProps) => {
               type="text"
               value={binaryPath}
               onChange={(event) => setBinaryPath(event.target.value)}
-              placeholder="/tmp/smartvenue-esphome/builds/firmware_xxx.bin"
+              placeholder="/tmp/tapcommand-esphome/builds/firmware_xxx.bin"
               className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200"
             />
           </div>

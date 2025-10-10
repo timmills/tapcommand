@@ -2,13 +2,13 @@
 
 ## Overview
 
-This guide covers common issues and solutions when adopting Samsung Smart TVs into the SmartVenue system. Samsung TVs use different connection methods depending on the model year and firmware version.
+This guide covers common issues and solutions when adopting Samsung Smart TVs into the TapCommand system. Samsung TVs use different connection methods depending on the model year and firmware version.
 
 ---
 
 ## Samsung TV Connection Methods
 
-SmartVenue automatically detects and uses the appropriate method:
+TapCommand automatically detects and uses the appropriate method:
 
 ### 1. **Modern TVs with TokenAuthSupport (2017+)**
 - **Ports**: 8001 (WebSocket) or 8002 (Secure WebSocket)
@@ -42,7 +42,7 @@ SmartVenue automatically detects and uses the appropriate method:
 1. Permission dialog timed out (30 second window)
 2. User pressed "Deny" instead of "Allow"
 3. TV's "Access Notification" setting is set to "Never"
-4. SmartVenue is already in the TV's denied devices list
+4. TapCommand is already in the TV's denied devices list
 
 **Solution:**
 
@@ -50,11 +50,11 @@ SmartVenue automatically detects and uses the appropriate method:
 1. On TV, go to: **Settings → General → External Device Manager → Device Connection Manager**
 2. Set **Access Notification** to **"First time only"** (NOT "Always" or "Never")
 3. Check **Device List**:
-   - If "SmartVenue" is listed as **Denied**, delete it
+   - If "TapCommand" is listed as **Denied**, delete it
    - If it exists, remove it completely to allow fresh pairing
 
 #### Step 2: Retry Adoption
-1. Delete the failed adoption from SmartVenue UI
+1. Delete the failed adoption from TapCommand UI
 2. Click "Adopt" again
 3. **Watch the TV screen** - a permission dialog will appear
 4. **Press "Allow" within 30 seconds**
@@ -97,7 +97,7 @@ Should contain:
 #### Fix TV Settings
 1. Go to: **Settings → General → External Device Manager → Device Connection Manager**
 2. Set **Access Notification** to **"First time only"**
-3. In **Device List**, verify SmartVenue is marked as **Allowed**
+3. In **Device List**, verify TapCommand is marked as **Allowed**
 
 #### Re-adopt if Necessary
 If token is missing:
@@ -120,7 +120,7 @@ Samsung TVs turn off their network interface when powered off. Network commands 
 **Solution:**
 
 #### Use Wake-on-LAN (WOL)
-SmartVenue automatically uses WOL for power-on:
+TapCommand automatically uses WOL for power-on:
 1. Ensure TV has **Wake-on-LAN enabled** in network settings
 2. Command executor detects `power_on` and automatically sends WOL magic packets
 3. TV takes 10-20 seconds to fully boot
@@ -147,13 +147,13 @@ If WOL doesn't work, use IR fallback:
 - TV seems to remember the denial
 
 **Cause:**
-When TV's "Access Notification" is set to "First time only", it remembers the first response (Allow or Deny). If denied or timed out, SmartVenue is permanently blocked until TV settings are reset.
+When TV's "Access Notification" is set to "First time only", it remembers the first response (Allow or Deny). If denied or timed out, TapCommand is permanently blocked until TV settings are reset.
 
 **Solution:**
 
 #### Reset TV's Device Memory
 1. Go to: **Settings → General → External Device Manager → Device Connection Manager → Device List**
-2. Find **SmartVenue** in the list
+2. Find **TapCommand** in the list
 3. **Delete it** completely
 4. Alternatively, select it and change status to "Allowed" if option is available
 
@@ -204,7 +204,7 @@ tv = SamsungTVWS(
     host='TV_IP',
     port=8002,
     token='SAVED_TOKEN',  # Use token from database
-    name='SmartVenue'
+    name='TapCommand'
 )
 
 tv.shortcuts().volume_up()
@@ -252,12 +252,12 @@ If port 55000 still doesn't work, TV might actually support WebSocket:
 
 1. **TV Settings Checklist:**
    - ✅ TV is powered ON
-   - ✅ TV connected to same network as SmartVenue
+   - ✅ TV connected to same network as TapCommand
    - ✅ Network remote control enabled (varies by model)
    - ✅ Access Notification set to "First time only"
-   - ✅ No existing SmartVenue entry in denied devices list
+   - ✅ No existing TapCommand entry in denied devices list
 
-2. **SmartVenue Checklist:**
+2. **TapCommand Checklist:**
    - ✅ TV appears in discovery list
    - ✅ TV shows as "Ready to Adopt" (high confidence score)
    - ✅ No previous failed adoption attempts for this TV
@@ -450,7 +450,7 @@ def execute_websocket_command(device, command):
         host=device.ip_address,
         port=config['port'],
         token=config.get('auth_token'),  # May be None for 2016 TVs
-        name='SmartVenue'
+        name='TapCommand'
     )
 
     tv.shortcuts().send_key(command)
@@ -477,7 +477,7 @@ def execute_websocket_command(device, command):
 ### Adoption Failed?
 1. Check TV is ON and on network
 2. Verify "Access Notification" = "First time only"
-3. Remove SmartVenue from TV's denied list
+3. Remove TapCommand from TV's denied list
 4. Try again and press "Allow" within 30 seconds
 
 ### Commands Not Working?
@@ -493,7 +493,7 @@ def execute_websocket_command(device, command):
 
 ### Locked Out After Denial?
 1. Go to TV Device Connection Manager
-2. Delete SmartVenue from device list
+2. Delete TapCommand from device list
 3. Ensure "First time only" is set
 4. Adopt fresh
 

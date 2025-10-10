@@ -62,7 +62,7 @@ cd backend
 python3 migrations/add_user_management.py
 ```
 
-Result: All 8 tables created successfully in `smartvenue.db`
+Result: All 8 tables created successfully in `tapcommand.db`
 
 ---
 
@@ -159,7 +159,7 @@ Result: All 8 tables created successfully in `smartvenue.db`
 
 ### Run Migration
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 python3 migrations/add_user_management.py
 ```
 
@@ -167,7 +167,7 @@ python3 migrations/add_user_management.py
 ```bash
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 cursor.execute(\"SELECT name FROM sqlite_master WHERE type='table' AND (name LIKE 'user%' OR name LIKE '%role%' OR name LIKE '%permission%' OR name = 'audit_log') ORDER BY name\")
 for table in cursor.fetchall():
@@ -180,7 +180,7 @@ conn.close()
 ```bash
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 tables = ['users', 'roles', 'permissions', 'role_permissions', 'user_roles', 'user_sessions', 'audit_log']
 for table in tables:
@@ -209,7 +209,7 @@ Run the following to verify the schema:
 ```python
 import sqlite3
 
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 
 # Check users table structure

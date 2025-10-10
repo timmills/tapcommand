@@ -62,7 +62,7 @@ def download_simple(url, output_path):
 
 def main():
     """Download channel icons"""
-    db_path = "smartvenue.db"
+    db_path = "tapcommand.db"
     icons_dir = Path("static/channel-icons")
     icons_dir.mkdir(parents=True, exist_ok=True)
 

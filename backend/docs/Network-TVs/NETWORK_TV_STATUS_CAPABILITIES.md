@@ -88,7 +88,7 @@ Response: {"mode": "Dynamic", "brightness": 45}
 
 **Polling Frequency:** Every 5-10 seconds (WebSocket maintains connection)
 
-**Note:** Not yet implemented in SmartVenue (planned for future).
+**Note:** Not yet implemented in TapCommand (planned for future).
 
 ---
 

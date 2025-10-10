@@ -45,7 +45,7 @@
 ### Step 1: Run Database Migration
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 
 # Run migration
@@ -54,8 +54,8 @@ python migrations/run_migration.py
 
 Expected output:
 ```
-🔧 SmartVenue Database Migration Runner
-Database: /home/coastal/smartvenue/backend/smartvenue.db
+🔧 TapCommand Database Migration Runner
+Database: /home/coastal/tapcommand/backend/tapcommand.db
 
 📋 Running migration: 001_add_hybrid_support_to_virtual_devices.sql
   Executing: ALTER TABLE virtual_devices ADD COLUMN fallback_ir_cont...
@@ -196,7 +196,7 @@ Response:
 ### Test 1: Verify Migration Ran
 
 ```bash
-sqlite3 backend/smartvenue.db "PRAGMA table_info(virtual_devices)" | grep fallback
+sqlite3 backend/tapcommand.db "PRAGMA table_info(virtual_devices)" | grep fallback
 ```
 
 Should show:
@@ -348,7 +348,7 @@ const refreshStatus = async (deviceId: number) => {
 **Solution:** Migration already applied, skip it
 ```bash
 # Check if columns exist
-sqlite3 backend/smartvenue.db "PRAGMA table_info(virtual_devices)" | grep fallback
+sqlite3 backend/tapcommand.db "PRAGMA table_info(virtual_devices)" | grep fallback
 ```
 
 ---

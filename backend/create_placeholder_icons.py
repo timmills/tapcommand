@@ -71,7 +71,7 @@ def generate_color_from_text(text):
 
 def main():
     """Create placeholder icons for all channels"""
-    db_path = "smartvenue.db"
+    db_path = "tapcommand.db"
     icons_dir = Path("static/channel-icons")
     icons_dir.mkdir(parents=True, exist_ok=True)
 

@@ -24,7 +24,7 @@ import os
 def run_migration():
     """Create unified command queue table"""
     # Use the default database path
-    db_path = "smartvenue.db"
+    db_path = "tapcommand.db"
 
     if not os.path.exists(db_path):
         print(f"Database file not found: {db_path}")

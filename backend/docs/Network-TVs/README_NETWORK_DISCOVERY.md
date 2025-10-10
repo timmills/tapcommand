@@ -1,8 +1,8 @@
-# SmartVenue Network TV Discovery - Quick Start
+# TapCommand Network TV Discovery - Quick Start
 
 ## Overview
 
-SmartVenue can control TVs via network instead of IR for **5-10x faster response** and **99.9% reliability**.
+TapCommand can control TVs via network instead of IR for **5-10x faster response** and **99.9% reliability**.
 
 This directory contains a **standalone onsite discovery tool** to find and catalog network-controllable TVs at venues.
 
@@ -42,9 +42,9 @@ Two files are generated:
 - `tv_discovery_report_YYYYMMDD_HHMMSS.json` - For automation
 - `tv_discovery_report_YYYYMMDD_HHMMSS.csv` - For spreadsheets
 
-### 5. Import to SmartVenue
+### 5. Import to TapCommand
 
-Upload reports to SmartVenue admin portal to create virtual controllers automatically.
+Upload reports to TapCommand admin portal to create virtual controllers automatically.
 
 ## What TVs Are Detected?
 
@@ -73,7 +73,7 @@ Upload reports to SmartVenue admin portal to create virtual controllers automati
 
 ```
 ======================================================================
-SmartVenue Network TV Discovery - ALL BRANDS
+TapCommand Network TV Discovery - ALL BRANDS
 ======================================================================
 
 Scanning for: Samsung, LG, Sony, Philips, Roku, Apple TV,
@@ -124,7 +124,7 @@ DISCOVERED TVS (4 found)
 ✅ **Scans all TV brands** - 11 manufacturers supported
 ✅ **Port scanning included** - Automatic protocol detection
 ✅ **Works without nmap** - Falls back to Python async ping
-✅ **Standalone** - No SmartVenue backend required
+✅ **Standalone** - No TapCommand backend required
 ✅ **JSON + CSV output** - Easy import/automation
 ✅ **Non-invasive** - Read-only, safe for production networks
 ✅ **Tested and working** - Verified October 4, 2025
@@ -169,7 +169,7 @@ sudo apt-get install nmap -y
 2. **Copy to USB drive** with documentation
 3. **Run at venue** to discover TVs
 4. **Collect reports** (JSON/CSV)
-5. **Import to SmartVenue** to adopt TVs
+5. **Import to TapCommand** to adopt TVs
 
 ---
 

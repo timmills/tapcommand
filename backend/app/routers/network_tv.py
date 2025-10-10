@@ -57,7 +57,7 @@ async def _get_samsung_token(ip: str, db: Session):
             port = 8001
             protocol_prefix = 'ws'
 
-        name = base64.b64encode('SmartVenue'.encode()).decode()
+        name = base64.b64encode('TapCommand'.encode()).decode()
         url = f'{protocol_prefix}://{ip}:{port}/api/v2/channels/samsung.remote.control?name={name}'
 
         # Create SSL context for secure connections
@@ -388,9 +388,9 @@ async def send_tv_command(command: TVCommand, db: Session = Depends(get_db)):
     if tv["protocol"] == "samsung_legacy":
         try:
             config = {
-                "name": "SmartVenue",
-                "description": "SmartVenue Control System",
-                "id": "smartvenue",
+                "name": "TapCommand",
+                "description": "TapCommand Control System",
+                "id": "tapcommand",
                 "host": tv["ip"],
                 "port": tv["port"],
                 "method": "legacy",

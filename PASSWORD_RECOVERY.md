@@ -6,7 +6,7 @@ If you forget your password or get locked out due to too many failed login attem
 
 ### Quick Reset (Recommended)
 
-From the `/home/coastal/smartvenue` directory:
+From the `/home/coastal/tapcommand` directory:
 
 ```bash
 ./reset-password.sh <username> <new_password>
@@ -29,7 +29,7 @@ This script will:
 If you prefer to run the Python script directly:
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python3 reset_password.py <username> <new_password>
 ```
@@ -68,10 +68,10 @@ Your new password must meet these requirements:
 **"Virtual environment not found"**
 ```bash
 # Check if venv exists
-ls /home/coastal/smartvenue/venv
+ls /home/coastal/tapcommand/venv
 
 # If missing, recreate it
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 python3 -m venv venv
 source venv/bin/activate
 pip install -r backend/requirements.txt
@@ -80,15 +80,15 @@ pip install -r backend/requirements.txt
 **"User not found"**
 ```bash
 # List all users in the database
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
-sqlite3 ../smartvenue.db "SELECT id, username, email, is_active FROM users;"
+sqlite3 ../tapcommand.db "SELECT id, username, email, is_active FROM users;"
 ```
 
 **"Permission denied"**
 ```bash
 # Make sure the script is executable
-chmod +x /home/coastal/smartvenue/reset-password.sh
+chmod +x /home/coastal/tapcommand/reset-password.sh
 ```
 
 ### Default Admin Account
@@ -118,7 +118,7 @@ To avoid getting locked out:
 If you're still locked out or need assistance:
 
 1. Check the server logs: `/tmp/backend.log`
-2. Verify the database exists: `/home/coastal/smartvenue/smartvenue.db`
+2. Verify the database exists: `/home/coastal/tapcommand/tapcommand.db`
 3. Check if the backend is running: `ps aux | grep uvicorn`
 4. Review this guide carefully for troubleshooting steps
 

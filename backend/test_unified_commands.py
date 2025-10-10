@@ -15,7 +15,7 @@ from app.commands.queue import QueueManager
 from app.db.database import Base
 
 # Create test database
-engine = create_engine('sqlite:///smartvenue.db')
+engine = create_engine('sqlite:///tapcommand.db')
 SessionLocal = sessionmaker(bind=engine)
 
 async def test_ir_command():

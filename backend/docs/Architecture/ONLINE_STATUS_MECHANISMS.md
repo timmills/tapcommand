@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-The SmartVenue system uses **THREE SEPARATE** monitoring mechanisms for tracking device online/offline status:
+The TapCommand system uses **THREE SEPARATE** monitoring mechanisms for tracking device online/offline status:
 
 1. **IR Controller Health Checker** (`device_health.py`) - Monitors IR controllers via ESPHome API
 2. **Network TV Device Status Checker** (`device_status_checker.py`) - Monitors network TVs via protocol-specific checks
@@ -532,7 +532,7 @@ curl -X POST http://localhost:8000/api/v1/managed/4/health-check
 # Check database
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 cursor.execute('SELECT hostname, is_online, last_seen FROM managed_devices WHERE hostname=\"ir-dc4516\"')
 print(cursor.fetchone())
@@ -551,7 +551,7 @@ curl -X POST http://localhost:8000/api/v1/device-status/nw-b85a97/check
 # Check database
 python3 -c "
 import sqlite3
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 cursor.execute('SELECT controller_id, is_online, power_state, last_checked_at FROM device_status WHERE controller_id=\"nw-b85a97\"')
 print(cursor.fetchone())
@@ -588,7 +588,7 @@ print(cursor.fetchone())
 
 ## Conclusion
 
-The SmartVenue system has a sophisticated but **complex** multi-layered status monitoring system:
+The TapCommand system has a sophisticated but **complex** multi-layered status monitoring system:
 
 ✅ **Strengths**:
 - Separate monitoring for IR and Network devices

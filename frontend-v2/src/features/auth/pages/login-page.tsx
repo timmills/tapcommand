@@ -41,7 +41,7 @@ export const LoginPage = () => {
             <div className="rounded-xl bg-white/10 backdrop-blur-sm p-3">
               <Tv2 className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white">SmartVenue</h1>
+            <h1 className="text-3xl font-bold text-white">TapCommand</h1>
           </div>
 
           <div className="space-y-6 text-white/90">
@@ -89,7 +89,7 @@ export const LoginPage = () => {
         </div>
 
         <div className="relative z-10 text-white/60 text-sm">
-          <p>© 2025 SmartVenue. All rights reserved.</p>
+          <p>© 2025 TapCommand. All rights reserved.</p>
         </div>
       </div>
 
@@ -101,7 +101,7 @@ export const LoginPage = () => {
             <div className="rounded-xl bg-brand-100 p-3">
               <Tv2 className="h-8 w-8 text-brand-600" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">SmartVenue</h1>
+            <h1 className="text-2xl font-bold text-slate-900">TapCommand</h1>
           </div>
 
           <div className="space-y-8">

@@ -737,7 +737,7 @@ GET http://192.168.101.126/sensor/ir_capture_device_wifi_signal
 **Solutions:**
 1. **Check Database File**
    ```bash
-   ls -la backend/app/smartvenue.db
+   ls -la backend/app/tapcommand.db
    # Should exist and be writable
    ```
 
@@ -756,7 +756,7 @@ GET http://192.168.101.126/sensor/ir_capture_device_wifi_signal
 4. **Reset Database** (if needed)
    ```bash
    # CAUTION: Deletes all data
-   rm backend/app/smartvenue.db
+   rm backend/app/tapcommand.db
    python migrations/add_ir_capture_tables.py
    ```
 

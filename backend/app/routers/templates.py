@@ -817,7 +817,7 @@ def _build_capabilities_payload_lines(
         library_ids.add(profile.library.id)
 
     capabilities: Dict[str, Any] = {
-        "project": "smartvenue.dynamic_ir",
+        "project": "tapcommand.dynamic_ir",
         "schema": 1,
         "ports": ports_payload,
     }
@@ -1281,9 +1281,9 @@ def _build_web_handler_lambda(port_profiles: List[PortProfile]) -> List[str]:
     lines.append("          auto make_home_html = []() {")
     lines.append("            std::string html;")
     lines.append("            html.reserve(4096);")
-    lines.append("            html += \"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"><title>SmartVenue IR Prototype</title>\";")
+    lines.append("            html += \"<!DOCTYPE html><html lang=\\\"en\\\"><head><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width, initial-scale=1\\\"><title>TapCommand IR Prototype</title>\";")
     lines.append("            html += \"<style>body{font-family:Segoe UI,Roboto,Arial,sans-serif;margin:0;padding:2.5rem;background:#0b172a;color:#f5f8ff;}h1,h2{margin:0;font-weight:600;}h1{font-size:2rem;margin-bottom:0.75rem;}h2{font-size:1.2rem;margin-top:2rem;}ul{margin:0.75rem 0 0 1.5rem;}pre{background:#0c192f;border-radius:10px;padding:1rem;overflow:auto;}a.button{display:inline-block;margin-top:1rem;padding:0.6rem 1rem;border-radius:30px;background:#2563ff;color:#fff;text-decoration:none;font-weight:600;}</style></head><body>\";")
-    lines.append("            html += \"<h1>SmartVenue Dynamic IR</h1>\";")
+    lines.append("            html += \"<h1>TapCommand Dynamic IR</h1>\";")
     lines.append("            html += \"<p>Latest capability payload published from the IR template builder.</p>\";")
     lines.append("            html += \"<h2>Port Assignments</h2><ul>\";")
 
@@ -1566,7 +1566,7 @@ def _render_dynamic_yaml(
             )
 
     # Update project name to dynamic_ir
-    rendered_yaml = rendered_yaml.replace("smartvenue.universal_ir", "smartvenue.dynamic_ir")
+    rendered_yaml = rendered_yaml.replace("tapcommand.universal_ir", "tapcommand.dynamic_ir")
 
     # Remove ArduinoJson.h include if present (causes compilation issues)
     rendered_yaml = rendered_yaml.replace("\n  includes:\n    - ArduinoJson.h", "")
@@ -2558,7 +2558,7 @@ async def save_yaml_to_file(payload: SaveYamlRequest):
     """Save YAML content to a file on the server with timestamp."""
     try:
         # Create the esphome directory if it doesn't exist
-        esphome_dir = Path("/home/coastal/smartvenue/esphome")
+        esphome_dir = Path("/home/coastal/tapcommand/esphome")
         esphome_dir.mkdir(exist_ok=True)
 
         # Generate filename with timestamp if not provided
@@ -2566,7 +2566,7 @@ async def save_yaml_to_file(payload: SaveYamlRequest):
             filename = payload.filename
         else:
             timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"smartvenue-ir-{timestamp}.yaml"
+            filename = f"tapcommand-ir-{timestamp}.yaml"
 
         # Ensure .yaml extension
         if not filename.endswith('.yaml'):

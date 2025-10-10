@@ -256,11 +256,11 @@ Other:     Network (port 55000) - volume, channel, input, etc.
 
 ## Test Script Location
 
-**File:** `/home/coastal/smartvenue/backend/test_samsung_wake.py`
+**File:** `/home/coastal/tapcommand/backend/test_samsung_wake.py`
 
 **Usage:**
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python test_samsung_wake.py
 ```

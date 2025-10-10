@@ -1,4 +1,4 @@
-# 🛡️ SmartVenue Rollback Guide
+# 🛡️ TapCommand Rollback Guide
 
 This guide provides multiple ways to safely return to the stable working state from September 2025.
 
@@ -19,7 +19,7 @@ stable-working-sept-2025    ← NEVER TOUCH - Permanent backup branch
 git checkout stable-working-sept-2025
 
 # Restore database backup
-cp backup-database-sept-2025.db backend/smartvenue.db
+cp backup-database-sept-2025.db backend/tapcommand.db
 
 # If you want to continue from stable state with new branch:
 git checkout -b feature/new-approach-from-stable
@@ -54,12 +54,12 @@ git checkout stable-working-sept-2025 -- frontend/
 
 ```bash
 # Create complete backup copy of working directory
-cp -r /home/coastal/smartvenue /home/coastal/smartvenue-backup-sept2025
+cp -r /home/coastal/tapcommand /home/coastal/tapcommand-backup-sept2025
 
 # Later restore from backup
-rm -rf /home/coastal/smartvenue
-mv /home/coastal/smartvenue-backup-sept2025 /home/coastal/smartvenue
-cd /home/coastal/smartvenue
+rm -rf /home/coastal/tapcommand
+mv /home/coastal/tapcommand-backup-sept2025 /home/coastal/tapcommand
+cd /home/coastal/tapcommand
 git checkout stable-working-sept-2025
 ```
 

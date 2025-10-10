@@ -6,7 +6,7 @@ Use this script if you get locked out of your account.
 
 IMPORTANT: Must run from within the virtual environment!
 
-From /home/coastal/smartvenue/backend:
+From /home/coastal/tapcommand/backend:
 
     source ../venv/bin/activate
     python3 reset_password.py <username> <new_password>

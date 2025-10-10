@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SmartVenue Network TV Discovery Tool
+TapCommand Network TV Discovery Tool
 =====================================
 
 Standalone script for onsite venue surveys to discover network-controllable TVs.
@@ -333,7 +333,7 @@ def discover_tvs_on_network(subnet: str = "192.168.1") -> List[Dict]:
     """Main discovery function - find all TVs on network"""
 
     print(f"\n{Colors.HEADER}{'='*70}{Colors.ENDC}")
-    print(f"{Colors.HEADER}{Colors.BOLD}SmartVenue Network TV Discovery{Colors.ENDC}")
+    print(f"{Colors.HEADER}{Colors.BOLD}TapCommand Network TV Discovery{Colors.ENDC}")
     print(f"{Colors.HEADER}{'='*70}{Colors.ENDC}\n")
 
     # Step 1: nmap ping sweep
@@ -563,12 +563,12 @@ def print_adoption_guide(tvs: List[Dict]):
         print(f"  • IPs: {', '.join([tv['ip'] for tv in roku_tvs])}")
         print()
 
-    print(f"{Colors.OKBLUE}All discovered TVs can be adopted into SmartVenue.{Colors.ENDC}")
+    print(f"{Colors.OKBLUE}All discovered TVs can be adopted into TapCommand.{Colors.ENDC}")
     print(f"{Colors.OKBLUE}Import the JSON/CSV report to proceed with adoption.{Colors.ENDC}\n")
 
 def main():
     parser = argparse.ArgumentParser(
-        description='SmartVenue Network TV Discovery Tool - Find adoptable TVs on local network',
+        description='TapCommand Network TV Discovery Tool - Find adoptable TVs on local network',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:

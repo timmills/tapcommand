@@ -59,7 +59,7 @@ async def lifespan(app: FastAPI):
     _main_loop = asyncio.get_running_loop()
 
     # Startup
-    logger.info("Starting SmartVenue backend...")
+    logger.info("Starting TapCommand backend...")
 
     # Create database tables
     create_tables()
@@ -108,7 +108,7 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    logger.info("Shutting down SmartVenue backend...")
+    logger.info("Shutting down TapCommand backend...")
     await tv_status_poller.stop()
     logger.info("TV status polling service stopped")
     await status_checker.stop_status_monitoring()
@@ -381,7 +381,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root():
     """Root endpoint"""
     return {
-        "message": "SmartVenue API",
+        "message": "TapCommand API",
         "version": settings.PROJECT_VERSION,
         "docs": "/docs"
     }

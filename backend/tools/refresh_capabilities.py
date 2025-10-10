@@ -3,7 +3,7 @@
 Run from the project root with the backend virtualenv (or ensure the
 environment can import the backend package and its dependencies):
 
-    DATABASE_URL=sqlite:///backend/smartvenue.db \
+    DATABASE_URL=sqlite:///backend/tapcommand.db \
     backend/venv/bin/python3 backend/tools/refresh_capabilities.py
 
 The script queries managed devices, attempts to fetch their capability
@@ -31,7 +31,7 @@ from app.services.esphome_client import esphome_manager  # type: ignore  # noqa:
 from app.services.settings_service import settings_service  # type: ignore  # noqa: E402
 
 
-DB_PATH = REPO_ROOT / "smartvenue.db"
+DB_PATH = REPO_ROOT / "tapcommand.db"
 
 
 async def refresh_capabilities() -> None:

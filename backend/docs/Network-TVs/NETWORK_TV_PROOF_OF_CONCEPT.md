@@ -7,7 +7,7 @@
 
 ## Summary
 
-Successfully implemented network control for Samsung TVs, proving that SmartVenue can control TVs via IP network instead of IR, providing faster response times and bidirectional communication.
+Successfully implemented network control for Samsung TVs, proving that TapCommand can control TVs via IP network instead of IR, providing faster response times and bidirectional communication.
 
 ---
 
@@ -82,7 +82,7 @@ config = {
     "host": "192.168.101.50",
     "port": 55000,
     "method": "legacy",
-    "name": "SmartVenue",
+    "name": "TapCommand",
 }
 
 with samsungctl.Remote(config) as remote:
@@ -177,7 +177,7 @@ tv.shortcuts().hdmi1()
 
 ### Virtual Controller Pattern
 
-Network TVs fit perfectly into SmartVenue's architecture:
+Network TVs fit perfectly into TapCommand's architecture:
 
 ```
 Network TV = Virtual IR Controller with 1 Port
@@ -283,7 +283,7 @@ Backend routes to correct handler based on `device_subtype`.
 
 ### Test Legacy TV Control (CLI)
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python test_legacy_samsung.py
 ```

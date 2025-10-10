@@ -20,14 +20,14 @@ deactivate
 cd ..
 
 # Expected output:
-#   ✓ Template database created: smartvenue_template.db
+#   ✓ Template database created: tapcommand_template.db
 #   Template database contents:
 #     - Users: X
 #     - Roles: X
 #     - IR Codes: X
 
 # 4. Add template to git
-git add backend/smartvenue_template.db
+git add backend/tapcommand_template.db
 git add .gitignore  # Already updated to allow template
 git status  # Verify only template is being added
 
@@ -74,11 +74,11 @@ source venv/bin/activate
 python create_template_db.py
 
 # Compare with existing template
-ls -lh smartvenue_template.db
+ls -lh tapcommand_template.db
 
 # 5. If template changed, commit it
 git status
-git add smartvenue_template.db
+git add tapcommand_template.db
 git commit -m "chore: Update database template for v1.X.X"
 
 # 6. Update version in code (if you have a version file)
@@ -133,13 +133,13 @@ cd /tmp/test-install
 - ✅ All application code (backend/, frontend-v2/)
 - ✅ Installation scripts (install.sh, update.sh)
 - ✅ Database migration tools (migrate_database.py)
-- ✅ Clean database template (smartvenue_template.db)
+- ✅ Clean database template (tapcommand_template.db)
 - ✅ Documentation (DEPLOYMENT.md, QUICK_START.md)
 - ✅ Systemd service templates (deploy/systemd/)
 - ✅ Dependencies (requirements.txt, package.json)
 
 ### Excluded (via .gitignore):
-- ❌ Development database (smartvenue.db)
+- ❌ Development database (tapcommand.db)
 - ❌ Environment files (.env, .env.local)
 - ❌ Virtual environments (venv/, node_modules/)
 - ❌ Build artifacts (dist/, __pycache__/)
@@ -174,7 +174,7 @@ After pushing tag, create a GitHub Release:
 
 1. Go to GitHub → Releases → "Draft a new release"
 2. Choose tag: v1.X.X
-3. Release title: "SmartVenue v1.X.X"
+3. Release title: "TapCommand v1.X.X"
 4. Description:
    ```markdown
    ## What's New
@@ -187,7 +187,7 @@ After pushing tag, create a GitHub Release:
 
    ## Upgrade from v1.0.0
    ```bash
-   cd /opt/smartvenue
+   cd /opt/tapcommand
    ./update.sh
    ```
    ```
@@ -238,7 +238,7 @@ git log main..release --oneline
 git log release..main --oneline
 
 # View changes in database template
-git log -p backend/smartvenue_template.db
+git log -p backend/tapcommand_template.db
 
 # Compare main and release branches
 git diff main release

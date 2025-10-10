@@ -1,6 +1,6 @@
-# SmartVenue Documentation
+# TapCommand Documentation
 
-Welcome to the SmartVenue documentation! This directory contains comprehensive guides, implementation plans, and technical documentation for all aspects of the system.
+Welcome to the TapCommand documentation! This directory contains comprehensive guides, implementation plans, and technical documentation for all aspects of the system.
 
 ## 📁 Documentation Structure
 
@@ -76,7 +76,7 @@ User authentication and access control documentation.
 ## 🔄 Accessing Documentation
 
 All documentation can be accessed through:
-1. **Web UI**: Navigate to Documentation page in SmartVenue interface
+1. **Web UI**: Navigate to Documentation page in TapCommand interface
 2. **File System**: Browse this directory directly
 3. **API**: GET `/api/documentation/list` and `/api/documentation/content/{path}`
 

@@ -1,7 +1,7 @@
 """
 Audit Logging Service
 
-Provides comprehensive audit logging for all user actions in SmartVenue.
+Provides comprehensive audit logging for all user actions in TapCommand.
 Logs authentication events, resource modifications, permission changes, and errors.
 
 This is a standalone service that can be used by endpoints but is NOT

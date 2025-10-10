@@ -2,7 +2,7 @@
 
 ## Overview
 
-SmartVenue now uses a **unified command queue system** that routes all device commands (IR and Network) through a single, consistent pipeline. This provides:
+TapCommand now uses a **unified command queue system** that routes all device commands (IR and Network) through a single, consistent pipeline. This provides:
 
 - **Protocol Abstraction** - Frontend doesn't need to know if device is IR or Network
 - **Easy Extensibility** - Add new TV brands by creating one executor file

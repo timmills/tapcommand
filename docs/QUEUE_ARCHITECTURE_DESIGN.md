@@ -1,4 +1,4 @@
-# SmartVenue Command Routing Architecture - Deep Analysis & Design
+# TapCommand Command Routing Architecture - Deep Analysis & Design
 
 **Author:** Claude 4.5 (Sonnet)
 **Date:** 2025-10-01

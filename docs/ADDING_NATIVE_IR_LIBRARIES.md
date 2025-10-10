@@ -1,12 +1,12 @@
 # Adding ESPHome Native IR Libraries to Database
 
 ## Overview
-This document provides precise step-by-step instructions for adding new ESPHome native IR protocol libraries to the SmartVenue database. These libraries allow direct use of ESPHome's built-in IR transmit actions without requiring raw signal data.
+This document provides precise step-by-step instructions for adding new ESPHome native IR protocol libraries to the TapCommand database. These libraries allow direct use of ESPHome's built-in IR transmit actions without requiring raw signal data.
 
 ## Prerequisites
-- Access to `/home/coastal/smartvenue/backend/load_native_ir.py`
-- Python virtual environment at `/home/coastal/smartvenue/backend/venv`
-- Access to SmartVenue database at `/home/coastal/smartvenue/backend/smartvenue.db`
+- Access to `/home/coastal/tapcommand/backend/load_native_ir.py`
+- Python virtual environment at `/home/coastal/tapcommand/backend/venv`
+- Access to TapCommand database at `/home/coastal/tapcommand/backend/tapcommand.db`
 
 ## Step 1: Research IR Codes
 
@@ -105,7 +105,7 @@ For each protocol researched, document:
 
 ### 2.1 Create Command Dictionary List
 
-Open `/home/coastal/smartvenue/backend/load_native_ir.py`
+Open `/home/coastal/tapcommand/backend/load_native_ir.py`
 
 Add a new command array following this exact format:
 
@@ -203,7 +203,7 @@ PANASONIC_COMMANDS: List[Dict[str, Any]] = [
 
 ### 3.1 Library Entry Format
 
-Locate the `NATIVE_LIBRARIES` array in `/home/coastal/smartvenue/backend/load_native_ir.py`
+Locate the `NATIVE_LIBRARIES` array in `/home/coastal/tapcommand/backend/load_native_ir.py`
 
 Add a new dictionary entry at the end (before the closing `]`):
 
@@ -287,7 +287,7 @@ NATIVE_LIBRARIES = [
 Before running the script, check if a library with the same brand/name already exists:
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source venv/bin/activate
 python3 << 'EOF'
 from app.db.database import SessionLocal
@@ -311,7 +311,7 @@ EOF
 If a duplicate exists with different protocol (e.g., old LG library):
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source venv/bin/activate
 python3 << 'EOF'
 from app.db.database import SessionLocal
@@ -340,7 +340,7 @@ EOF
 ### 5.1 Activate Virtual Environment and Run
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source venv/bin/activate
 python load_native_ir.py
 ```
@@ -400,7 +400,7 @@ The protocol identifier you chose in Step 3.2 must be mapped in the YAML generat
 
 ### 6.1 Locate YAML Template Logic
 
-File: `/home/coastal/smartvenue/backend/app/routers/templates.py`
+File: `/home/coastal/tapcommand/backend/app/routers/templates.py`
 
 Search for protocol mapping logic (around line 800-900)
 
@@ -461,7 +461,7 @@ SONY_TRANSMIT_COMMANDS: List[Dict[str, Any]] = [
 
 #### Step 4: Run Script
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source venv/bin/activate
 python load_native_ir.py
 ```
@@ -532,22 +532,22 @@ PHILIPS_RC5_COMMANDS: List[Dict[str, Any]] = [
 
 ### load_native_ir.py Location
 ```
-/home/coastal/smartvenue/backend/load_native_ir.py
+/home/coastal/tapcommand/backend/load_native_ir.py
 ```
 
 ### Database Location
 ```
-/home/coastal/smartvenue/backend/smartvenue.db
+/home/coastal/tapcommand/backend/tapcommand.db
 ```
 
 ### Python Virtual Environment
 ```
-/home/coastal/smartvenue/backend/venv
+/home/coastal/tapcommand/backend/venv
 ```
 
 ### YAML Template Router
 ```
-/home/coastal/smartvenue/backend/app/routers/templates.py
+/home/coastal/tapcommand/backend/app/routers/templates.py
 ```
 
 ## Additional Resources

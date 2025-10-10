@@ -214,7 +214,7 @@ Before using in production:
 - [ ] Test error handling (TV off, wrong IP)
 - [ ] Verify discovery detects TV correctly
 - [ ] Test adoption as Virtual Controller
-- [ ] Send commands via SmartVenue API
+- [ ] Send commands via TapCommand API
 
 ---
 

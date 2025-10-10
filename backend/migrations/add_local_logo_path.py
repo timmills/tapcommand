@@ -12,7 +12,7 @@ from pathlib import Path
 def run_migration():
     """Add local_logo_path column to channels table"""
     # Use the default database path
-    db_path = "smartvenue.db"
+    db_path = "tapcommand.db"
 
     if not os.path.exists(db_path):
         print(f"Database file not found: {db_path}")

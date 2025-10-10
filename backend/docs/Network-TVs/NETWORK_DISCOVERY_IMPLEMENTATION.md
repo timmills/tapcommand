@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-SmartVenue now has a comprehensive **network device discovery and adoption system** that allows automatic detection and control of TVs via IP network instead of infrared. This provides 5-10x faster response times, 99.9% reliability, and eliminates the need for IR blaster hardware.
+TapCommand now has a comprehensive **network device discovery and adoption system** that allows automatic detection and control of TVs via IP network instead of infrared. This provides 5-10x faster response times, 99.9% reliability, and eliminates the need for IR blaster hardware.
 
 ### Key Achievements
 - ✅ 55,805 MAC vendors imported and indexed
@@ -307,7 +307,7 @@ async def send_network_command(device: Device, command: str):
 import samsungctl
 
 config = {
-    "name": "SmartVenue",
+    "name": "TapCommand",
     "host": "192.168.101.50",
     "port": 55000,
     "method": "legacy",
@@ -759,7 +759,7 @@ def log_network_command(hostname, command, result):
 
 **Location:** `/venue_tv_discovery_nmap_optional.py`
 
-A standalone Python script for onsite venue surveys to discover network-controllable TVs without requiring SmartVenue backend.
+A standalone Python script for onsite venue surveys to discover network-controllable TVs without requiring TapCommand backend.
 
 **Features:**
 - ✅ Scans for **all TV brands** (Samsung, LG, Sony, Philips, Roku, Apple TV, Vizio, Panasonic, TCL, Hisense, Sharp)

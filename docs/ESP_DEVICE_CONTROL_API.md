@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Last Updated:** 2025-10-01
-**Purpose:** Complete reference for controlling SmartVenue ESPHome IR blaster devices
+**Purpose:** Complete reference for controlling TapCommand ESPHome IR blaster devices
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## Overview
 
-The SmartVenue IR Control System allows remote control of multiple IR devices (TVs, projectors, etc.) through ESPHome-based ESP8266 controllers. Each controller supports up to 5 independent IR output ports.
+The TapCommand IR Control System allows remote control of multiple IR devices (TVs, projectors, etc.) through ESPHome-based ESP8266 controllers. Each controller supports up to 5 independent IR output ports.
 
 ### Key Concepts
 

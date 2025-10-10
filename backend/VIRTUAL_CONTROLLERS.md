@@ -353,7 +353,7 @@ Updates Virtual Controllers:
 
 ### Network Configuration
 1. Assign static IPs to network TVs when possible
-2. Ensure TVs are on same network as SmartVenue backend
+2. Ensure TVs are on same network as TapCommand backend
 3. Check firewall rules allow control ports (55000, 8001, 3000, etc.)
 
 ### Troubleshooting

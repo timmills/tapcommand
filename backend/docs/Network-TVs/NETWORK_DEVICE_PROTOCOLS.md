@@ -7,7 +7,7 @@
 
 ## Overview
 
-This document provides comprehensive information about network control protocols for TVs and displays that SmartVenue can adopt for direct network control (bypassing IR).
+This document provides comprehensive information about network control protocols for TVs and displays that TapCommand can adopt for direct network control (bypassing IR).
 
 ---
 

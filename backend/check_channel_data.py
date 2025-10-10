@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 
 print("=== IR Ports (excluding port 0) ===")

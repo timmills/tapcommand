@@ -1,19 +1,19 @@
 substitutions:
-  device_name: smartvenue-ir-prototype
-  friendly_name: SmartVenue IR Prototype
+  device_name: tapcommand-ir-prototype
+  friendly_name: TapCommand IR Prototype
   wifi_ssid: "TV"
   wifi_password: "rdL1R7iDpXDx4O"
   api_key: "uuPgF8JOAV/ZhFbDV4iS4Kwr1MV5H97p6Nk+HnpE0+g="
   ota_password: "demo-ota"
   web_username: admin
-  web_password: smartvenue
+  web_password: tapcommand
 
 esphome:
   name: "${device_name}"
   friendly_name: "${friendly_name}"
   comment: "Prototype dynamic IR configuration"
   project:
-    name: "smartvenue.dynamic_ir"
+    name: "tapcommand.dynamic_ir"
     version: "0.1.0"
   includes:
     - ArduinoJson.h
@@ -80,7 +80,7 @@ esphome:
 
             html += "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">";
             html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
-            html += "<title>" + friendly + " · SmartVenue IR</title>";
+            html += "<title>" + friendly + " · TapCommand IR</title>";
             html += "<style>body{font-family:'Segoe UI',Roboto,Arial,sans-serif;margin:0;padding:2.5rem;background:#0b172a;color:#f5f8ff;}";
             html += "h1,h2{margin:0;font-weight:600;}h1{font-size:2rem;margin-bottom:0.75rem;}h2{font-size:1.2rem;margin-bottom:0.75rem;}";
             html += ".layout{display:grid;grid-template-columns:minmax(0,1fr);gap:1.5rem;}@media(min-width:900px){.layout{grid-template-columns:repeat(2,minmax(0,1fr));}}";
@@ -102,7 +102,7 @@ esphome:
             html += "<div class=\"meta\"><span><strong>Hostname:</strong> " + hostname + "</span>";
             html += "<span><strong>Uptime:</strong> " + uptime_text + "</span>";
             html += "<span><strong>WiFi:</strong> " + wifi_text + "</span></div>";
-            html += "<p style=\"margin-top:0.75rem;line-height:1.5;max-width:540px;\">This prototype exposes SmartVenue dynamic IR capabilities for dual-port operation. Use the summary below to verify which library is mapped to each port before importing into the Configure Ports workflow.</p>";
+            html += "<p style=\"margin-top:0.75rem;line-height:1.5;max-width:540px;\">This prototype exposes TapCommand dynamic IR capabilities for dual-port operation. Use the summary below to verify which library is mapped to each port before importing into the Configure Ports workflow.</p>";
             html += "<a class=\"button\" href=\"/report\">Publish Capabilities</a></div>";
 
             html += "<div class=\"card\"><h2>Port Overview &amp; OTA</h2><table><thead><tr><th>Port</th><th>Brand</th><th>Functions</th></tr></thead><tbody>";
@@ -122,7 +122,7 @@ esphome:
 
             html += "</div>";
 
-            html += "<footer>SmartVenue Dynamic IR Prototype &middot; Firmware " + std::string(ESPHOME_VERSION) + "</footer>";
+            html += "<footer>TapCommand Dynamic IR Prototype &middot; Firmware " + std::string(ESPHOME_VERSION) + "</footer>";
             html += "</body></html>";
             return html;
           };
@@ -293,7 +293,7 @@ script:
     then:
       - lambda: |-
           std::string payload = "{\"device_id\":\"" + std::string(App.get_name()) + "\"";
-          payload += ",\"project\":\"smartvenue.dynamic_ir\"";
+          payload += ",\"project\":\"tapcommand.dynamic_ir\"";
           payload += ",\"firmware_version\":\"0.1.0\"";
           payload += ",\"ports\":[";
           payload += "{\"port\":1,\"brand\":\"Samsung\",\"commands\":[\"power\",\"mute\",\"volume_up\",\"volume_down\",\"channel_up\",\"channel_down\",\"digit_0\",\"digit_1\",\"digit_2\",\"digit_3\",\"digit_4\",\"digit_5\",\"digit_6\",\"digit_7\",\"digit_8\",\"digit_9\"]}";

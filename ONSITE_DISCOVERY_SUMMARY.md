@@ -1,4 +1,4 @@
-# SmartVenue Onsite TV Discovery - Summary
+# TapCommand Onsite TV Discovery - Summary
 
 ## ✅ Successfully Created
 
@@ -120,7 +120,7 @@ python3 venue_tv_discovery_nmap_optional.py 10.0.50
 ### Example Output
 ```
 ======================================================================
-SmartVenue Network TV Discovery - ALL BRANDS
+TapCommand Network TV Discovery - ALL BRANDS
 ======================================================================
 
 Scanning for: Samsung, LG, Sony, Philips, Roku, Apple TV,
@@ -154,7 +154,7 @@ Discovery complete!
 ✅ **Scans ALL TV brands** (11 brands supported)
 ✅ **Port scanning included** (automatic protocol detection)
 ✅ **Works without nmap** (slower but functional)
-✅ **Standalone script** (no SmartVenue backend needed)
+✅ **Standalone script** (no TapCommand backend needed)
 ✅ **JSON + CSV output** (for import/automation)
 ✅ **Non-invasive** (read-only, safe for production networks)
 ✅ **Tested and working** on real network
@@ -192,7 +192,7 @@ Discovery complete!
    - `tv_discovery_report_YYYYMMDD_HHMMSS.json`
    - `tv_discovery_report_YYYYMMDD_HHMMSS.csv`
 
-4. **Import to SmartVenue**:
+4. **Import to TapCommand**:
    - Upload JSON/CSV to admin portal
    - System creates virtual controllers
    - Pair each TV (protocol-specific)
@@ -217,6 +217,6 @@ Discovery complete!
 
 ---
 
-**Script Location**: `/home/coastal/smartvenue/venue_tv_discovery_nmap_optional.py`
+**Script Location**: `/home/coastal/tapcommand/venue_tv_discovery_nmap_optional.py`
 **Status**: ✅ Tested and working
 **Last Test**: October 4, 2025 - Found 1 Samsung TV on 192.168.101.0/24

@@ -19,7 +19,7 @@ if ! command -v nmap &> /dev/null; then
 fi
 
 # Variables
-INSTALL_DIR="/home/coastal/smartvenue"
+INSTALL_DIR="/home/coastal/tapcommand"
 VENV_PATH="$INSTALL_DIR/venv"
 APP_USER="coastal"
 SUBNET="192.168.101"
@@ -27,10 +27,10 @@ SUBNET="192.168.101"
 echo "📝 Creating systemd service..."
 
 # Create systemd service file
-cat > /etc/systemd/system/smartvenue-scanner.service << EOF
+cat > /etc/systemd/system/tapcommand-scanner.service << EOF
 [Unit]
-Description=SmartVenue Network Scanner
-After=network.target smartvenue-backend.service
+Description=TapCommand Network Scanner
+After=network.target tapcommand-backend.service
 
 [Service]
 Type=simple
@@ -49,18 +49,18 @@ echo "🔄 Reloading systemd..."
 systemctl daemon-reload
 
 echo "▶️  Starting service..."
-systemctl enable smartvenue-scanner.service
-systemctl start smartvenue-scanner.service
+systemctl enable tapcommand-scanner.service
+systemctl start tapcommand-scanner.service
 
 echo "📊 Service status:"
-systemctl status smartvenue-scanner.service --no-pager
+systemctl status tapcommand-scanner.service --no-pager
 
 echo ""
 echo "✅ Network scanner service installed and started!"
 echo ""
 echo "Useful commands:"
-echo "  sudo systemctl status smartvenue-scanner   - Check service status"
-echo "  sudo systemctl stop smartvenue-scanner     - Stop service"
-echo "  sudo systemctl start smartvenue-scanner    - Start service"
-echo "  sudo systemctl restart smartvenue-scanner  - Restart service"
-echo "  sudo journalctl -u smartvenue-scanner -f   - View live logs"
+echo "  sudo systemctl status tapcommand-scanner   - Check service status"
+echo "  sudo systemctl stop tapcommand-scanner     - Stop service"
+echo "  sudo systemctl start tapcommand-scanner    - Start service"
+echo "  sudo systemctl restart tapcommand-scanner  - Restart service"
+echo "  sudo journalctl -u tapcommand-scanner -f   - View live logs"

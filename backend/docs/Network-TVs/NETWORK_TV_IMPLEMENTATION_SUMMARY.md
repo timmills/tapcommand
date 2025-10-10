@@ -212,7 +212,7 @@ requests>=2.31.0       # HTTP for Sony, Roku, Philips, Vizio
 
 ### 1. Install Dependencies
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 pip install -r requirements.txt
 ```

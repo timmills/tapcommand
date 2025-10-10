@@ -22,7 +22,7 @@ const brandData: Record<string, BrandInfo> = {
     setupTime: '2 minutes',
     icon: '📺',
     setupSteps: [
-      'Click "Adopt" in SmartVenue',
+      'Click "Adopt" in TapCommand',
       'WATCH THE TV SCREEN - permission dialog appears',
       'Press "Allow" within 30 seconds',
       'Token saved automatically - no more prompts!'
@@ -86,7 +86,7 @@ const brandData: Record<string, BrandInfo> = {
     setupTime: '5 minutes',
     icon: '📺',
     setupSteps: [
-      'Connect from SmartVenue',
+      'Connect from TapCommand',
       'TV displays 6-digit pairing code on screen',
       'Accept pairing within 30 seconds',
       'Enable "Mobile TV On" for WOL support'
@@ -110,7 +110,7 @@ const brandData: Record<string, BrandInfo> = {
       'Settings → Network → IP Control',
       'Enable Authentication',
       'Set Pre-Shared Key (PSK) - e.g., "0000"',
-      'Store PSK in SmartVenue credentials'
+      'Store PSK in TapCommand credentials'
     ],
     notes: [
       '✅ IRCC (IR over IP) - very reliable',

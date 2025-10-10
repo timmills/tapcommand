@@ -130,9 +130,9 @@ All Australian brands use specific MAC prefixes:
 - Toshiba: Various Toshiba Corp. prefixes
 
 ### Database Integration
-Script automatically loads from SmartVenue database:
+Script automatically loads from TapCommand database:
 ```python
-# Loads 1,730 prefixes from backend/smartvenue.db
+# Loads 1,730 prefixes from backend/tapcommand.db
 # Includes all Australian brands automatically
 # No manual updates needed
 ```

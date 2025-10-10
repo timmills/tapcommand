@@ -101,9 +101,9 @@ class SamsungLegacyExecutor(CommandExecutor):
 
             # Configure Samsung remote
             config = {
-                "name": "SmartVenue",
-                "description": "SmartVenue Control System",
-                "id": "smartvenue",
+                "name": "TapCommand",
+                "description": "TapCommand Control System",
+                "id": "tapcommand",
                 "host": device.ip_address,
                 "port": 55000,
                 "method": "legacy",
@@ -157,7 +157,7 @@ class SamsungLegacyExecutor(CommandExecutor):
                 host=device.ip_address,
                 port=port,
                 token=auth_token,  # None is valid for 2016 TVs, required for 2017+
-                name='SmartVenue',
+                name='TapCommand',
                 timeout=5
             )
 

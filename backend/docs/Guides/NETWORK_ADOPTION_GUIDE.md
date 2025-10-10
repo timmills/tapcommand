@@ -7,7 +7,7 @@
 
 ## Overview
 
-This guide explains how to discover and adopt network-controllable TVs and displays into SmartVenue, creating "virtual IR controllers" that communicate over IP instead of infrared.
+This guide explains how to discover and adopt network-controllable TVs and displays into TapCommand, creating "virtual IR controllers" that communicate over IP instead of infrared.
 
 ---
 
@@ -56,7 +56,7 @@ This guide explains how to discover and adopt network-controllable TVs and displ
 ### Method 0: Onsite Discovery Tool (Standalone)
 **Best for:** Initial venue surveys and site assessments
 
-**Standalone Python script** for discovering TVs without SmartVenue backend running.
+**Standalone Python script** for discovering TVs without TapCommand backend running.
 
 **Usage:**
 ```bash
@@ -78,11 +78,11 @@ python3 venue_tv_discovery_nmap_optional.py 192.168.1
 - `tv_discovery_report_YYYYMMDD_HHMMSS.json`
 - `tv_discovery_report_YYYYMMDD_HHMMSS.csv`
 
-**Import reports into SmartVenue** to create virtual controllers automatically.
+**Import reports into TapCommand** to create virtual controllers automatically.
 
 **Documentation:** See `/VENUE_DISCOVERY_README.md` for full guide.
 
-**Pros:** No SmartVenue needed, comprehensive scan, all brands
+**Pros:** No TapCommand needed, comprehensive scan, all brands
 **Cons:** Manual process, requires report import
 
 ---
@@ -225,7 +225,7 @@ Click **"Adopt"** button:
 
 #### Samsung Legacy (D/E/F series):
 1. Pairing request sent to TV
-2. TV displays: **"SmartVenue wants to connect"**
+2. TV displays: **"TapCommand wants to connect"**
 3. User presses **"Allow"** on TV within 30 seconds
 4. Connection established ✅
 5. No token stored (pair each time)
@@ -241,7 +241,7 @@ Click **"Adopt"** button:
 #### LG WebOS (planned):
 1. Connection request sent to port 3000
 2. TV displays 6-digit pairing key
-3. User enters key in SmartVenue UI
+3. User enters key in TapCommand UI
 4. Client key received and stored
 5. Future connections automatic ✅
 
@@ -299,7 +299,7 @@ Network TVs can be scheduled exactly like IR controllers:
 
 **No devices found:**
 - Verify TVs are powered on
-- Check TVs are on same subnet as SmartVenue
+- Check TVs are on same subnet as TapCommand
 - Verify no firewall blocking:
   - ICMP (ping)
   - ARP requests
@@ -326,7 +326,7 @@ Network TVs can be scheduled exactly like IR controllers:
 **Token invalid (Samsung Modern):**
 - TV may have been factory reset
 - Token expired (rare)
-- Re-pair from SmartVenue UI
+- Re-pair from TapCommand UI
 - Delete and re-add device
 
 **Wrong protocol detected:**
@@ -358,7 +358,7 @@ Network TVs can be scheduled exactly like IR controllers:
 
 ## MAC Address Verification
 
-SmartVenue uses MAC addresses as the **source of truth** for device identity:
+TapCommand uses MAC addresses as the **source of truth** for device identity:
 
 ### Why MAC over IP?
 - IP addresses can change (DHCP)
@@ -412,7 +412,7 @@ if mac != device.mac_address:
 
 ### Network Setup
 1. **Static IPs:** Assign static IPs to TVs via DHCP reservation
-2. **Same Subnet:** Keep all TVs on same subnet as SmartVenue
+2. **Same Subnet:** Keep all TVs on same subnet as TapCommand
 3. **VLAN (optional):** Separate VLAN for displays
 4. **QoS:** Prioritize TV control traffic
 5. **Monitoring:** Monitor TV connectivity

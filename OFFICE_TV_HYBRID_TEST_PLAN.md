@@ -25,15 +25,15 @@
 #### Step 1.1: Run Database Migration
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python migrations/run_migration.py
 ```
 
 **Expected Output:**
 ```
-🔧 SmartVenue Database Migration Runner
-Database: /home/coastal/smartvenue/backend/smartvenue.db
+🔧 TapCommand Database Migration Runner
+Database: /home/coastal/tapcommand/backend/tapcommand.db
 
 📋 Running migration: 001_add_hybrid_support_to_virtual_devices.sql
   Executing: ALTER TABLE virtual_devices ADD COLUMN fallback_ir_cont...
@@ -48,7 +48,7 @@ Database: /home/coastal/smartvenue/backend/smartvenue.db
 #### Step 1.2: Restart Backend
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 ./restart.sh
 ```
 
@@ -93,7 +93,7 @@ curl http://localhost:8000/api/hybrid-devices/1/control-status
 #### Step 2.1: List Available IR Controllers
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python3 -c "
 from app.db.database import SessionLocal
@@ -252,7 +252,7 @@ curl -X POST http://localhost:8000/api/commands/execute \
 
 **Check backend logs:**
 ```bash
-tail -f /home/coastal/smartvenue/backend/backend.out | grep -i "power\|hybrid"
+tail -f /home/coastal/tapcommand/backend/backend.out | grep -i "power\|hybrid"
 ```
 
 Should see:
@@ -363,7 +363,7 @@ Should show:
 If APIs aren't working, you can update the database directly:
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python3 -c "
 from app.db.database import SessionLocal
@@ -442,7 +442,7 @@ else:
 
 **Solution:** Migration hasn't run. Check:
 ```bash
-ls -la /home/coastal/smartvenue/backend/migrations/
+ls -la /home/coastal/tapcommand/backend/migrations/
 ```
 
 Ensure `001_add_hybrid_support_to_virtual_devices.sql` exists.
@@ -453,7 +453,7 @@ Ensure `001_add_hybrid_support_to_virtual_devices.sql` exists.
 
 **Solution:** Backend not restarted after migration. Restart:
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 ./restart.sh
 ```
 

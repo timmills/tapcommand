@@ -131,7 +131,7 @@ export const HierarchicalNav = () => {
   return (
     <aside className="w-64 flex-shrink-0 border-r border-slate-200 bg-white">
       <div className="px-6 py-4">
-        <h1 className="text-lg font-semibold text-brand-600">SmartVenue</h1>
+        <h1 className="text-lg font-semibold text-brand-600">TapCommand</h1>
         <p className="mt-1 text-sm text-slate-500">Device management</p>
       </div>
 

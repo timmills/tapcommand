@@ -2,7 +2,7 @@
 
 ## Overview
 
-SmartVenue uses role-based access control (RBAC) to manage user permissions. This guide explains how to create users, assign roles, and manage permissions.
+TapCommand uses role-based access control (RBAC) to manage user permissions. This guide explains how to create users, assign roles, and manage permissions.
 
 ## Table of Contents
 
@@ -53,7 +53,7 @@ SmartVenue uses role-based access control (RBAC) to manage user permissions. Thi
 
 ## System Roles
 
-SmartVenue includes four built-in system roles with predefined permissions:
+TapCommand includes four built-in system roles with predefined permissions:
 
 ### Super Admin
 **Access Level**: Full system access
@@ -191,8 +191,8 @@ If a user is completely locked out (forgotten password, account locked), system 
 ```
 
 **Steps**:
-1. SSH into the SmartVenue server
-2. Navigate to the SmartVenue directory
+1. SSH into the TapCommand server
+2. Navigate to the TapCommand directory
 3. Run the reset script with the username
 4. Enter a new password when prompted
 5. The script will:
@@ -377,11 +377,11 @@ If you've lost the admin password, use the password reset script.
 ### Support
 
 For additional help:
-- Check the **Documentation** page in SmartVenue
+- Check the **Documentation** page in TapCommand
 - Contact your system administrator
-- Review logs in `/var/log/smartvenue/` (server access required)
+- Review logs in `/var/log/tapcommand/` (server access required)
 
 ---
 
 **Last Updated**: October 2025
-**SmartVenue Version**: 2.0+
+**TapCommand Version**: 2.0+

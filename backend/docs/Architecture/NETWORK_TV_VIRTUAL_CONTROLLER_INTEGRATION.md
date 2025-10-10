@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document defines how network-controllable TVs integrate seamlessly into the existing SmartVenue architecture by treating them as **virtual IR controllers with a single port**. This approach maintains API compatibility, preserves existing workflows, and makes network TVs first-class citizens in the device management system.
+This document defines how network-controllable TVs integrate seamlessly into the existing TapCommand architecture by treating them as **virtual IR controllers with a single port**. This approach maintains API compatibility, preserves existing workflows, and makes network TVs first-class citizens in the device management system.
 
 **Key Principle:** A network TV = Virtual ESP8266 controller with 1 port (port 1) that controls itself
 

@@ -1,4 +1,4 @@
-# SmartVenue Quick Start Guide
+# TapCommand Quick Start Guide
 
 ## Fresh Installation (5 minutes)
 
@@ -7,8 +7,8 @@
 sudo apt-get update && sudo apt-get install -y git
 
 # 1. Clone repository (release branch)
-git clone -b release <your-repo-url> /opt/smartvenue
-cd /opt/smartvenue
+git clone -b release <your-repo-url> /opt/tapcommand
+cd /opt/tapcommand
 
 # 2. Run installer (installs everything else)
 ./install.sh
@@ -21,29 +21,29 @@ cd /opt/smartvenue
 
 ### Update to Latest Version
 ```bash
-cd /opt/smartvenue
+cd /opt/tapcommand
 ./update.sh
 ```
 
 ### View Backend Logs
 ```bash
-sudo journalctl -u smartvenue-backend.service -f
+sudo journalctl -u tapcommand-backend.service -f
 ```
 
 ### Restart Services
 ```bash
-sudo systemctl restart smartvenue-backend.service
+sudo systemctl restart tapcommand-backend.service
 sudo systemctl reload nginx
 ```
 
 ### Backup Database
 ```bash
-cp /opt/smartvenue/backend/smartvenue.db ~/smartvenue_backup_$(date +%Y%m%d).db
+cp /opt/tapcommand/backend/tapcommand.db ~/tapcommand_backup_$(date +%Y%m%d).db
 ```
 
 ### Check Service Status
 ```bash
-sudo systemctl status smartvenue-backend.service
+sudo systemctl status tapcommand-backend.service
 sudo systemctl status nginx
 ```
 
@@ -58,7 +58,7 @@ http://<server-ip-address>
 
 **Backend won't start?**
 ```bash
-sudo journalctl -u smartvenue-backend.service -n 50
+sudo journalctl -u tapcommand-backend.service -n 50
 ```
 
 **Frontend not loading?**
@@ -69,7 +69,7 @@ sudo systemctl reload nginx
 
 **After update, database errors?**
 ```bash
-cd /opt/smartvenue/backend
+cd /opt/tapcommand/backend
 source venv/bin/activate
 python migrate_database.py
 ```
@@ -78,11 +78,11 @@ python migrate_database.py
 
 ## File Locations
 
-- **Application**: `/opt/smartvenue/`
-- **Database**: `/opt/smartvenue/backend/smartvenue.db`
-- **Backups**: `/opt/smartvenue/backups/`
-- **Logs**: `sudo journalctl -u smartvenue-backend.service`
-- **Nginx Config**: `/etc/nginx/sites-available/smartvenue`
+- **Application**: `/opt/tapcommand/`
+- **Database**: `/opt/tapcommand/backend/tapcommand.db`
+- **Backups**: `/opt/tapcommand/backups/`
+- **Logs**: `sudo journalctl -u tapcommand-backend.service`
+- **Nginx Config**: `/etc/nginx/sites-available/tapcommand`
 
 ---
 

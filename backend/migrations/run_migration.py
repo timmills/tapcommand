@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 # Database path
-DB_PATH = Path(__file__).parent.parent / "smartvenue.db"
+DB_PATH = Path(__file__).parent.parent / "tapcommand.db"
 MIGRATIONS_DIR = Path(__file__).parent
 
 
@@ -67,7 +67,7 @@ def check_columns_exist():
 
 
 if __name__ == "__main__":
-    print("🔧 SmartVenue Database Migration Runner")
+    print("🔧 TapCommand Database Migration Runner")
     print(f"Database: {DB_PATH}")
     print()
 

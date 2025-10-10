@@ -28,7 +28,7 @@ export const RootLayout = () => {
           <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/70 backdrop-blur">
             <div className={`mx-auto flex items-center justify-between px-4 py-4 ${isFullWidth ? '' : 'max-w-6xl'}`}>
               <div>
-                <h2 className="text-xl font-semibold text-slate-900">SmartVenue control center</h2>
+                <h2 className="text-xl font-semibold text-slate-900">TapCommand control center</h2>
                 <p className="text-sm text-slate-500">Manage IR controllers, discovery, and firmware generation from anywhere.</p>
               </div>
             </div>

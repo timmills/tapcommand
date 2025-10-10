@@ -173,7 +173,7 @@ async def main():
     args = parser.parse_args()
 
     logger.info("=" * 80)
-    logger.info("SmartVenue Network Scanner")
+    logger.info("TapCommand Network Scanner")
     logger.info("=" * 80)
 
     if args.continuous:

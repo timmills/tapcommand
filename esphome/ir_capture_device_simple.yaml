@@ -10,7 +10,7 @@ esphome:
   name: ${device_name}
   platform: ESP32
   board: esp32dev
-  comment: "IR remote code capture device for SmartVenue"
+  comment: "IR remote code capture device for TapCommand"
 
 # WiFi configuration
 # IMPORTANT: These will be read from database when using compile button
@@ -106,7 +106,7 @@ text_sensor:
 #    [remote.raw] Received Raw: [4500, 4500, 560, 1690, ...]
 #    OR
 #    [remote_receiver] Received NEC: address=0x04, command=0x08
-# 7. Copy the code data and paste into SmartVenue web interface
+# 7. Copy the code data and paste into TapCommand web interface
 #
 # ==================== EXAMPLE LOG OUTPUT ====================
 #

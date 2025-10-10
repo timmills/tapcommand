@@ -1,8 +1,8 @@
-# SmartVenue TV Discovery Tool - Onsite Usage Guide
+# TapCommand TV Discovery Tool - Onsite Usage Guide
 
 ## Overview
 
-`venue_tv_discovery.py` is a standalone script for onsite venue surveys to discover and catalog network-controllable TVs. This tool identifies TVs that can be adopted into SmartVenue for network control (faster, more reliable than IR).
+`venue_tv_discovery.py` is a standalone script for onsite venue surveys to discover and catalog network-controllable TVs. This tool identifies TVs that can be adopted into TapCommand for network control (faster, more reliable than IR).
 
 ## What It Does
 
@@ -10,7 +10,7 @@
 2. **Identifies TV brands** via MAC address lookup (Samsung, LG, Sony, Philips, etc.)
 3. **Detects protocols** by port scanning (Samsung Legacy, Samsung Modern, LG WebOS, Sony IRCC, etc.)
 4. **Gathers device details** (model, firmware, etc.)
-5. **Generates reports** in JSON and CSV formats for import into SmartVenue
+5. **Generates reports** in JSON and CSV formats for import into TapCommand
 
 ## Pre-Installation (On Your Laptop)
 
@@ -88,8 +88,8 @@ python3 venue_tv_discovery.py 192.168.1 --range 1-50
    tv_discovery_report_20251004_143022.csv
    ```
 
-6. **Import into SmartVenue**
-   - Upload JSON/CSV to SmartVenue admin portal
+6. **Import into TapCommand**
+   - Upload JSON/CSV to TapCommand admin portal
    - System will create virtual controllers
    - Initiate pairing for each TV
 
@@ -99,7 +99,7 @@ python3 venue_tv_discovery.py 192.168.1 --range 1-50
 
 ```
 ======================================================================
-SmartVenue Network TV Discovery
+TapCommand Network TV Discovery
 ======================================================================
 
 [*] Scanning 192.168.1.1-254 with nmap...
@@ -157,7 +157,7 @@ Sony Bravia TVs (1 found):
   • Settings → Network → IP Control → Authentication
   • IPs: 192.168.1.120
 
-All discovered TVs can be adopted into SmartVenue.
+All discovered TVs can be adopted into TapCommand.
 Import the JSON/CSV report to proceed with adoption.
 
 Discovery complete!
@@ -309,7 +309,7 @@ If scan seems stuck, it's likely the nmap phase (can take 30-60s for /24 network
 
 ## What Happens After Discovery?
 
-1. **Upload Reports** to SmartVenue admin panel
+1. **Upload Reports** to TapCommand admin panel
 2. **System creates virtual controllers** for each TV
 3. **Pairing initiated** based on protocol:
    - Samsung Legacy: Accept on TV screen
@@ -369,7 +369,7 @@ tv_discovery_report_20251004_143022.csv   # Spreadsheet format
 For issues or questions:
 - Check this README
 - Review console output for error messages
-- Contact SmartVenue support with report files
+- Contact TapCommand support with report files
 
 ## Version History
 
@@ -382,5 +382,5 @@ For issues or questions:
 
 ---
 
-**Script Location**: `/home/coastal/smartvenue/venue_tv_discovery.py`
+**Script Location**: `/home/coastal/tapcommand/venue_tv_discovery.py`
 **Last Updated**: October 4, 2025

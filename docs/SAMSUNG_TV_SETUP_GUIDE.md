@@ -48,7 +48,7 @@ Samsung Smart TVs require specific settings to be enabled for network control to
 
 ### Step 3: Test Basic Connectivity
 
-**From SmartVenue server:**
+**From TapCommand server:**
 ```bash
 # Test if TV responds to ping (must be powered on)
 ping 192.168.101.48
@@ -119,7 +119,7 @@ curl http://192.168.101.48:8001/api/v2/
 
 **Run discovery test:**
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python test_samsung_discovery.py
 ```
@@ -143,7 +143,7 @@ Testing 192.168.101.48...
 
 ```bash
 # Test pairing with first TV
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 
 # Create pairing script
@@ -153,7 +153,7 @@ from samsungtvws import SamsungTVWS
 tv = SamsungTVWS(
     host='192.168.101.48',
     port=8001,
-    name='SmartVenue Control System',
+    name='TapCommand Control System',
     timeout=10
 )
 
@@ -174,7 +174,7 @@ EOF
 
 **What happens:**
 1. Script initiates connection
-2. TV displays pop-up: "Allow SmartVenue Control System to connect?"
+2. TV displays pop-up: "Allow TapCommand Control System to connect?"
 3. Select **Allow** using TV remote (within 30 seconds)
 4. Script returns authentication token
 
@@ -199,7 +199,7 @@ tv = SamsungTVWS(
     host='192.168.101.48',
     port=8001,
     token='YOUR_TOKEN_HERE',  # From pairing step
-    name='SmartVenue Control System'
+    name='TapCommand Control System'
 )
 
 # Send power command
@@ -233,7 +233,7 @@ tv.shortcuts().hdmi2()  # Switch to HDMI 2
 
 **Current Setup:**
 ```
-SmartVenue Hub: 192.168.101.153/24
+TapCommand Hub: 192.168.101.153/24
 Samsung TV #1:  192.168.101.48/24
 Samsung TV #2:  192.168.101.50/24
 Samsung TV #3:  192.168.101.52/24
@@ -265,9 +265,9 @@ Gateway: (check TV network settings)
 1. **Pair first TV** (192.168.101.48) using pairing script
 2. **Test basic commands** (power, volume, input)
 3. **Document token** securely
-4. **Create virtual device** entry in SmartVenue database
+4. **Create virtual device** entry in TapCommand database
 5. **Assign port 1** with Samsung TV library
-6. **Test via SmartVenue API** using existing command endpoint
+6. **Test via TapCommand API** using existing command endpoint
 
 ### Long-term Integration
 
@@ -358,7 +358,7 @@ wscat -c ws://192.168.101.48:8001/api/v2/channels/samsung.remote.control
 - Create virtual device entry
 - Add network credentials
 - Assign library to port 1
-- Test via SmartVenue API
+- Test via TapCommand API
 
 **Phase 4: Rollout (1 hour)**
 - Pair remaining 2 TVs

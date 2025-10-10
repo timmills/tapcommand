@@ -13,7 +13,7 @@
 - Model: Samsung LA40D550 (2011 D-series)
 - Protocol: Legacy Samsung protocol (port 55000)
 - Port 55000: **OPEN** ✓
-- Network: Same subnet as SmartVenue (192.168.101.x)
+- Network: Same subnet as TapCommand (192.168.101.x)
 - Status: Online and reachable
 
 **Library Used:** `samsungctl` (not `samsungtvws`)
@@ -61,21 +61,21 @@ This is the same pairing flow as newer Samsung TVs - the user must accept the co
 Run the pairing script:
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python test_legacy_samsung.py
 ```
 
 **What happens:**
 1. Script connects to TV on port 55000
-2. TV displays on-screen prompt: "Allow SmartVenue to connect?"
+2. TV displays on-screen prompt: "Allow TapCommand to connect?"
 3. **Accept on TV within 30 seconds** using remote
 4. Connection succeeds and test commands execute
 
 ### Step 3: Accept Pairing on TV Screen
 
 **Watch for pop-up on TV:**
-- Message: "SmartVenue wants to connect to this TV"
+- Message: "TapCommand wants to connect to this TV"
 - Options: "Allow" / "Deny"
 - **Select "Allow" using TV remote**
 
@@ -120,9 +120,9 @@ Once paired, the following commands are available:
 import samsungctl
 
 config = {
-    "name": "SmartVenue",
-    "description": "SmartVenue Control System",
-    "id": "smartvenue",
+    "name": "TapCommand",
+    "description": "TapCommand Control System",
+    "id": "tapcommand",
     "host": "192.168.101.50",
     "port": 55000,
     "method": "legacy",
@@ -182,7 +182,7 @@ def send_tv_command(hostname: str, command: str):
             "host": device.ip_address,
             "port": 55000,
             "method": "legacy",
-            "name": "SmartVenue",
+            "name": "TapCommand",
         }
         with samsungctl.Remote(config) as remote:
             remote.control(f"KEY_{command.upper()}")
@@ -202,7 +202,7 @@ def send_tv_command(hostname: str, command: str):
 3. **Map IR commands to KEY codes** (create translation table)
 4. **Implement backend API endpoint** for legacy Samsung control
 5. **Create virtual device entry** in database
-6. **Test via SmartVenue API** using existing command structure
+6. **Test via TapCommand API** using existing command structure
 
 ---
 

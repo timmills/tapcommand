@@ -35,12 +35,12 @@ Hisense TVs run an MQTT broker (mosquitto 1.4.2) on port 36669:
 ### Command Flow
 
 ```
-SmartVenue → MQTT Connection → Hisense TV (port 36669) → Command Execution
+TapCommand → MQTT Connection → Hisense TV (port 36669) → Command Execution
 ```
 
 For power-on:
 ```
-SmartVenue → WOL Magic Packet → TV Wake → MQTT Connection → Power Command
+TapCommand → WOL Magic Packet → TV Wake → MQTT Connection → Power Command
 ```
 
 ---
@@ -145,7 +145,7 @@ elif device.device_type_guess == "hisense_vidaa":
 ### 1. Install Dependencies
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 pip install hisensetv wakeonlan
 ```
@@ -167,7 +167,7 @@ The network discovery system will automatically detect Hisense TVs:
 **File:** `backend/test_hisense.py`
 
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 
 # Edit test_hisense.py and set:
@@ -252,7 +252,7 @@ INSERT INTO virtual_controllers (
 ### Wake-on-LAN (Recommended)
 
 When MAC address is configured:
-1. SmartVenue sends 16 WOL magic packets
+1. TapCommand sends 16 WOL magic packets
 2. TV wakes from deep sleep (5-15 seconds)
 3. Success response returned immediately
 4. User waits for TV to fully boot
@@ -376,7 +376,7 @@ Some models require first-time pairing:
 1. Watch TV screen when connecting
 2. Accept authorization prompt
 3. Or use RemoteNow app to pair first
-4. After pairing, SmartVenue connections work
+4. After pairing, TapCommand connections work
 
 ---
 
@@ -519,7 +519,7 @@ tv.send_key_amazon()    # Launch Prime Video
 - Allow UDP 9 for WOL
 
 **Network Topology:**
-- Same subnet as SmartVenue server
+- Same subnet as TapCommand server
 - Low latency for fast response
 
 ---
@@ -535,7 +535,7 @@ Before production deployment:
 - [ ] Channel navigation works
 - [ ] WOL wakes TV from standby (if enabled)
 - [ ] Virtual Controller adoption successful
-- [ ] Commands work via SmartVenue API
+- [ ] Commands work via TapCommand API
 - [ ] Error handling tested (TV off, wrong IP, etc.)
 - [ ] Execution time < 500ms for commands
 
@@ -579,4 +579,4 @@ Before production deployment:
 
 **Implementation Status:** ✅ Complete and ready for testing
 **Last Updated:** October 6, 2025
-**Maintainer:** SmartVenue Backend Team
+**Maintainer:** TapCommand Backend Team

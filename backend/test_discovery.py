@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple test script for SmartVenue device discovery
+Simple test script for TapCommand device discovery
 Run this to test mDNS discovery without starting the full API
 """
 

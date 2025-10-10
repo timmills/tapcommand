@@ -23,7 +23,7 @@ from .database_report_service import DatabaseReportService
 logger = logging.getLogger(__name__)
 
 # Backup configuration
-BACKUP_ROOT = Path("/home/coastal/smartvenue/backups")
+BACKUP_ROOT = Path("/home/coastal/tapcommand/backups")
 BACKUP_DAILY_DIR = BACKUP_ROOT / "daily"
 BACKUP_WEEKLY_DIR = BACKUP_ROOT / "weekly"
 BACKUP_MONTHLY_DIR = BACKUP_ROOT / "monthly"
@@ -265,20 +265,20 @@ class BackupService:
             # Determine backup directory and filename (always .gz compressed)
             if backup_type == "daily":
                 backup_dir = BACKUP_DAILY_DIR
-                filename = f"smartvenue_daily_{datetime.now().strftime('%Y-%m-%d')}.db.gz"
+                filename = f"tapcommand_daily_{datetime.now().strftime('%Y-%m-%d')}.db.gz"
             elif backup_type == "weekly":
                 backup_dir = BACKUP_WEEKLY_DIR
                 week_num = datetime.now().isocalendar()[1]
-                filename = f"smartvenue_weekly_{datetime.now().strftime('%Y')}-W{week_num:02d}.db.gz"
+                filename = f"tapcommand_weekly_{datetime.now().strftime('%Y')}-W{week_num:02d}.db.gz"
             elif backup_type == "monthly":
                 backup_dir = BACKUP_MONTHLY_DIR
-                filename = f"smartvenue_monthly_{datetime.now().strftime('%Y-%m')}.db.gz"
+                filename = f"tapcommand_monthly_{datetime.now().strftime('%Y-%m')}.db.gz"
             elif backup_type == "emergency":
                 backup_dir = BACKUP_DAILY_DIR
-                filename = f"smartvenue_emergency_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.db.gz"
+                filename = f"tapcommand_emergency_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.db.gz"
             else:  # manual
                 backup_dir = BACKUP_DAILY_DIR
-                filename = f"smartvenue_manual_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.db.gz"
+                filename = f"tapcommand_manual_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.db.gz"
 
             # Create temporary uncompressed backup first
             temp_backup = backup_dir / filename.replace('.gz', '')

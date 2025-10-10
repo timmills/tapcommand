@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-SmartVenue Network TV Discovery Tool (nmap optional)
+TapCommand Network TV Discovery Tool (nmap optional)
 ====================================================
 
 Standalone script for onsite venue surveys to discover network-controllable TVs.
@@ -369,7 +369,7 @@ async def discover_tvs_on_network_async(subnet: str = "192.168.1", start: int = 
     """Main discovery function - find all TVs on network"""
 
     print(f"\n{Colors.HEADER}{'='*70}{Colors.ENDC}")
-    print(f"{Colors.HEADER}{Colors.BOLD}SmartVenue Network TV Discovery - ALL BRANDS{Colors.ENDC}")
+    print(f"{Colors.HEADER}{Colors.BOLD}TapCommand Network TV Discovery - ALL BRANDS{Colors.ENDC}")
     print(f"{Colors.HEADER}{'='*70}{Colors.ENDC}\n")
 
     print(f"{Colors.OKCYAN}Scanning for: Samsung, LG, Sony, Philips, Roku, Apple TV,{Colors.ENDC}")
@@ -549,12 +549,12 @@ def print_adoption_guide(tvs: List[Dict]):
         print(f"  Protocols: {', '.join(set([p for tv in vendor_tvs for p in tv.get('protocols', [])]))}")
         print()
 
-    print(f"{Colors.OKBLUE}All discovered TVs can be adopted into SmartVenue.{Colors.ENDC}")
+    print(f"{Colors.OKBLUE}All discovered TVs can be adopted into TapCommand.{Colors.ENDC}")
     print(f"{Colors.OKBLUE}Import the JSON/CSV report to proceed with adoption.{Colors.ENDC}\n")
 
 def main():
     parser = argparse.ArgumentParser(
-        description='SmartVenue Network TV Discovery Tool - Find ALL TV brands',
+        description='TapCommand Network TV Discovery Tool - Find ALL TV brands',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Supported Brands:

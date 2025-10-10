@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 # Database path - adjust if needed
-DB_PATH = "smartvenue.db"
+DB_PATH = "tapcommand.db"
 
 def migrate_database():
     """Perform the database migration to remove Foxtel distinction"""

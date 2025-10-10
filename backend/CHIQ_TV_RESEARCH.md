@@ -81,7 +81,7 @@ pip install androidtvremote2
 from androidtvremote2 import AndroidTVRemote
 
 # Connect to TV
-tv = AndroidTVRemote("192.168.1.50", "SmartVenue")
+tv = AndroidTVRemote("192.168.1.50", "TapCommand")
 
 # Pair (one-time, shows code on TV)
 await tv.async_connect()
@@ -219,7 +219,7 @@ class CHiQExecutor(CommandExecutor):
                 )
 
             # Connect to TV
-            tv = AndroidTVRemote(command.ip_address, "SmartVenue")
+            tv = AndroidTVRemote(command.ip_address, "TapCommand")
             tv.certificate = pairing_cert
 
             await tv.async_connect()
@@ -298,7 +298,7 @@ async def start_pairing(request: PairingStartRequest):
     User must enter this code to complete pairing
     """
     try:
-        tv = AndroidTVRemote(request.ip_address, "SmartVenue")
+        tv = AndroidTVRemote(request.ip_address, "TapCommand")
         await tv.async_connect()
 
         # Pairing code will be shown on TV screen
@@ -323,7 +323,7 @@ async def complete_pairing(request: PairingCodeRequest):
     Returns pairing certificate to store in database
     """
     try:
-        tv = AndroidTVRemote(request.ip_address, "SmartVenue")
+        tv = AndroidTVRemote(request.ip_address, "TapCommand")
         await tv.async_connect()
         await tv.async_pair(request.pairing_code)
 
@@ -371,7 +371,7 @@ async def _poll_chiq(self, device: VirtualDevice) -> Optional[Dict[str, Any]]:
         if not pairing_cert:
             return None
 
-        tv = AndroidTVRemote(device.ip_address, "SmartVenue")
+        tv = AndroidTVRemote(device.ip_address, "TapCommand")
         tv.certificate = pairing_cert
         await tv.async_connect()
 
@@ -398,16 +398,16 @@ async def _poll_chiq(self, device: VirtualDevice) -> Optional[Dict[str, Any]]:
 
 ### Step 1: Ensure TV is on Network
 
-CHiQ TV must be connected to the same network as SmartVenue:
+CHiQ TV must be connected to the same network as TapCommand:
 - Connect via WiFi (2.4 GHz only) or Ethernet
 
 ### Step 2: Pair with TV
 
-1. In SmartVenue, click "Add CHiQ TV"
+1. In TapCommand, click "Add CHiQ TV"
 2. Enter TV IP address
 3. Click "Start Pairing"
 4. **TV will show 4-digit code on screen**
-5. Enter code in SmartVenue
+5. Enter code in TapCommand
 6. Click "Complete Pairing"
 7. Pairing certificate stored automatically
 

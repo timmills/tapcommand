@@ -37,7 +37,7 @@ assigned_ports = sorted(set(profile.port_number for profile in assigned_port_pro
 
 ### 🔧 **Technical Details**
 
-**Modified File**: `/home/coastal/smartvenue/backend/app/routers/templates.py`
+**Modified File**: `/home/coastal/tapcommand/backend/app/routers/templates.py`
 
 **Key Changes**:
 - **Line 616**: Added port filtering logic in `_build_shared_scripts()`
@@ -87,7 +87,7 @@ AttributeError: 'PortProfile' object has no attribute 'library_id'. Did you mean
 
 **Serial Monitor Requirements**:
 - Need sudo access or dialout group membership
-- ESPHome available at `/home/coastal/smartvenue/venv/bin/esphome`
+- ESPHome available at `/home/coastal/tapcommand/venv/bin/esphome`
 - Ready for direct flash and monitoring
 
 ## 📁 **Architecture Context**
@@ -128,7 +128,7 @@ Users can now:
 - Deploy multi-device IR blaster configurations
 - Use the full 5-port hardware capability
 
-The SmartVenue IR system is now fully functional for multi-port configurations!
+The TapCommand IR system is now fully functional for multi-port configurations!
 
 ---
 *Last Updated: September 23, 2025 - YAML Generation Issue Resolved*

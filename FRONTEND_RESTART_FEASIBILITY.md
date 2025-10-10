@@ -3,7 +3,7 @@
 
 ## Executive Summary
 
-After conducting a comprehensive analysis of the SmartVenue application architecture and reviewing detailed technical forensics, I've assessed the feasibility of restarting the frontend from scratch. **The conclusion is that a fresh frontend restart is not only viable but essential**, given the excellent backend API foundation and the current state of frontend build failures.
+After conducting a comprehensive analysis of the TapCommand application architecture and reviewing detailed technical forensics, I've assessed the feasibility of restarting the frontend from scratch. **The conclusion is that a fresh frontend restart is not only viable but essential**, given the excellent backend API foundation and the current state of frontend build failures.
 
 **UPDATED FINDING**: The current frontend has **>90 TypeScript errors** and literally cannot build under strict TypeScript configuration. This moves the recommendation from "highly recommended" to **"absolutely necessary"**.
 
@@ -189,7 +189,7 @@ src/
 ### Phase 1: Foundation (Week 1) - ENHANCED
 ```bash
 # Day 1-2: Project setup with verified dependencies
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 mv frontend frontend-legacy  # Archive current broken frontend
 npm create vite@latest frontend -- --template react-ts
 cd frontend
@@ -395,7 +395,7 @@ VITE_FEATURE_FLAGS=devices,ir-config,templates
 5. **Implement incrementally** with regular stakeholder reviews
 6. **Plan deployment strategy** for seamless transition
 
-The SmartVenue application has a **world-class backend** and clear business requirements. A fresh frontend implementation will unlock the full potential of this system while providing a maintainable foundation for future development.
+The TapCommand application has a **world-class backend** and clear business requirements. A fresh frontend implementation will unlock the full potential of this system while providing a maintainable foundation for future development.
 
 ---
 
@@ -419,4 +419,4 @@ The SmartVenue application has a **world-class backend** and clear business requ
 - Implementation guide from backend developer
 - Git history analysis of working vs broken states
 
-*This comprehensive analysis proves that a fresh frontend start is not just recommended but essential for the SmartVenue application's success.*
+*This comprehensive analysis proves that a fresh frontend start is not just recommended but essential for the TapCommand application's success.*

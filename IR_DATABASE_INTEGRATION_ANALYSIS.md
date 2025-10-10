@@ -105,8 +105,8 @@ NEC -> {"address": "20 00 00 00", "command": "02 00 00 00"}       // Space-separ
 - [User mentioned having another idea - waiting for input]
 
 ## Files Modified
-- `/home/coastal/smartvenue/backend/smartvenue.db` - Added ESPHome native commands
-- Analysis of `/home/coastal/smartvenue/backend/app/routers/templates.py`
+- `/home/coastal/tapcommand/backend/tapcommand.db` - Added ESPHome native commands
+- Analysis of `/home/coastal/tapcommand/backend/app/routers/templates.py`
 
 ## Key Functions
 - `_build_native_transmissions()` - Hardcoded path (line 274)

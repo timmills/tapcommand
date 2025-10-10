@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database cleanup script for fresh SmartVenue installations.
+Database cleanup script for fresh TapCommand installations.
 Removes cached discovery data and resets the database to a clean state.
 """
 
@@ -139,7 +139,7 @@ def cleanup_database(db_path: str, keep_ir_libraries: bool = True):
 def main():
     # Find database file
     backend_dir = Path(__file__).parent.parent
-    db_path = backend_dir / "smartvenue.db"
+    db_path = backend_dir / "tapcommand.db"
 
     if not db_path.exists():
         print(f"❌ Database not found at: {db_path}")

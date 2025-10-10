@@ -1,4 +1,4 @@
-# SmartVenue Frontend Action Plan & Options
+# TapCommand Frontend Action Plan & Options
 
 ## Strategic Decision Framework
 
@@ -49,7 +49,7 @@ Testing: Vitest + Testing Library
 #### Phase 1: Foundation (Days 1-5)
 ```bash
 # Day 1: Project Setup
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 mv frontend frontend-legacy  # Backup current version
 npm create vite@latest frontend -- --template react-ts
 cd frontend
@@ -273,7 +273,7 @@ Fixing Tag Management alone won't solve these underlying problems.
 ### If Choosing Option A (Fresh Start) - RECOMMENDED
 ```bash
 # 1. Create backup and new project
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 cp -r frontend frontend-backup-$(date +%Y%m%d)
 npm create vite@latest frontend-v2 -- --template react-ts
 
@@ -351,7 +351,7 @@ npm install zustand
    - Better user experience and application stability
    - Technical foundation for scaling the business
 
-**The SmartVenue application deserves a frontend that matches the quality of its excellent backend. A fresh start will unlock the full potential of this system.**
+**The TapCommand application deserves a frontend that matches the quality of its excellent backend. A fresh start will unlock the full potential of this system.**
 
 ---
 

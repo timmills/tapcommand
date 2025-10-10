@@ -29,7 +29,7 @@ class FirmwareBuilder:
 
     async def compile_yaml(self, yaml_content: str) -> FirmwareBuildResult:
         """Compile the provided YAML and return the result."""
-        temp_dir = Path(tempfile.mkdtemp(prefix="smartvenue-esphome-", dir=self.workspace))
+        temp_dir = Path(tempfile.mkdtemp(prefix="tapcommand-esphome-", dir=self.workspace))
         yaml_path = temp_dir / "firmware.yaml"
         yaml_path.write_text(yaml_content)
 
@@ -96,7 +96,7 @@ class FirmwareBuilder:
         output_callback: Callable[[str], None]
     ) -> FirmwareBuildResult:
         """Compile YAML with real-time output streaming."""
-        temp_dir = Path(tempfile.mkdtemp(prefix="smartvenue-esphome-", dir=self.workspace))
+        temp_dir = Path(tempfile.mkdtemp(prefix="tapcommand-esphome-", dir=self.workspace))
         yaml_path = temp_dir / "firmware.yaml"
         yaml_path.write_text(yaml_content)
 
@@ -187,6 +187,6 @@ class FirmwareBuilder:
 
 
 def get_firmware_builder() -> FirmwareBuilder:
-    workspace = Path(tempfile.gettempdir()) / "smartvenue-esphome"
+    workspace = Path(tempfile.gettempdir()) / "tapcommand-esphome"
     workspace.mkdir(parents=True, exist_ok=True)
     return FirmwareBuilder(workspace)

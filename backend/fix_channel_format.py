@@ -5,7 +5,7 @@ Remove 'channel:' prefix and replace with actual foxtel_number
 import sqlite3
 import re
 
-conn = sqlite3.connect('smartvenue.db')
+conn = sqlite3.connect('tapcommand.db')
 cursor = conn.cursor()
 
 # Get all ports with default_channel that starts with 'channel:'

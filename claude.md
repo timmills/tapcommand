@@ -1,4 +1,4 @@
-# SmartVenue Development Plan
+# TapCommand Development Plan
 
 ## Project Overview
 Commercial hospitality display management system for pubs/restaurants. Replace 75+ minutes of daily manual TV control with centralized automation. Target: <5 minutes via touchscreen interface.
@@ -138,7 +138,7 @@ ESP8266 IR Blasters (5 ports each) → TVs/Audio/Foxtel via IR library selection
 
 ## Current File Structure
 ```
-smartvenue/
+tapcommand/
 ├── backend/
 │   ├── app/
 │   │   ├── api/           # REST endpoints
@@ -249,7 +249,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 git push origin main
 ```
 
-**GitHub Repository**: https://github.com/timmills/smartvenue-device-management
+**GitHub Repository**: https://github.com/timmills/tapcommand-device-management
 
 ## Allowed Bash Commands
 

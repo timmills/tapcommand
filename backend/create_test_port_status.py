@@ -11,7 +11,7 @@ import sqlite3
 from datetime import datetime
 
 def create_test_data():
-    conn = sqlite3.connect('smartvenue.db')
+    conn = sqlite3.connect('tapcommand.db')
     cursor = conn.cursor()
 
     print("Creating test port status data...")

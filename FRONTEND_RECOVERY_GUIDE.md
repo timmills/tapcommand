@@ -1,11 +1,11 @@
-# 🚀 SmartVenue Frontend Recovery Guide
+# 🚀 TapCommand Frontend Recovery Guide
 *A Complete Guide to Rising from the Ashes and Creating a Masterpiece*
 
 ---
 
 ## 🎯 TL;DR - Your Mission (Should You Choose to Accept It)
 
-You're building a **React/TypeScript frontend** for the SmartVenue IR Blaster system. The backend is **ROCK SOLID** and ready for you. This guide will help you create something that actually works instead of... well, whatever happened before.
+You're building a **React/TypeScript frontend** for the TapCommand IR Blaster system. The backend is **ROCK SOLID** and ready for you. This guide will help you create something that actually works instead of... well, whatever happened before.
 
 ---
 
@@ -18,7 +18,7 @@ You're building a **React/TypeScript frontend** for the SmartVenue IR Blaster sy
 - **Tech Stack**: Python 3.12, FastAPI 0.100+, Uvicorn
 
 ### What This System Does
-SmartVenue is an **IR Blaster management system** that:
+TapCommand is an **IR Blaster management system** that:
 1. **Manages IR Libraries**: Collections of IR codes for different devices (TVs, etc.)
 2. **Creates Dynamic Templates**: ESPHome YAML configs that compile to ESP8266 firmware
 3. **Handles Device Discovery**: Finds and manages ESP devices on the network
@@ -117,7 +117,7 @@ GET /api/v1/channels/channels/platform/{platform}
 #### **templates** - ESPHome Base Templates
 ```sql
 - id: Primary key (always use template_id: 1)
-- name: "SmartVenue ESPHome Template (D1 Mini)"
+- name: "TapCommand ESPHome Template (D1 Mini)"
 - version: "1.0.26"
 - template_yaml: Full YAML with {{PLACEHOLDERS}}
 ```
@@ -249,7 +249,7 @@ src/
       "hostname": "ir-abc123",
       "ip": "192.168.101.149",
       "mac": "DC:F8:9F:AB:C1:23",
-      "project": "smartvenue.universal_ir",
+      "project": "tapcommand.universal_ir",
       "version": "1.0.26",
       "capabilities": {
         "brands": ["Generic Samsung", "Generic LG"],
@@ -305,7 +305,7 @@ const assignments: PortAssignment[] = [
 ### Quick Health Check
 ```bash
 curl http://localhost:8000/
-# Should return: {"message": "SmartVenue API is running"}
+# Should return: {"message": "TapCommand API is running"}
 ```
 
 ### Get Available Libraries
@@ -450,11 +450,11 @@ interface ESPDevice {
 ### Development Setup
 ```bash
 # Backend (already running)
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 ./run.sh
 
 # Frontend (your job)
-cd /home/coastal/smartvenue/frontend
+cd /home/coastal/tapcommand/frontend
 npm install
 npm run dev
 # Should open http://localhost:5173

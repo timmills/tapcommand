@@ -66,7 +66,7 @@ def test_websocket_connection(ip: str):
     """Test WebSocket connection (requires pairing)"""
     try:
         # This will trigger on-screen pairing prompt if not already paired
-        tv = SamsungTVWS(host=ip, port=8001, name="SmartVenue Discovery Test")
+        tv = SamsungTVWS(host=ip, port=8001, name="TapCommand Discovery Test")
 
         # Try to get token (won't work without user accepting on TV)
         # Just testing if port is open and responding

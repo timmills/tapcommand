@@ -1,4 +1,4 @@
-# SmartVenue Device Management System
+# TapCommand Device Management System
 ## Dynamic IR Prototype Notes
 
 - Prototype ESPHome firmware: `esphome/prototypes/ir_dynamic_test.yaml`
@@ -21,19 +21,19 @@ python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 #### Run the backend as a service (recommended)
 
 ```bash
-sudo cp deploy/systemd/smartvenue-backend.service /etc/systemd/system/
+sudo cp deploy/systemd/tapcommand-backend.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl enable --now smartvenue-backend.service
-sudo systemctl status smartvenue-backend.service
+sudo systemctl enable --now tapcommand-backend.service
+sudo systemctl status tapcommand-backend.service
 ```
 
 Tail the logs at any time with:
 
 ```bash
-journalctl -u smartvenue-backend.service -f
+journalctl -u tapcommand-backend.service -f
 ```
 
-> The UI will show “Backend API unreachable. Ensure the SmartVenue backend service is running.” if this service is stopped.
+> The UI will show “Backend API unreachable. Ensure the TapCommand backend service is running.” if this service is stopped.
 
 ### Frontend
 ```bash
@@ -169,7 +169,7 @@ Full API documentation: `http://100.93.158.19:8000/docs`
 ## 📁 Project Structure
 
 ```
-smartvenue/
+tapcommand/
 ├── backend/           # FastAPI application
 │   ├── app/
 │   │   ├── api/       # REST API endpoints

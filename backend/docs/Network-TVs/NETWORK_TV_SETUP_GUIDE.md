@@ -1,6 +1,6 @@
 # Network TV Setup Guide
 
-Complete guide for setting up network-controlled TVs with SmartVenue
+Complete guide for setting up network-controlled TVs with TapCommand
 
 **Supported Brands:** Samsung, Hisense, LG, Sony, Roku, Vizio, Philips
 
@@ -9,10 +9,10 @@ Complete guide for setting up network-controlled TVs with SmartVenue
 ## Quick Start
 
 1. **Enable network control** on your TV (see brand-specific sections below)
-2. **Discover TV** using SmartVenue network scan
+2. **Discover TV** using TapCommand network scan
 3. **Complete authentication** (if required by your brand)
 4. **Test commands** to verify functionality
-5. **Adopt as Virtual Controller** in SmartVenue
+5. **Adopt as Virtual Controller** in TapCommand
 
 ---
 
@@ -30,7 +30,7 @@ Complete guide for setting up network-controlled TVs with SmartVenue
 
 #### Test Connection
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 python test_legacy_samsung.py
 ```
@@ -59,7 +59,7 @@ python test_legacy_samsung.py
 
 #### Test Connection
 ```bash
-cd /home/coastal/smartvenue/backend
+cd /home/coastal/tapcommand/backend
 source ../venv/bin/activate
 
 # Edit test_hisense.py with your TV's IP
@@ -69,7 +69,7 @@ python test_hisense.py
 #### Wake-on-LAN Setup (Optional)
 1. **Settings** → **Network** → **Wake on LAN**
 2. Enable if available (not all models support)
-3. Configure MAC address in SmartVenue
+3. Configure MAC address in TapCommand
 
 #### Notes
 - ⚠️ WOL unreliable - use WOL + IR fallback for power-on
@@ -90,7 +90,7 @@ python test_hisense.py
 3. Note: Network control usually enabled by default
 
 #### Pairing Process
-1. Run connection from SmartVenue
+1. Run connection from TapCommand
 2. **TV displays pairing code on screen** (6 digits)
 3. Accept pairing on TV within 30 seconds
 4. Pairing key is automatically stored
@@ -99,11 +99,11 @@ python test_hisense.py
 #### Wake-on-LAN Setup
 1. **Settings** → **General** → **Mobile TV On**
 2. Enable "Turn on via WiFi" or "Turn on via Mobile"
-3. Configure MAC address in SmartVenue
+3. Configure MAC address in TapCommand
 
 #### Test Connection
 ```bash
-# Use pylgtv CLI or SmartVenue test
+# Use pylgtv CLI or TapCommand test
 pip install pylgtv
 lgtv 192.168.101.XX scan  # Discover
 lgtv 192.168.101.XX auth  # Pair
@@ -131,7 +131,7 @@ OR (some models):
 1. **Settings** → **Network** → **Remote Start**
 2. Enable **Remote Start**
 
-#### Configure SmartVenue
+#### Configure TapCommand
 - Store PSK in TV credentials
 - PSK sent with each command via `X-Auth-PSK` header
 
@@ -197,7 +197,7 @@ Must pair to get auth token before control works.
 4. TV displays 4-digit PIN code on screen
 5. Enter PIN when prompted
 6. **Save auth token** from output
-7. Store token in SmartVenue credentials
+7. Store token in TapCommand credentials
 
 #### Test Connection
 ```bash
@@ -230,7 +230,7 @@ pyvizio --ip=192.168.101.XX --auth=YOUR_TOKEN volume-up
 #### Port Detection
 - **Android TVs:** Port 1926 (HTTPS)
 - **Non-Android TVs:** Port 1925 (HTTP)
-- SmartVenue auto-detects correct port
+- TapCommand auto-detects correct port
 
 #### Test Connection
 ```bash
@@ -277,7 +277,7 @@ ping 192.168.101.XX
 nc -zv 192.168.101.XX 3000
 ```
 
-### 2. Discovery in SmartVenue
+### 2. Discovery in TapCommand
 
 ```bash
 # Run network scan
@@ -317,7 +317,7 @@ POST /api/virtual-controllers/adopt
 }
 ```
 
-### 6. Verify in SmartVenue
+### 6. Verify in TapCommand
 
 ```bash
 # Send test command
@@ -369,7 +369,7 @@ POST /api/commands
 **Brand-specific solutions:**
 
 **LG webOS:** Accept pairing on TV screen (30 second window)
-**Sony Bravia:** Configure PSK in TV settings, store in SmartVenue
+**Sony Bravia:** Configure PSK in TV settings, store in TapCommand
 **Vizio:** Run pairing process with `pyvizio` CLI
 **Philips:** Configure digest auth credentials
 **Hisense:** May need to accept authorization on TV screen
@@ -391,7 +391,7 @@ POST /api/commands
 
 1. **Verify TV is ON** - Most TVs require power to respond
 2. **Check authentication** - Ensure pairing/PSK is correct
-3. **Test with CLI tools** - Isolate issue to SmartVenue vs TV
+3. **Test with CLI tools** - Isolate issue to TapCommand vs TV
 4. **Review TV logs** - Check for error messages
 5. **Factory reset TV** (last resort) - Re-pair after reset
 
@@ -460,14 +460,14 @@ All commands via network
 
 ### Network Setup
 - ✅ Use static IP or DHCP reservation
-- ✅ Same subnet as SmartVenue server
+- ✅ Same subnet as TapCommand server
 - ✅ Low latency (< 10ms ping)
 - ✅ Wired Ethernet preferred over WiFi
 - ✅ Document TV IP/MAC in spreadsheet
 
 ### Security
 - ✅ Store auth tokens/PSKs encrypted
-- ✅ Limit network access to SmartVenue server
+- ✅ Limit network access to TapCommand server
 - ✅ Use VLAN segmentation in production
 - ✅ Regular credential rotation (if supported)
 
@@ -538,4 +538,4 @@ For brand-specific documentation:
 ---
 
 **Last Updated:** October 6, 2025
-**Maintained by:** SmartVenue Development Team
+**Maintained by:** TapCommand Development Team

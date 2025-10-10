@@ -15,7 +15,7 @@ export const OverviewPage = () => {
     <div className="space-y-8">
       {/* Hero Section */}
       <div className="rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 p-8 text-white">
-        <h1 className="text-3xl font-bold">Welcome to SmartVenue</h1>
+        <h1 className="text-3xl font-bold">Welcome to TapCommand</h1>
         <p className="mt-2 text-lg text-brand-100">
           Control your venue's entertainment systems from anywhere
         </p>
@@ -74,7 +74,7 @@ export const OverviewPage = () => {
 
       {/* How It Works - For All Users */}
       <div className="rounded-lg border border-slate-200 bg-white p-8">
-        <h2 className="text-xl font-semibold text-slate-900">How SmartVenue Works</h2>
+        <h2 className="text-xl font-semibold text-slate-900">How TapCommand Works</h2>
         <p className="mt-2 text-sm text-slate-600">
           A simple guide to controlling your venue's entertainment systems
         </p>
@@ -184,7 +184,7 @@ export const OverviewPage = () => {
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-blue-900">System Architecture</h2>
                 <p className="mt-2 text-sm text-blue-700">
-                  Understanding how SmartVenue components work together
+                  Understanding how TapCommand components work together
                 </p>
               </div>
             </div>
@@ -325,7 +325,7 @@ export const OverviewPage = () => {
               <div className="flex-1">
                 <h2 className="text-xl font-semibold text-rose-900">User Management</h2>
                 <p className="mt-2 text-sm text-rose-700">
-                  Managing users, roles, and permissions in SmartVenue
+                  Managing users, roles, and permissions in TapCommand
                 </p>
               </div>
             </div>
@@ -356,7 +356,7 @@ export const OverviewPage = () => {
                   <h3 className="font-semibold text-slate-900">Roles & Permissions</h3>
                 </div>
                 <p className="mt-2 text-sm text-slate-600">
-                  SmartVenue uses role-based access control with four system roles:
+                  TapCommand uses role-based access control with four system roles:
                 </p>
                 <div className="mt-3 space-y-2">
                   <div className="flex items-start gap-2">

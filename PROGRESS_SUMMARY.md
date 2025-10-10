@@ -1,4 +1,4 @@
-# SmartVenue Hybrid Control - Progress Summary
+# TapCommand Hybrid Control - Progress Summary
 
 **Date:** October 7, 2025
 **Branch:** `feature/hybrid-ir-network-control`
@@ -195,7 +195,7 @@ When you're back, run these steps:
 
 ### Step 1: Pull Latest Code
 ```bash
-cd /home/coastal/smartvenue
+cd /home/coastal/tapcommand
 git pull origin feature/hybrid-ir-network-control
 ```
 

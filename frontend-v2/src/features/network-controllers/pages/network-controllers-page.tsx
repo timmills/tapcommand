@@ -176,7 +176,7 @@ const AdoptionModal = ({ tv, isOpen, onClose, onAdopt }: AdoptionModalProps) => 
             <ul className="mt-2 space-y-1 text-xs text-blue-700">
               <li>✓ Creates a Virtual Controller for this TV</li>
               <li>✓ Maps TV to port 1 of the controller</li>
-              <li>✓ Enables control through SmartVenue</li>
+              <li>✓ Enables control through TapCommand</li>
               <li>✓ Removes from discovery list</li>
             </ul>
           </div>

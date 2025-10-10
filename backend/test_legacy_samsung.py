@@ -8,9 +8,9 @@ import samsungctl
 
 # Samsung LA40D550 at 192.168.101.50
 TV_CONFIG = {
-    "name": "SmartVenue",
-    "description": "SmartVenue Control System",
-    "id": "smartvenue",
+    "name": "TapCommand",
+    "description": "TapCommand Control System",
+    "id": "tapcommand",
     "host": "192.168.101.50",
     "port": 55000,
     "method": "legacy",  # Legacy protocol for D-series
@@ -108,4 +108,4 @@ if __name__ == "__main__":
         print("Next steps:")
         print("1. Create virtual controller entry in database")
         print("2. Store TV credentials")
-        print("3. Integrate with SmartVenue API")
+        print("3. Integrate with TapCommand API")

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Successfully integrated **Bosch Plena Matrix** commercial audio amplifiers (PLM-4Px2x series) into SmartVenue alongside the existing Bosch Praesensa (AES70) support.
+Successfully integrated **Bosch Plena Matrix** commercial audio amplifiers (PLM-4Px2x series) into TapCommand alongside the existing Bosch Praesensa (AES70) support.
 
 ## What Was Added
 

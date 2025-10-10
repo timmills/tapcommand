@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SmartVenue scheduling system allows users to create recurring or one-time automated actions for IR-controlled devices. Schedules can target devices by selection, tags, locations, or all devices, and execute sequences of up to 4 actions with configurable delays.
+The TapCommand scheduling system allows users to create recurring or one-time automated actions for IR-controlled devices. Schedules can target devices by selection, tags, locations, or all devices, and execute sequences of up to 4 actions with configurable delays.
 
 ## Architecture
 
@@ -517,7 +517,7 @@ Or manually drop and recreate if needed.
 For issues or questions:
 - Check logs: `backend/app/services/schedule_processor.py`
 - Review queue metrics: `GET /api/v1/commands/queue/metrics`
-- Inspect database: `sqlite3 smartvenue.db`
+- Inspect database: `sqlite3 tapcommand.db`
 
 ## Version History
 

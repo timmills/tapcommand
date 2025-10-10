@@ -1,4 +1,4 @@
-# SmartVenue ESPHome Optimization Report
+# TapCommand ESPHome Optimization Report
 **Date**: 2025-10-01
 **Summary**: Array-based dispatch optimization + IR Capabilities payload reduction
 
@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-Successfully implemented two major optimizations to the SmartVenue ESPHome firmware generator:
+Successfully implemented two major optimizations to the TapCommand ESPHome firmware generator:
 
 1. **Array-Based Digit Dispatch**: Replaced nested if/else pyramid with static C++ arrays
 2. **IR Capabilities Payload Reduction**: Removed verbose descriptions to prevent OOM crashes
@@ -87,7 +87,7 @@ def _build_digit_dispatch() -> List[str]:
 **Original IR Capabilities Payload** (615 bytes):
 ```json
 {
-  "project":"smartvenue.dynamic_ir",
+  "project":"tapcommand.dynamic_ir",
   "schema":1,
   "ports":[
     {
@@ -358,7 +358,7 @@ def _build_capabilities_payload_lines(
         library_ids.add(profile.library.id)
 
     capabilities: Dict[str, Any] = {
-        "project": "smartvenue.dynamic_ir",
+        "project": "tapcommand.dynamic_ir",
         "schema": 1,
         "ports": ports_payload,
     }
@@ -380,7 +380,7 @@ def _build_capabilities_payload_lines(
 **New Payload** (302 bytes):
 ```json
 {
-  "project":"smartvenue.dynamic_ir",
+  "project":"tapcommand.dynamic_ir",
   "schema":1,
   "ports":[
     {"port":1,"lib":1799,"brand":"Samsung"},
@@ -413,11 +413,11 @@ id(device_hostname).publish_state(App.get_name().c_str());
 ```
 
 ### 2. Template Database Update
-Updated device name prefix from `smartvenue-ir` to `ir`:
+Updated device name prefix from `tapcommand-ir` to `ir`:
 ```yaml
 # Old
 substitutions:
-  device_name: smartvenue-ir  # Generated: smartvenue-ir-dcf89f
+  device_name: tapcommand-ir  # Generated: tapcommand-ir-dcf89f
 
 # New
 substitutions:
@@ -491,19 +491,19 @@ substitutions:
 ## Files Changed
 
 ### Backend (Python)
-1. **`/home/coastal/smartvenue/backend/app/routers/templates.py`**
+1. **`/home/coastal/tapcommand/backend/app/routers/templates.py`**
    - Lines 970-1120: Replaced `_build_digit_dispatch()` with array-based implementation
    - Lines 771-817: Optimized `_build_capabilities_payload_lines()` (removed descriptions)
 
-2. **`/home/coastal/smartvenue/backend/app/routers/BACKUP_original_build_digit_dispatch.py`**
+2. **`/home/coastal/tapcommand/backend/app/routers/BACKUP_original_build_digit_dispatch.py`**
    - New file: Backup of original nested implementation
 
-3. **`/home/coastal/smartvenue/backend/smartvenue.db`**
-   - Updated ESPTemplate (id=1): `device_name: smartvenue-ir` → `device_name: ir`
+3. **`/home/coastal/tapcommand/backend/tapcommand.db`**
+   - Updated ESPTemplate (id=1): `device_name: tapcommand-ir` → `device_name: ir`
    - Incremented revision: 29 → 30
 
 ### Reference YAML Files
-1. **`/home/coastal/smartvenue/esphome/test_optimized_full.yaml`**
+1. **`/home/coastal/tapcommand/esphome/test_optimized_full.yaml`**
    - Manual test YAML proving optimization works
    - Successfully compiled and hardware tested
 

@@ -2,7 +2,7 @@
 """
 Seed Authentication Data
 
-Creates default permissions, roles, and admin user for SmartVenue.
+Creates default permissions, roles, and admin user for TapCommand.
 Safe to run multiple times - will skip existing data.
 
 Usage:
@@ -163,7 +163,7 @@ ROLES = {
 # Default admin user
 DEFAULT_ADMIN = {
     'username': 'admin',
-    'email': 'admin@smartvenue.local',
+    'email': 'admin@tapcommand.local',
     'password': 'admin',  # MUST BE CHANGED on first login
     'full_name': 'System Administrator',
     'is_superuser': True,

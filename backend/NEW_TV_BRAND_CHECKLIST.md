@@ -257,7 +257,7 @@ async def complete_pairing(request: PairingCodeRequest):
   setupSteps: [
     'Ensure TV is on same network',
     'Enable network control in TV settings',
-    'Pair via SmartVenue UI'
+    'Pair via TapCommand UI'
   ],
   notes: [
     'Supports full bidirectional control',

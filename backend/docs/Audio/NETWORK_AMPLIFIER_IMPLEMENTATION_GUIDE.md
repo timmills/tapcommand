@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines the implementation strategy for integrating network-connected audio amplifiers into the SmartVenue device management system, following the same architectural patterns established for network TV control.
+This document outlines the implementation strategy for integrating network-connected audio amplifiers into the TapCommand device management system, following the same architectural patterns established for network TV control.
 
 **Primary Focus**: Bosch Praesensa and PLENA matrix systems
 **Secondary Targets**: AUDAC, Powersoft, Sonos, Crown amplifiers
@@ -27,7 +27,7 @@ This document outlines the implementation strategy for integrating network-conne
 
 ### High-Level Design
 
-Network amplifiers will integrate into the existing SmartVenue architecture using the same patterns as network TV control:
+Network amplifiers will integrate into the existing TapCommand architecture using the same patterns as network TV control:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -1372,7 +1372,7 @@ Praesensa Network
 
 ## Conclusion
 
-This implementation guide provides a complete blueprint for integrating network amplifiers into SmartVenue, with primary focus on Bosch Praesensa systems. The architecture mirrors the successful network TV implementation, ensuring consistency and maintainability.
+This implementation guide provides a complete blueprint for integrating network amplifiers into TapCommand, with primary focus on Bosch Praesensa systems. The architecture mirrors the successful network TV implementation, ensuring consistency and maintainability.
 
 **Key Takeaways**:
 - Reuse existing infrastructure (Virtual Controllers, command queue, protocol router)

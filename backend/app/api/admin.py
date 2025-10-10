@@ -80,7 +80,7 @@ async def admin_dashboard(db: Session = Depends(get_db)):
     <!DOCTYPE html>
     <html>
     <head>
-        <title>SmartVenue Database Admin</title>
+        <title>TapCommand Database Admin</title>
         <style>
             body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; margin: 20px; background: #f8fafc; }}
             .container {{ max-width: 1200px; margin: 0 auto; }}
@@ -107,7 +107,7 @@ async def admin_dashboard(db: Session = Depends(get_db)):
     <body>
         <div class="container">
             <div class="header">
-                <h1>SmartVenue Database Administration</h1>
+                <h1>TapCommand Database Administration</h1>
                 <p>Real-time database monitoring and device management overview</p>
                 <button class="refresh-btn" onclick="refreshData()">🔄 Refresh Data</button>
             </div>

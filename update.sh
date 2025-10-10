@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #######################################################################
-# SmartVenue Update Script
+# TapCommand Update Script
 # Handles updates from git with database migration support
 #######################################################################
 
@@ -87,10 +87,10 @@ create_backup() {
     mkdir -p "$BACKUP_DIR"
 
     # Backup database
-    if [[ -f "$BACKEND_DIR/smartvenue.db" ]]; then
+    if [[ -f "$BACKEND_DIR/tapcommand.db" ]]; then
         print_info "Backing up database..."
-        cp "$BACKEND_DIR/smartvenue.db" "$BACKUP_DIR/smartvenue_${TIMESTAMP}.db"
-        print_success "Database backed up to: $BACKUP_DIR/smartvenue_${TIMESTAMP}.db"
+        cp "$BACKEND_DIR/tapcommand.db" "$BACKUP_DIR/tapcommand_${TIMESTAMP}.db"
+        print_success "Database backed up to: $BACKUP_DIR/tapcommand_${TIMESTAMP}.db"
     fi
 
     # Backup .env files
@@ -244,20 +244,20 @@ restart_services() {
     print_header "Restarting Services"
 
     print_info "Stopping backend service..."
-    sudo systemctl stop smartvenue-backend.service || true
+    sudo systemctl stop tapcommand-backend.service || true
 
     sleep 2
 
     print_info "Starting backend service..."
-    sudo systemctl start smartvenue-backend.service
+    sudo systemctl start tapcommand-backend.service
 
     sleep 3
 
-    if sudo systemctl is-active --quiet smartvenue-backend.service; then
+    if sudo systemctl is-active --quiet tapcommand-backend.service; then
         print_success "Backend service restarted"
     else
         print_error "Backend service failed to start"
-        print_info "Check logs with: sudo journalctl -u smartvenue-backend.service -n 50"
+        print_info "Check logs with: sudo journalctl -u tapcommand-backend.service -n 50"
         exit 1
     fi
 
@@ -278,7 +278,7 @@ verify_update() {
         print_success "Backend is responding"
     else
         print_error "Backend health check failed"
-        print_info "Check logs: sudo journalctl -u smartvenue-backend.service -n 50"
+        print_info "Check logs: sudo journalctl -u tapcommand-backend.service -n 50"
         return 1
     fi
 
@@ -302,10 +302,10 @@ cleanup_old_backups() {
 
     if [[ -d "$BACKUP_DIR" ]]; then
         # Keep only last 10 backups
-        BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/smartvenue_*.db 2>/dev/null | wc -l)
+        BACKUP_COUNT=$(ls -1 "$BACKUP_DIR"/tapcommand_*.db 2>/dev/null | wc -l)
         if [[ $BACKUP_COUNT -gt 10 ]]; then
             print_info "Removing old backups (keeping last 10)..."
-            ls -1t "$BACKUP_DIR"/smartvenue_*.db | tail -n +11 | xargs rm -f
+            ls -1t "$BACKUP_DIR"/tapcommand_*.db | tail -n +11 | xargs rm -f
             print_success "Old backups removed"
         fi
     fi
@@ -322,14 +322,14 @@ rollback() {
     print_info "To rollback manually:"
     echo ""
     echo "  1. Restore database:"
-    echo "     Latest backup: $(ls -1t "$BACKUP_DIR"/smartvenue_*.db 2>/dev/null | head -1)"
-    echo "     cp [backup] $BACKEND_DIR/smartvenue.db"
+    echo "     Latest backup: $(ls -1t "$BACKUP_DIR"/tapcommand_*.db 2>/dev/null | head -1)"
+    echo "     cp [backup] $BACKEND_DIR/tapcommand.db"
     echo ""
     echo "  2. Revert git changes:"
     echo "     git reset --hard HEAD@{1}"
     echo ""
     echo "  3. Restart services:"
-    echo "     sudo systemctl restart smartvenue-backend.service"
+    echo "     sudo systemctl restart tapcommand-backend.service"
     echo ""
 }
 
@@ -338,7 +338,7 @@ rollback() {
 #######################################################################
 
 main() {
-    print_header "SmartVenue Update Script"
+    print_header "TapCommand Update Script"
 
     # Trap errors for rollback info
     trap rollback ERR
@@ -356,7 +356,7 @@ main() {
 
     print_header "Update Complete!"
     echo ""
-    print_success "SmartVenue has been updated successfully!"
+    print_success "TapCommand has been updated successfully!"
     echo ""
     print_info "New version: $(git rev-parse --short HEAD)"
     print_info "Previous version: $(git rev-parse --short HEAD@{1})"

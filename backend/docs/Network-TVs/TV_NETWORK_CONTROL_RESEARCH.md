@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-Based on extensive research, **all major TV brands supported in SmartVenue have network control capabilities** that could complement or replace IR control. This presents a significant opportunity to enhance the SmartVenue system with bidirectional feedback, improved reliability, and advanced monitoring.
+Based on extensive research, **all major TV brands supported in TapCommand have network control capabilities** that could complement or replace IR control. This presents a significant opportunity to enhance the TapCommand system with bidirectional feedback, improved reliability, and advanced monitoring.
 
 **Key Finding:** Modern smart TVs (2015+) universally support some form of local network control via HTTP, WebSocket, or MQTT protocols.
 
@@ -184,7 +184,7 @@ Based on extensive research, **all major TV brands supported in SmartVenue have 
 
 **IR Control (Current):**
 ```
-SmartVenue → ESP8266 → IR LED → TV
+TapCommand → ESP8266 → IR LED → TV
            (one-way, blind)
 ```
 - No confirmation command was received
@@ -194,7 +194,7 @@ SmartVenue → ESP8266 → IR LED → TV
 
 **Network Control:**
 ```
-SmartVenue ←→ TV (WebSocket/HTTP)
+TapCommand ←→ TV (WebSocket/HTTP)
            (two-way, verified)
 ```
 - Immediate success/failure feedback
@@ -283,7 +283,7 @@ Result: "5/6 TVs powered on successfully. Bar TV #3 not responding (network issu
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
-│                    SmartVenue Backend (FastAPI)                     │
+│                    TapCommand Backend (FastAPI)                     │
 │                                                                     │
 │  ┌──────────────────────────────────────────────────────────────┐  │
 │  │         Unified Device Control Abstraction Layer             │  │
@@ -808,7 +808,7 @@ class SamsungTVController(BaseNetworkTVController):
     def __init__(self, ip_address: str, port: int = 8001, token: Optional[str] = None, **kwargs):
         super().__init__(ip_address, port, **kwargs)
         self.token = token
-        self.name = kwargs.get('name', 'SmartVenue Control')
+        self.name = kwargs.get('name', 'TapCommand Control')
 
     async def connect(self) -> bool:
         """Establish WebSocket connection to Samsung TV"""
@@ -1377,7 +1377,7 @@ class TokenManager:
 ┌─────────────────────────────────────────┐
 │  Management VLAN (10.0.1.0/24)         │
 │                                         │
-│  • SmartVenue Hub (10.0.1.10)          │
+│  • TapCommand Hub (10.0.1.10)          │
 │  • Admin Access                         │
 │  • VPN Gateway (Tailscale)             │
 └──────────────┬──────────────────────────┘
@@ -1398,7 +1398,7 @@ class TokenManager:
 - Firewall logs all traffic between VLANs
 
 **If Using Existing "TV" WiFi:**
-- Document that TVs are on same network as SmartVenue hub
+- Document that TVs are on same network as TapCommand hub
 - Consider WPA2-Enterprise for device authentication
 - MAC address filtering for known devices only
 - Regular security audits
