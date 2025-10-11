@@ -1,0 +1,18 @@
+[Unit]
+Description=TapCommand FastAPI Backend
+After=network.target
+
+[Service]
+Type=simple
+User=coastal
+WorkingDirectory=/home/coastal/tapcommand/backend
+ExecStart=/home/coastal/tapcommand/backend/run.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+Environment=TZ=Australia/Sydney
+
+[Install]
+WantedBy=multi-user.target

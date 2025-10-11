@@ -1,0 +1,17 @@
+[Unit]
+Description=TapCommand Network Scanner Service
+After=network.target tapcommand-backend.service
+
+[Service]
+Type=simple
+User=coastal
+WorkingDirectory=/home/coastal/tapcommand/backend
+Environment="PATH=/home/coastal/tapcommand/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ExecStart=/home/coastal/tapcommand/venv/bin/python -m app.services.scheduled_network_scan --interval 10 --subnet 192.168.101
+Restart=always
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

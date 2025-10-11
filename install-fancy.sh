@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #######################################################################
-# TapCommand Fancy Installation Script for Ubuntu 24 Server
+# SmartVenue Fancy Installation Script for Ubuntu 24 Server
 # Enhanced with Gum for a beautiful terminal UI experience
 #######################################################################
 
@@ -12,13 +12,13 @@ trap 'rm -f "$0"' EXIT
 
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-INSTALL_DIR="${SCRIPT_DIR}/tapcommand"
+INSTALL_DIR="${SCRIPT_DIR}/smartvenue"
 APP_USER="${SUDO_USER:-$USER}"
 PYTHON_VERSION="3.12"
 NODE_VERSION="22"
 BACKEND_PORT="8000"
 FRONTEND_PORT="5173"
-REPO_URL="https://github.com/timmills/tapcommand.git"
+REPO_URL="https://github.com/timmills/smartvenue-device-management.git"
 REPO_BRANCH="release"
 
 # Check if gum is available
@@ -165,7 +165,7 @@ install_gum() {
 }
 
 clone_repository() {
-    fancy_header "Cloning TapCommand Repository"
+    fancy_header "Cloning SmartVenue Repository"
 
     # Check if git is available
     if ! command -v git &> /dev/null; then
@@ -320,9 +320,9 @@ setup_database() {
 
     cd "$INSTALL_DIR/backend"
 
-    if [[ -f "tapcommand.db" ]]; then
+    if [[ -f "smartvenue.db" ]]; then
         fancy_success "Database found in repository"
-        chmod 664 tapcommand.db
+        chmod 664 smartvenue.db
 
         # Ask if user wants to clean the database
         fancy_info "Database contains sample/cached data from development"
@@ -360,7 +360,7 @@ setup_environment() {
 
         cat > "$INSTALL_DIR/backend/.env" << EOF
 # Database
-DATABASE_URL=sqlite:///./tapcommand.db
+DATABASE_URL=sqlite:///./smartvenue.db
 
 # CORS Configuration (JSON array format)
 CORS_ORIGINS=$CORS_LIST
@@ -401,9 +401,9 @@ setup_systemd_services() {
     fancy_header "Setting Up Systemd Services"
 
     fancy_info "Creating backend systemd service..."
-    sudo tee /etc/systemd/system/tapcommand-backend.service > /dev/null << EOF
+    sudo tee /etc/systemd/system/smartvenue-backend.service > /dev/null << EOF
 [Unit]
-Description=TapCommand Backend API
+Description=SmartVenue Backend API
 After=network.target
 
 [Service]
@@ -426,10 +426,10 @@ EOF
     SUBNET=$(echo $LOCAL_IP | cut -d'.' -f1-3)
 
     fancy_info "Creating network scanner service..."
-    sudo tee /etc/systemd/system/tapcommand-scanner.service > /dev/null << EOF
+    sudo tee /etc/systemd/system/smartvenue-scanner.service > /dev/null << EOF
 [Unit]
-Description=TapCommand Network Scanner
-After=network.target tapcommand-backend.service
+Description=SmartVenue Network Scanner
+After=network.target smartvenue-backend.service
 
 [Service]
 Type=simple
@@ -469,7 +469,7 @@ setup_nginx() {
     fi
 
     fancy_info "Creating nginx configuration for: $SERVER_NAMES"
-    sudo tee /etc/nginx/sites-available/tapcommand > /dev/null << EOF
+    sudo tee /etc/nginx/sites-available/smartvenue > /dev/null << EOF
 server {
     listen 80;
     server_name $SERVER_NAMES;
@@ -506,7 +506,7 @@ server {
 EOF
 
     # Enable site
-    sudo ln -sf /etc/nginx/sites-available/tapcommand /etc/nginx/sites-enabled/
+    sudo ln -sf /etc/nginx/sites-available/smartvenue /etc/nginx/sites-enabled/
     sudo rm -f /etc/nginx/sites-enabled/default
 
     # Test nginx config
@@ -522,27 +522,27 @@ EOF
 start_services() {
     fancy_header "Starting Services"
 
-    fancy_spin "Enabling backend service..." sudo systemctl enable tapcommand-backend.service
-    fancy_spin "Starting backend service..." sudo systemctl start tapcommand-backend.service
+    fancy_spin "Enabling backend service..." sudo systemctl enable smartvenue-backend.service
+    fancy_spin "Starting backend service..." sudo systemctl start smartvenue-backend.service
     sleep 3
 
-    if sudo systemctl is-active --quiet tapcommand-backend.service; then
+    if sudo systemctl is-active --quiet smartvenue-backend.service; then
         fancy_success "Backend service started"
     else
         fancy_error "Backend service failed to start"
         fancy_info "Recent logs:"
-        sudo journalctl -u tapcommand-backend.service -n 20 --no-pager
+        sudo journalctl -u smartvenue-backend.service -n 20 --no-pager
         exit 1
     fi
 
-    fancy_spin "Enabling network scanner service..." sudo systemctl enable tapcommand-scanner.service
-    fancy_spin "Starting network scanner service..." sudo systemctl start tapcommand-scanner.service
+    fancy_spin "Enabling network scanner service..." sudo systemctl enable smartvenue-scanner.service
+    fancy_spin "Starting network scanner service..." sudo systemctl start smartvenue-scanner.service
     sleep 2
 
-    if sudo systemctl is-active --quiet tapcommand-scanner.service; then
+    if sudo systemctl is-active --quiet smartvenue-scanner.service; then
         fancy_success "Network scanner service started"
     else
-        fancy_warning "Network scanner failed to start (check logs: sudo journalctl -u tapcommand-scanner.service)"
+        fancy_warning "Network scanner failed to start (check logs: sudo journalctl -u smartvenue-scanner.service)"
     fi
 
     fancy_spin "Restarting nginx..." sudo systemctl restart nginx
@@ -580,25 +580,25 @@ verify_installation() {
             --border-foreground 10 \
             --padding "2 4" \
             --margin "1" \
-            "🎉 TapCommand Installed Successfully!" \
+            "🎉 SmartVenue Installed Successfully!" \
             "" \
             "🌐 Access: http://$LOCAL_IP" \
             "" \
-            "📊 Backend logs: sudo journalctl -u tapcommand-backend.service -f" \
-            "🔄 Restart: sudo systemctl restart tapcommand-backend.service" \
-            "📁 Database: $INSTALL_DIR/backend/tapcommand.db"
+            "📊 Backend logs: sudo journalctl -u smartvenue-backend.service -f" \
+            "🔄 Restart: sudo systemctl restart smartvenue-backend.service" \
+            "📁 Database: $INSTALL_DIR/backend/smartvenue.db"
     else
         echo ""
-        fancy_success "TapCommand has been installed successfully!"
+        fancy_success "SmartVenue has been installed successfully!"
         echo ""
         echo "🌐 Access the application at: http://$LOCAL_IP"
         echo ""
         echo "Service Management:"
-        echo "  View backend logs:   sudo journalctl -u tapcommand-backend.service -f"
-        echo "  Restart backend:     sudo systemctl restart tapcommand-backend.service"
-        echo "  Check status:        sudo systemctl status tapcommand-backend.service"
+        echo "  View backend logs:   sudo journalctl -u smartvenue-backend.service -f"
+        echo "  Restart backend:     sudo systemctl restart smartvenue-backend.service"
+        echo "  Check status:        sudo systemctl status smartvenue-backend.service"
         echo ""
-        echo "Database Location: $INSTALL_DIR/backend/tapcommand.db"
+        echo "Database Location: $INSTALL_DIR/backend/smartvenue.db"
         echo ""
     fi
 }
@@ -636,12 +636,12 @@ main() {
             --margin "1 0" \
             --width 60 \
             --align center \
-            "🏢 TapCommand Installation Script" \
+            "🏢 SmartVenue Installation Script" \
             "" \
             "Fancy Terminal UI Edition"
     else
         echo "╔════════════════════════════════════════════════════════╗"
-        echo "║      🏢 TapCommand Installation Script                ║"
+        echo "║      🏢 SmartVenue Installation Script                ║"
         echo "║          Fancy Terminal UI Edition                     ║"
         echo "╚════════════════════════════════════════════════════════╝"
     fi

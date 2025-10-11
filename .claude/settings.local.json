@@ -148,7 +148,9 @@
       "Read(//var/log/**)",
       "Bash(git fetch:*)",
       "Bash(gum:*)",
-      "Bash(./health-check.sh:*)"
+      "Bash(./health-check.sh:*)",
+      "Bash(deactivate)",
+      "Bash(./enable-services.sh:*)"
     ],
     "deny": [],
     "ask": []
