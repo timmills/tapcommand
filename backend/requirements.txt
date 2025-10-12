@@ -9,8 +9,8 @@ aiofiles==23.2.1
 python-dotenv==1.0.0
 httpx
 zeroconf==0.131.0
-aioesphomeapi
-esphome
+aioesphomeapi==40.2.1
+esphome==2025.9.3
 asyncio-mqtt==0.16.1
 apscheduler==3.10.4
 croniter

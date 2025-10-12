@@ -46,11 +46,7 @@ def reset_password(username: str, new_password: str):
     if not is_valid:
         print(f"❌ Password validation failed: {error_message}")
         print("\nPassword requirements:")
-        print("  - At least 8 characters")
-        print("  - At least one uppercase letter")
-        print("  - At least one lowercase letter")
-        print("  - At least one number")
-        print("  - At least one special character (!@#$%^&*)")
+        print("  - At least 4 characters")
         return False
 
     db: Session = SessionLocal()

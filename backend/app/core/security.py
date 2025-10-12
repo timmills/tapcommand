@@ -74,11 +74,11 @@ def validate_password_strength(password: str) -> tuple[bool, Optional[str]]:
     Validate password meets security requirements.
 
     Requirements:
-    - Minimum 8 characters
-    - At least one uppercase letter
-    - At least one lowercase letter
-    - At least one number
-    - At least one special character
+    - Minimum 4 characters (simplified for ease of use in hospitality environment)
+
+    Note: This is intentionally relaxed for internal/embedded systems where
+    physical security is the primary concern. For public-facing deployments,
+    consider implementing stronger requirements.
 
     Args:
         password: Password to validate
@@ -89,27 +89,13 @@ def validate_password_strength(password: str) -> tuple[bool, Optional[str]]:
         If invalid: (False, "error description")
 
     Example:
-        >>> validate_password_strength("weak")
-        (False, "Password must be at least 8 characters long")
-        >>> validate_password_strength("StrongPass123!")
+        >>> validate_password_strength("abc")
+        (False, "Password must be at least 4 characters long")
+        >>> validate_password_strength("admin")
         (True, None)
     """
-    if len(password) < 8:
-        return False, "Password must be at least 8 characters long"
-
-    if not any(c.isupper() for c in password):
-        return False, "Password must contain at least one uppercase letter"
-
-    if not any(c.islower() for c in password):
-        return False, "Password must contain at least one lowercase letter"
-
-    if not any(c.isdigit() for c in password):
-        return False, "Password must contain at least one number"
-
-    # Check for special characters
-    special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?"
-    if not any(c in special_chars for c in password):
-        return False, "Password must contain at least one special character"
+    if len(password) < 4:
+        return False, "Password must be at least 4 characters long"
 
     return True, None
 

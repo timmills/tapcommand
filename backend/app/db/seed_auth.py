@@ -160,14 +160,24 @@ ROLES = {
 }
 
 
-# Default admin user
+# Default users
 DEFAULT_ADMIN = {
     'username': 'admin',
     'email': 'admin@tapcommand.local',
-    'password': 'admin',  # MUST BE CHANGED on first login
+    'password': 'admin',
     'full_name': 'System Administrator',
     'is_superuser': True,
-    'must_change_password': True,
+    'must_change_password': False,  # Simplified for ease of use
+}
+
+DEFAULT_STAFF = {
+    'username': 'staff',
+    'email': 'staff@tapcommand.local',
+    'password': 'staff',
+    'full_name': 'Staff User',
+    'is_superuser': False,
+    'must_change_password': False,
+    'role': 'Operator',  # Day-to-day operational control
 }
 
 
@@ -285,8 +295,8 @@ def seed_auth_data(db: Session) -> dict:
     print(f"   ✓ Created {stats['role_permissions']} role-permission mappings")
     print()
 
-    # 3. Create default admin user
-    print("3. Creating default admin user...")
+    # 3. Create default users
+    print("3. Creating default users...")
 
     # Check if admin user already exists
     existing_admin = db.query(User).filter_by(username=DEFAULT_ADMIN['username']).first()
@@ -322,7 +332,42 @@ def seed_auth_data(db: Session) -> dict:
 
         print(f"   ✓ Created admin user: {DEFAULT_ADMIN['username']}")
         print(f"   ✓ Default password: {DEFAULT_ADMIN['password']}")
-        print(f"   ⚠ IMPORTANT: Change password on first login!")
+
+    # Check if staff user already exists
+    existing_staff = db.query(User).filter_by(username=DEFAULT_STAFF['username']).first()
+
+    if existing_staff:
+        print(f"   ⚠ Staff user '{DEFAULT_STAFF['username']}' already exists - skipping")
+    else:
+        # Create staff user
+        staff_user = User(
+            username=DEFAULT_STAFF['username'],
+            email=DEFAULT_STAFF['email'],
+            password_hash=hash_password(DEFAULT_STAFF['password']),
+            full_name=DEFAULT_STAFF['full_name'],
+            is_superuser=DEFAULT_STAFF['is_superuser'],
+            must_change_password=DEFAULT_STAFF['must_change_password'],
+            is_active=True,
+            password_changed_at=datetime.utcnow(),
+        )
+        db.add(staff_user)
+        db.flush()  # Flush to get the user ID
+
+        # Assign Operator role
+        operator_role = role_map.get(DEFAULT_STAFF['role'])
+        if operator_role:
+            user_role = UserRole(
+                user_id=staff_user.id,
+                role_id=operator_role.id
+            )
+            db.add(user_role)
+
+        stats['users'] += 1
+        db.commit()
+
+        print(f"   ✓ Created staff user: {DEFAULT_STAFF['username']}")
+        print(f"   ✓ Default password: {DEFAULT_STAFF['password']}")
+        print(f"   ✓ Assigned role: {DEFAULT_STAFF['role']}")
 
     print()
     print("=" * 70)
@@ -337,10 +382,9 @@ def seed_auth_data(db: Session) -> dict:
     print()
 
     if stats['users'] > 0:
-        print("⚠ SECURITY REMINDER:")
-        print(f"   Username: {DEFAULT_ADMIN['username']}")
-        print(f"   Password: {DEFAULT_ADMIN['password']}")
-        print("   Please change the admin password immediately!")
+        print("Default credentials:")
+        print(f"  👤 Admin: {DEFAULT_ADMIN['username']} / {DEFAULT_ADMIN['password']} (Super Admin)")
+        print(f"  👤 Staff: {DEFAULT_STAFF['username']} / {DEFAULT_STAFF['password']} (Operator)")
         print()
 
     return stats

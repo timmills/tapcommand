@@ -621,6 +621,86 @@ check_tailscale_status() {
     fi
 }
 
+check_esphome_compilation() {
+    fancy_section "ESPHome Firmware Compiler"
+
+    if [ ! -d "$INSTALL_DIR/venv" ]; then
+        check_fail "Virtual environment not found - skipping ESPHome check"
+        return
+    fi
+
+    if [ ! -f "$INSTALL_DIR/venv/bin/esphome" ]; then
+        check_fail "ESPHome not installed in virtual environment"
+        if [ "$FIX_MODE" = true ]; then
+            check_fix "Installing ESPHome..."
+            cd "$INSTALL_DIR"
+            source venv/bin/activate
+            pip install esphome==2025.9.3 > /dev/null 2>&1
+            deactivate
+        fi
+        return
+    fi
+
+    check_pass "ESPHome binary found"
+
+    cd "$INSTALL_DIR"
+    source venv/bin/activate
+    ESPHOME_VERSION=$(esphome version 2>/dev/null | head -1)
+    if [ -n "$ESPHOME_VERSION" ]; then
+        check_pass "ESPHome version: $ESPHOME_VERSION"
+    fi
+
+    if [ -d "$HOME/.platformio" ]; then
+        CACHE_SIZE=$(du -sh "$HOME/.platformio" 2>/dev/null | cut -f1)
+        check_pass "PlatformIO cache exists ($CACHE_SIZE)"
+    elif [ -d "/tmp/tapcommand-esphome/.platformio" ]; then
+        CACHE_SIZE=$(du -sh "/tmp/tapcommand-esphome/.platformio" 2>/dev/null | cut -f1)
+        check_pass "PlatformIO cache exists ($CACHE_SIZE)"
+    else
+        check_warn "PlatformIO cache not found (toolchains will download on first compile)"
+    fi
+
+    if [ "$VERBOSE" = true ] || [ "$FIX_MODE" = true ]; then
+        ESPHOME_TEST_DIR=$(mktemp -d)
+        cat > "$ESPHOME_TEST_DIR/test.yaml" << 'EOF'
+esphome:
+  name: health-check-test
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  ssid: "test"
+  password: "test1234"
+
+api:
+
+logger:
+EOF
+
+        if [ "$VERBOSE" = true ]; then
+            check_pass "Running test compilation (this may take 2-5 minutes)..."
+        fi
+
+        if timeout 300 esphome compile "$ESPHOME_TEST_DIR/test.yaml" > /dev/null 2>&1; then
+            check_pass "ESPHome test compilation successful"
+        else
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 124 ]; then
+                check_warn "ESPHome compilation timed out (PlatformIO may be downloading tools)"
+                if [ "$FIX_MODE" = true ]; then
+                    check_fix "Re-running with extended timeout to cache dependencies..."
+                    timeout 600 esphome compile "$ESPHOME_TEST_DIR/test.yaml" > /dev/null 2>&1 || true
+                fi
+            else
+                check_warn "ESPHome test compilation failed (exit code: $EXIT_CODE)"
+            fi
+        fi
+        rm -rf "$ESPHOME_TEST_DIR"
+    fi
+    deactivate
+}
+
 #######################################################################
 # Main Execution
 #######################################################################
@@ -671,6 +751,7 @@ main() {
     check_git_status
     check_system_resources
     check_tailscale_status
+    check_esphome_compilation
 
     # Summary
     if [ "$JSON_OUTPUT" = true ]; then

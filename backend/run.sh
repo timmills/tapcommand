@@ -16,6 +16,9 @@ fi
 echo "Activating virtual environment..."
 source ../venv/bin/activate
 
+# Set timezone to fix conflicting system config
+export TZ=Australia/Sydney
+
 # Install dependencies
 echo "Installing dependencies..."
 pip install -r requirements.txt

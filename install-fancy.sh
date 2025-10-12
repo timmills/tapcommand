@@ -272,6 +272,9 @@ setup_backend() {
     fancy_info "Activating virtual environment..."
     source venv/bin/activate
 
+    # Set timezone to fix conflicting system config
+    export TZ=Australia/Sydney
+
     fancy_spin "Upgrading pip..." pip install --upgrade pip
 
     fancy_info "Installing Python dependencies (this may take several minutes)..."
@@ -285,6 +288,58 @@ setup_backend() {
 
     fancy_success "Backend dependencies installed"
     deactivate
+}
+
+setup_esphome_cache() {
+    fancy_header "ESPHome Firmware Compiler Setup"
+
+    fancy_info "ESPHome is used to compile firmware for IR blaster devices."
+    fancy_info "First-time compilation can be slow due to downloading build tools."
+    echo ""
+
+    if fancy_confirm "Would you like to pre-download ESPHome compilation tools now? (Recommended, takes 3-5 minutes)"; then
+        cd "$INSTALL_DIR"
+        source venv/bin/activate
+        export TZ=Australia/Sydney
+
+        fancy_info "Creating test firmware to download PlatformIO toolchains..."
+
+        ESPHOME_TEST_DIR=$(mktemp -d)
+        cat > "$ESPHOME_TEST_DIR/test.yaml" << 'EOF'
+esphome:
+  name: test-firmware
+
+esp8266:
+  board: d1_mini
+
+wifi:
+  ssid: "test"
+  password: "test1234"
+
+api:
+
+logger:
+EOF
+
+        if [ "$HAS_GUM" = true ]; then
+            gum spin --spinner globe --title "Downloading ESPHome toolchains (this may take 3-5 minutes)..." -- \
+                timeout 600 esphome compile "$ESPHOME_TEST_DIR/test.yaml" > /dev/null 2>&1 || true
+        else
+            fancy_info "Downloading ESPHome toolchains (this may take 3-5 minutes)..."
+            timeout 600 esphome compile "$ESPHOME_TEST_DIR/test.yaml" > /dev/null 2>&1 || true
+        fi
+
+        rm -rf "$ESPHOME_TEST_DIR"
+
+        if [ -d "$HOME/.platformio" ] || [ -d "/tmp/tapcommand-esphome/.platformio" ]; then
+            fancy_success "ESPHome build cache populated successfully"
+        else
+            fancy_warning "ESPHome cache setup completed (toolchains will download on first compile)"
+        fi
+        deactivate
+    else
+        fancy_info "Skipping ESPHome pre-warming. First compilation will take longer."
+    fi
 }
 
 setup_frontend() {
@@ -320,23 +375,39 @@ setup_database() {
 
     cd "$INSTALL_DIR/backend"
 
-    if [[ -f "smartvenue.db" ]]; then
+    if [[ -f "tapcommand.db" ]]; then
         fancy_success "Database found in repository"
-        chmod 664 smartvenue.db
+        chmod 664 tapcommand.db
 
-        # Ask if user wants to clean the database
-        fancy_info "Database contains sample/cached data from development"
-        if fancy_confirm "Would you like to clean the database for fresh installation?"; then
-            fancy_info "Cleaning database..."
+        # Ask if user wants to reset user database
+        echo ""
+        fancy_info "The database contains existing user accounts and authentication data."
+        fancy_warning "You can optionally reset ALL users to start with a fresh admin account."
+        echo ""
+
+        if fancy_confirm "Would you like to reset the user database? (This will delete ALL users)"; then
+            fancy_info "Resetting user database..."
             cd "$INSTALL_DIR"
             source venv/bin/activate
-            python backend/scripts/cleanup_database.py
+            export TZ=Australia/Sydney
+
+            # Run the reset script non-interactively by piping the confirmation
+            echo "DELETE ALL USERS" | python3 backend/reset_database_users.py
+
             deactivate
-            fancy_success "Database cleaned!"
+
+            fancy_success "User database reset complete!"
+            fancy_info "Default credentials:"
+            fancy_info "  - admin / admin (Super Admin)"
+            fancy_info "  - staff / staff (Operator)"
+        else
+            fancy_info "Keeping existing user database"
         fi
     else
         fancy_warning "No database found in repository"
-        fancy_info "Database will be created on first run"
+        fancy_info "Database will be created on first run with default credentials:"
+        fancy_info "  - admin / admin (Super Admin)"
+        fancy_info "  - staff / staff (Operator)"
     fi
 }
 
@@ -664,6 +735,7 @@ main() {
     check_python_version
     install_node
     setup_backend
+    setup_esphome_cache
     setup_frontend
     setup_database
     setup_environment
