@@ -96,8 +96,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value: AuthContextType = {
     user: user || null,
-    isLoading: !isAuthChecked || isLoading,
-    isAuthenticated: !!user && tokenStorage.isAuthenticated(),
+    isLoading: !isAuthChecked || (tokenStorage.isAuthenticated() && isLoading),
+    isAuthenticated: tokenStorage.isAuthenticated(),
     role,
     hasRole,
     isSuperuser: user?.is_superuser || false,
