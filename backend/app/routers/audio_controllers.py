@@ -14,7 +14,6 @@ from ..db.database import get_db
 from ..models.virtual_controller import VirtualController, VirtualDevice
 from ..services.aes70_discovery import AES70DiscoveryService, discover_and_create_audio_controller
 from ..services.plena_matrix_discovery import PlenaMatrixDiscoveryService, discover_and_create_plena_matrix_controller
-from ..services.command_queue import CommandQueueService
 
 router = APIRouter(prefix="/api/audio", tags=["audio"])
 
@@ -71,6 +70,10 @@ class MuteControl(BaseModel):
     mute: bool
 
 
+class PresetRecall(BaseModel):
+    preset_number: int  # 1-8
+
+
 @router.post("/controllers/discover", response_model=AudioControllerResponse)
 async def discover_audio_controller(
     controller_data: AudioControllerCreate,
@@ -97,7 +100,7 @@ async def discover_audio_controller(
             port = controller_data.port or 12128
             total_zones = controller_data.total_zones or 4
 
-            controller, devices = await discover_and_create_plena_matrix_controller(
+            controller_id, num_devices = await discover_and_create_plena_matrix_controller(
                 ip_address=controller_data.ip_address,
                 controller_name=controller_data.controller_name,
                 port=port,
@@ -124,9 +127,25 @@ async def discover_audio_controller(
                 detail=f"Unsupported protocol: {controller_data.protocol}"
             )
 
-        # Format response
+        # Re-query the controller with the router's database session to avoid detached object issues
+        # Handle both return formats: (controller_id, num_devices) or (controller, devices)
+        if isinstance(controller_id, str):
+            # New format: just got controller_id string
+            final_controller_id = controller_id
+        else:
+            # Old format: got controller object
+            final_controller_id = controller_id.controller_id
+
+        controller = db.query(VirtualController).filter(
+            VirtualController.controller_id == final_controller_id
+        ).first()
+
+        if not controller:
+            raise HTTPException(status_code=500, detail="Controller was created but cannot be retrieved")
+
+        # Get zones via the controller relationship
         zones = []
-        for device in devices:
+        for device in controller.virtual_devices:
             gain_range = device.connection_config.get("gain_range") if device.connection_config else None
             has_mute = device.connection_config.get("mute_path") is not None if device.connection_config else False
 
@@ -145,15 +164,20 @@ async def discover_audio_controller(
                 has_mute=has_mute
             ))
 
+        # Get IP and port from connection_config
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address", "")
+        port = connection_config.get("port", 0)
+
         return AudioControllerResponse(
             id=controller.id,
             controller_id=controller.controller_id,
             controller_name=controller.controller_name,
             controller_type=controller.controller_type,
-            ip_address=controller.ip_address,
-            port=controller.port,
+            ip_address=ip_address,
+            port=port,
             is_online=controller.is_online,
-            total_zones=len(devices),
+            total_zones=len(zones),
             zones=zones
         )
 
@@ -191,13 +215,18 @@ async def list_audio_controllers(db: Session = Depends(get_db)):
                 has_mute=has_mute
             ))
 
+        # Get IP and port from connection_config
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address", "")
+        port = connection_config.get("port", 0)
+
         result.append(AudioControllerResponse(
             id=controller.id,
             controller_id=controller.controller_id,
             controller_name=controller.controller_name,
             controller_type=controller.controller_type,
-            ip_address=controller.ip_address,
-            port=controller.port,
+            ip_address=ip_address,
+            port=port,
             is_online=controller.is_online,
             total_zones=len(zones),
             zones=zones
@@ -269,19 +298,30 @@ async def set_zone_volume(
     if not controller:
         raise HTTPException(status_code=404, detail="Controller not found")
 
-    # Queue command
-    cmd = CommandQueueService.queue_command(
-        db=db,
+    # Queue command (use enqueue with proper parameters)
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
         hostname=controller.controller_id,
-        port=zone.port_number,
         command="set_volume",
-        parameters={"volume": volume_data.volume, "zone_number": zone.port_number}
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        channel=str(volume_data.volume),  # Store volume in channel field
+        digit=zone.port_number  # Store zone number in digit field
     )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
 
     return {
         "success": True,
         "message": f"Queued volume change for {zone.device_name}",
-        "command_id": cmd.id,
+        "command_id": queue_entry.id,
         "volume": volume_data.volume
     }
 
@@ -296,18 +336,28 @@ async def volume_up(zone_id: int, db: Session = Depends(get_db)):
 
     controller = db.query(VirtualController).get(zone.controller_id)
 
-    cmd = CommandQueueService.queue_command(
-        db=db,
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
         hostname=controller.controller_id,
-        port=zone.port_number,
         command="volume_up",
-        parameters={"zone_number": zone.port_number}
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        digit=zone.port_number
     )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
 
     return {
         "success": True,
         "message": f"Queued volume up for {zone.device_name}",
-        "command_id": cmd.id
+        "command_id": queue_entry.id
     }
 
 
@@ -321,18 +371,28 @@ async def volume_down(zone_id: int, db: Session = Depends(get_db)):
 
     controller = db.query(VirtualController).get(zone.controller_id)
 
-    cmd = CommandQueueService.queue_command(
-        db=db,
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
         hostname=controller.controller_id,
-        port=zone.port_number,
         command="volume_down",
-        parameters={"zone_number": zone.port_number}
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        digit=zone.port_number
     )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
 
     return {
         "success": True,
         "message": f"Queued volume down for {zone.device_name}",
-        "command_id": cmd.id
+        "command_id": queue_entry.id
     }
 
 
@@ -356,18 +416,28 @@ async def toggle_mute(
     else:
         command = "toggle_mute"
 
-    cmd = CommandQueueService.queue_command(
-        db=db,
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
         hostname=controller.controller_id,
-        port=zone.port_number,
         command=command,
-        parameters={"zone_number": zone.port_number}
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        digit=zone.port_number
     )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
 
     return {
         "success": True,
         "message": f"Queued mute command for {zone.device_name}",
-        "command_id": cmd.id
+        "command_id": queue_entry.id
     }
 
 
@@ -412,12 +482,20 @@ async def rediscover_zones(
         raise HTTPException(status_code=404, detail="Audio controller not found")
 
     try:
+        # Get IP and port from connection_config
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address")
+        port = connection_config.get("port", 65000)
+
+        if not ip_address:
+            raise HTTPException(status_code=400, detail="No IP address found for controller")
+
         # Discover zones
         discovery = AES70DiscoveryService()
         zones = await discovery.discover_praesensa_zones(
             controller_id=controller.controller_id,
-            ip_address=controller.ip_address,
-            port=controller.port or 65000
+            ip_address=ip_address,
+            port=port
         )
 
         # Create Virtual Devices for new zones
@@ -432,3 +510,248 @@ async def rediscover_zones(
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to rediscover zones: {str(e)}")
+
+
+@router.post("/controllers/{controller_id}/preset")
+async def recall_controller_preset(
+    controller_id: str,
+    preset_data: PresetRecall,
+    db: Session = Depends(get_db)
+):
+    """
+    Recall a saved preset on the audio controller
+
+    This affects all zones at once (sets volumes, routing, etc. to saved state)
+    Only applicable to Plena Matrix controllers.
+    """
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # Only Plena Matrix supports presets
+    if controller.protocol != "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Preset recall not supported for protocol: {controller.protocol}"
+        )
+
+    # Get preset information from controller config
+    connection_config = controller.connection_config or {}
+    presets = connection_config.get("presets", [])
+
+    # Find preset info
+    preset_info = None
+    for preset in presets:
+        if preset.get("preset_number") == preset_data.preset_number:
+            preset_info = preset
+            break
+
+    if not preset_info:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Preset {preset_data.preset_number} not found on controller"
+        )
+
+    if not preset_info.get("is_valid", True):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Preset {preset_data.preset_number} ({preset_info.get('preset_name')}) is not active"
+        )
+
+    # Queue preset recall command
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="recall_preset",
+        port=0,  # Controller-level command, not zone-specific
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        digit=preset_data.preset_number
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued preset recall: {preset_info.get('preset_name', f'Preset {preset_data.preset_number}')}",
+        "command_id": queue_entry.id,
+        "preset_number": preset_data.preset_number,
+        "preset_name": preset_info.get("preset_name")
+    }
+
+
+@router.get("/controllers/{controller_id}/presets")
+async def get_controller_presets(
+    controller_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Get available presets for a controller
+
+    Returns list of presets with names and validity status
+    Only applicable to Plena Matrix controllers.
+    """
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # Only Plena Matrix supports presets
+    if controller.protocol != "bosch_plena_matrix":
+        return {
+            "controller_id": controller_id,
+            "controller_name": controller.controller_name,
+            "presets": [],
+            "message": "Preset support not available for this controller type"
+        }
+
+    # Get presets from controller config
+    connection_config = controller.connection_config or {}
+    presets = connection_config.get("presets", [])
+
+    return {
+        "controller_id": controller_id,
+        "controller_name": controller.controller_name,
+        "total_presets": len(presets),
+        "presets": presets
+    }
+
+
+@router.post("/controllers/{controller_id}/volume")
+async def set_master_volume(
+    controller_id: str,
+    volume_data: VolumeControl,
+    db: Session = Depends(get_db)
+):
+    """
+    Set master volume on all zones simultaneously
+
+    This sets the same volume level on all zones of the controller
+    """
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # Queue master volume command
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="set_master_volume",
+        port=0,  # Controller-level command
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued",
+        channel=str(volume_data.volume)
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued master volume change for {controller.controller_name}",
+        "command_id": queue_entry.id,
+        "volume": volume_data.volume
+    }
+
+
+@router.post("/controllers/{controller_id}/volume/up")
+async def master_volume_up(
+    controller_id: str,
+    db: Session = Depends(get_db)
+):
+    """Increase master volume on all zones by 5%"""
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="master_volume_up",
+        port=0,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued master volume up for {controller.controller_name}",
+        "command_id": queue_entry.id
+    }
+
+
+@router.post("/controllers/{controller_id}/volume/down")
+async def master_volume_down(
+    controller_id: str,
+    db: Session = Depends(get_db)
+):
+    """Decrease master volume on all zones by 5%"""
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="master_volume_down",
+        port=0,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued master volume down for {controller.controller_name}",
+        "command_id": queue_entry.id
+    }

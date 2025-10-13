@@ -15,6 +15,13 @@ export interface AudioZone {
   has_mute: boolean;
 }
 
+export interface AudioPreset {
+  preset_number: number;
+  preset_name: string;
+  is_valid: boolean;
+  preset_index: number;
+}
+
 export interface AudioController {
   id: number;
   controller_id: string;
@@ -86,5 +93,16 @@ export const audioApi = {
   }): Promise<AudioController> => {
     const response = await apiClient.post('/api/audio/controllers/discover', data);
     return response.data;
+  },
+
+  // Get presets for a controller
+  getPresets: async (controllerId: string): Promise<{ presets: AudioPreset[], controller_name: string }> => {
+    const response = await apiClient.get(`/api/audio/controllers/${controllerId}/presets`);
+    return response.data;
+  },
+
+  // Recall a preset
+  recallPreset: async (controllerId: string, presetNumber: number): Promise<void> => {
+    await apiClient.post(`/api/audio/controllers/${controllerId}/preset`, { preset_number: presetNumber });
   },
 };

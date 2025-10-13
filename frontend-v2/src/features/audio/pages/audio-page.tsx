@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAudioControllers, useDeleteController, useRediscoverZones, useAddController } from '../hooks/use-audio';
 import { ZoneCard } from '../components/zone-card';
 import { AmplifierInfoCards } from '../components/amplifier-info-cards';
+import { PresetButtons } from '../components/preset-buttons';
 
 export function AudioPage() {
   const { data: controllers, isLoading, isError, error } = useAudioControllers();
@@ -196,7 +197,7 @@ export function AudioPage() {
               No audio controllers
             </h3>
             <p className="mt-1 text-sm text-slate-500">
-              Add a Bosch Praesensa or other AES70 amplifier from the Discovery page.
+              Click "Add Manual IP" to add an audio controller.
             </p>
           </div>
         </div>
@@ -267,6 +268,12 @@ export function AudioPage() {
                   No zones discovered for this controller
                 </div>
               )}
+
+              {/* Presets section (only for Plena Matrix) */}
+              <PresetButtons
+                controllerId={controller.controller_id}
+                controllerName={controller.controller_name}
+              />
             </div>
           ))}
         </div>

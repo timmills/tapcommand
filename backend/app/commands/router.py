@@ -84,8 +84,8 @@ class ProtocolRouter:
             elif command.protocol == "vizio_smartcast":
                 return VizioExecutor(self.db)
 
-        # Audio Zone Controllers
-        if command.device_type == "audio_zone":
+        # Audio Zone Controllers and Audio Controllers (controller-level commands)
+        if command.device_type in ["audio_zone", "audio"]:
             if command.protocol == "bosch_aes70":
                 return BoschAES70Executor(self.db)
             elif command.protocol == "bosch_plena_matrix":

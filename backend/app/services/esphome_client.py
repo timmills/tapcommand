@@ -165,11 +165,19 @@ class ESPHomeClient:
                 if getattr(state, "key", None) == text_sensor_key and not payload_future.done():
                     payload_future.set_result(state.state)
 
-            unsubscribe = await self.client.subscribe_states(state_callback)
+            # Handle both coroutine and None returns from subscribe_states
+            subscribe_result = self.client.subscribe_states(state_callback)
+            if subscribe_result is not None:
+                unsubscribe = await subscribe_result
+            else:
+                unsubscribe = None
 
             report_service = next((svc for svc in services if svc.name == "report_capabilities"), None)
             if report_service:
-                await self.client.execute_service(report_service, {})
+                # Handle both coroutine and None returns from execute_service
+                result = self.client.execute_service(report_service, {})
+                if result is not None:
+                    await result
             else:
                 logger.warning(f"report_capabilities service not found on {self.hostname}")
 
@@ -191,7 +199,9 @@ class ESPHomeClient:
                 return None
 
         except Exception as e:
+            import traceback
             logger.error(f"Error retrieving capabilities from {self.hostname}: {e}")
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return None
         finally:
             await self.disconnect()

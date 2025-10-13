@@ -11,7 +11,9 @@ import { IRCommandsPage } from '../features/ir/IRCommandsPage';
 import { IRLibrariesPage } from '../features/ir/IRLibrariesPage';
 import { IRCapturePage } from '../features/ir-capture/pages/IRCapturePage';
 import { ControlPage } from '../features/control/pages/control-page';
+import { ControlDemoPage } from '../features/control/pages/control-demo-page';
 import { ControlLayout } from '../features/control/pages/control-layout';
+import { ControlDemoLayout } from '../features/control/pages/control-demo-layout';
 import { SchedulesPage } from '../features/scheduling/pages/schedules-page';
 import { QueueDiagnosticsPage } from '../features/diagnostics/pages/queue-diagnostics-page';
 import { UsersPage } from '../features/users/pages/users-page';
@@ -52,6 +54,11 @@ export const router = createBrowserRouter([
     path: '/control',
     element: <ControlLayout />,
     children: [{ index: true, element: <ControlPage /> }],
+  },
+  {
+    path: '/control-demo',
+    element: <ControlDemoLayout />,
+    children: [{ index: true, element: <ControlDemoPage /> }],
   },
   { path: '/login', element: <LoginPage /> },
   { path: '*', element: <Navigate to="/" replace /> },

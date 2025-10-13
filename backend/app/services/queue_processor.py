@@ -136,30 +136,40 @@ class CommandQueueProcessor:
             virtual_device = None  # Track if this is a virtual device with hybrid config
 
             # Check if it's a Virtual Controller (network TV or audio)
-            if cmd.hostname.startswith('nw-') or cmd.hostname.startswith('aud-'):
+            # Audio controllers can have prefixes: plm-, aud-, audio-
+            # Network TVs have prefix: nw-
+            if cmd.hostname.startswith(('nw-', 'aud-', 'audio-', 'plm-')):
                 vc = db.query(VirtualController).filter(
                     VirtualController.controller_id == cmd.hostname
                 ).first()
 
                 if vc:
-                    # Get the Virtual Device for this port
-                    vd = db.query(VirtualDevice).filter(
-                        VirtualDevice.controller_id == vc.id,
-                        VirtualDevice.port_number == cmd.port
-                    ).first()
-
-                    if vd:
-                        # Device type comes from Virtual Device
-                        # - network_tv for Network TVs
-                        # - audio_zone for Audio Zones
-                        device_type = vd.device_type
-                        protocol = vd.protocol
-                        virtual_device = vd  # Store for hybrid routing check
+                    # Check if this is a controller-level command (port=0)
+                    # Controller-level commands like recall_preset, set_master_volume operate on the entire controller
+                    if cmd.port == 0:
+                        # Controller-level command - use controller's protocol
+                        device_type = vc.controller_type  # "audio"
+                        protocol = vc.protocol  # "bosch_plena_matrix", "bosch_aes70", etc.
+                        virtual_device = None  # No specific device
                     else:
-                        CommandQueueService.mark_failed(
-                            db, cmd.id, f"Virtual device port {cmd.port} not found", retry=False
-                        )
-                        return
+                        # Zone/device-specific command - find the Virtual Device for this port
+                        vd = db.query(VirtualDevice).filter(
+                            VirtualDevice.controller_id == vc.id,
+                            VirtualDevice.port_number == cmd.port
+                        ).first()
+
+                        if vd:
+                            # Device type comes from Virtual Device
+                            # - network_tv for Network TVs
+                            # - audio_zone for Audio Zones
+                            device_type = vd.device_type
+                            protocol = vd.protocol
+                            virtual_device = vd  # Store for hybrid routing check
+                        else:
+                            CommandQueueService.mark_failed(
+                                db, cmd.id, f"Virtual device port {cmd.port} not found", retry=False
+                            )
+                            return
                 else:
                     CommandQueueService.mark_failed(
                         db, cmd.id, f"Virtual controller {cmd.hostname} not found", retry=False

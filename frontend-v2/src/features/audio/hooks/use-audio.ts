@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 const QUERY_KEYS = {
   controllers: ['audio', 'controllers'] as const,
   zones: (controllerId?: string) => ['audio', 'zones', controllerId] as const,
+  presets: (controllerId: string) => ['audio', 'presets', controllerId] as const,
 };
 
 // Fetch all audio controllers
@@ -152,6 +153,35 @@ export function useAddController() {
     },
     onError: (error) => {
       toast.error('Failed to add controller', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}
+
+// Fetch presets for a controller
+export function usePresets(controllerId: string) {
+  return useQuery({
+    queryKey: QUERY_KEYS.presets(controllerId),
+    queryFn: () => audioApi.getPresets(controllerId),
+    enabled: !!controllerId,
+  });
+}
+
+// Recall a preset
+export function useRecallPreset() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ controllerId, presetNumber }: { controllerId: string; presetNumber: number }) =>
+      audioApi.recallPreset(controllerId, presetNumber),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      queryClient.invalidateQueries({ queryKey: ['audio', 'zones'] });
+      toast.success('Preset recalled successfully');
+    },
+    onError: (error) => {
+      toast.error('Failed to recall preset', {
         description: error instanceof Error ? error.message : 'Unknown error',
       });
     },
