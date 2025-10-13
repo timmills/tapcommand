@@ -12,6 +12,7 @@ import logging
 from ..db.database import get_db
 from ..services.network_sweep import network_sweep_service
 from ..models.network_discovery import NetworkScanCache
+from ..utils.network_utils import get_default_subnet
 
 router = APIRouter(prefix="/api/network", tags=["network-discovery"])
 logger = logging.getLogger(__name__)
@@ -21,14 +22,14 @@ active_scans = {}
 
 
 class ScanRequest(BaseModel):
-    subnet: Optional[str] = "192.168.101"
+    subnet: Optional[str] = None  # Will auto-detect if not provided
     start: Optional[int] = 1
     end: Optional[int] = 254
 
 
 class BrandScanRequest(BaseModel):
     brand: str  # "Samsung", "LG", "Sony", "Philips"
-    subnet: Optional[str] = "192.168.101"
+    subnet: Optional[str] = None  # Will auto-detect if not provided
 
 
 class DeviceInfo(BaseModel):
@@ -55,12 +56,16 @@ async def trigger_network_scan(
     Trigger immediate network scan (manual button trigger)
 
     This performs a scan immediately and returns results when complete.
+    Auto-detects local subnet if not specified.
     """
     try:
-        logger.info(f"Manual scan triggered: {request.subnet}.{request.start}-{request.end}")
+        # Auto-detect subnet if not provided
+        subnet = request.subnet if request.subnet else get_default_subnet()
+
+        logger.info(f"Manual scan triggered: {subnet}.{request.start}-{request.end}")
 
         devices = await network_sweep_service.scan_subnet(
-            subnet=request.subnet,
+            subnet=subnet,
             start=request.start,
             end=request.end,
             db_session=db
@@ -70,8 +75,9 @@ async def trigger_network_scan(
             "success": True,
             "message": f"Network scan completed",
             "devices_found": len(devices),
-            "subnet": request.subnet,
+            "subnet": subnet,
             "range": f"{request.start}-{request.end}",
+            "auto_detected": request.subnet is None,
             "note": "Scan cache has been updated. Use GET /api/network/scan-cache to retrieve results"
         }
 
@@ -103,18 +109,23 @@ async def scan_tvs(
     """
     Quick scan for TV devices only
 
-    Returns only devices that match known TV vendor MACs
+    Returns only devices that match known TV vendor MACs.
+    Auto-detects local subnet if not specified.
     """
     try:
+        # Auto-detect subnet if not provided
+        subnet = request.subnet if request.subnet else get_default_subnet()
+
         tv_devices = await network_sweep_service.scan_for_tvs(
-            subnet=request.subnet,
+            subnet=subnet,
             db_session=db
         )
 
         return {
             "success": True,
             "total_found": len(tv_devices),
-            "subnet": request.subnet,
+            "subnet": subnet,
+            "auto_detected": request.subnet is None,
             "devices": tv_devices
         }
 
@@ -131,12 +142,16 @@ async def scan_brand(
     """
     Scan for specific brand devices
 
-    Brands: Samsung, LG, Sony, Philips
+    Brands: Samsung, LG, Sony, Philips.
+    Auto-detects local subnet if not specified.
     """
     try:
+        # Auto-detect subnet if not provided
+        subnet = request.subnet if request.subnet else get_default_subnet()
+
         brand_devices = await network_sweep_service.scan_for_brand(
             brand=brand,
-            subnet=request.subnet,
+            subnet=subnet,
             db_session=db
         )
 
@@ -144,7 +159,8 @@ async def scan_brand(
             "success": True,
             "brand": brand,
             "total_found": len(brand_devices),
-            "subnet": request.subnet,
+            "subnet": subnet,
+            "auto_detected": request.subnet is None,
             "devices": brand_devices
         }
 
@@ -292,6 +308,7 @@ async def get_network_stats(db: Session = Depends(get_db)):
     Get network discovery statistics
     """
     from ..models.network_discovery import MACVendor
+    from ..utils.network_utils import get_local_ip_and_subnet
 
     try:
         total_cached = db.query(NetworkScanCache).count()
@@ -315,6 +332,9 @@ async def get_network_stats(db: Session = Depends(get_db)):
             MACVendor.vendor_name.like('%Sony%')
         ).count()
 
+        # Network detection info
+        local_ip, subnet = get_local_ip_and_subnet()
+
         return {
             "success": True,
             "scan_cache": {
@@ -327,6 +347,11 @@ async def get_network_stats(db: Session = Depends(get_db)):
                 "samsung_prefixes": samsung_vendors,
                 "lg_prefixes": lg_vendors,
                 "sony_prefixes": sony_vendors
+            },
+            "network_info": {
+                "local_ip": local_ip,
+                "detected_subnet": subnet,
+                "scan_range": f"{subnet}.1-254" if subnet else None
             }
         }
 
