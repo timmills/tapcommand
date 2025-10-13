@@ -75,6 +75,22 @@ if [ $RESULT -eq 0 ]; then
     echo -e "${GREEN}╔════════════════════════════════════════════════╗${NC}"
     echo -e "${GREEN}║         Password Reset Successful! ✓          ║${NC}"
     echo -e "${GREEN}╚════════════════════════════════════════════════╝${NC}"
+    echo
+
+    # Check if backend service is running and restart it
+    if systemctl is-active --quiet tapcommand-backend.service 2>/dev/null; then
+        echo -e "${BLUE}Restarting backend service to apply changes...${NC}"
+        if sudo systemctl restart tapcommand-backend.service 2>/dev/null; then
+            echo -e "${GREEN}✓ Backend service restarted successfully${NC}"
+            echo -e "${GREEN}  You can now log in with the new password${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Could not restart backend service automatically${NC}"
+            echo -e "${YELLOW}  Please restart manually: sudo systemctl restart tapcommand-backend.service${NC}"
+        fi
+    else
+        echo -e "${YELLOW}Note: Backend service is not running or not installed as systemd service${NC}"
+        echo -e "${YELLOW}If the backend is running, you may need to restart it manually${NC}"
+    fi
 else
     echo
     echo -e "${RED}╔════════════════════════════════════════════════╗${NC}"

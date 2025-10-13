@@ -72,6 +72,22 @@ if [ $RESULT -eq 0 ]; then
     echo -e "${GREEN}     Username: staff${NC}"
     echo -e "${GREEN}     Password: staff${NC}"
     echo -e "${GREEN}     Role: Operator${NC}"
+    echo
+
+    # Check if backend service is running and restart it
+    if systemctl is-active --quiet tapcommand-backend.service 2>/dev/null; then
+        echo -e "${BLUE}Restarting backend service to apply changes...${NC}"
+        if sudo systemctl restart tapcommand-backend.service 2>/dev/null; then
+            echo -e "${GREEN}✓ Backend service restarted successfully${NC}"
+            echo -e "${GREEN}  You can now log in with the credentials above${NC}"
+        else
+            echo -e "${YELLOW}⚠️  Could not restart backend service automatically${NC}"
+            echo -e "${YELLOW}  Please restart manually: sudo systemctl restart tapcommand-backend.service${NC}"
+        fi
+    else
+        echo -e "${YELLOW}Note: Backend service is not running or not installed as systemd service${NC}"
+        echo -e "${YELLOW}If the backend is running, you may need to restart it manually${NC}"
+    fi
 else
     echo
     echo -e "${RED}╔════════════════════════════════════════════════╗${NC}"
