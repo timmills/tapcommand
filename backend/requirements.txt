@@ -8,7 +8,7 @@ python-multipart==0.0.6
 aiofiles==23.2.1
 python-dotenv==1.0.0
 httpx
-zeroconf==0.131.0
+zeroconf>=0.143.0,<1.0
 aioesphomeapi==40.2.1
 esphome==2025.9.3
 asyncio-mqtt==0.16.1
