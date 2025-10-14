@@ -20,7 +20,7 @@ from .executors.network import (
     VizioExecutor,
     PhilipsExecutor
 )
-from .executors.audio import BoschAES70Executor, BoschPlenaMatrixExecutor
+from .executors.audio import BoschAES70Executor, BoschPlenaMatrixExecutor, SonosUPnPExecutor
 
 
 class ProtocolRouter:
@@ -90,6 +90,8 @@ class ProtocolRouter:
                 return BoschAES70Executor(self.db)
             elif command.protocol == "bosch_plena_matrix":
                 return BoschPlenaMatrixExecutor(self.db)
+            elif command.protocol == "sonos_upnp":
+                return SonosUPnPExecutor(self.db)
 
         # No executor found
         return None

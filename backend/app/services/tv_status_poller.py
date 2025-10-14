@@ -17,10 +17,10 @@ logger = logging.getLogger(__name__)
 
 class TVStatusPoller:
     """
-    Background service to poll network TVs for status
+    Background service to poll network TVs and audio devices for status
 
     Polling tiers:
-    - Tier 1 (3s): LG webOS, Roku, Hisense (WebSocket/MQTT connections)
+    - Tier 1 (3s): LG webOS, Roku, Hisense, Sonos (fast polling)
     - Tier 2 (5s): Sony Bravia, Philips, Vizio (HTTP polling)
     - Tier 3 (disabled): Samsung Legacy (no status available)
     """
@@ -121,7 +121,7 @@ class TVStatusPoller:
 
     def _get_poll_interval(self, protocol: str) -> int:
         """Get polling interval in seconds based on protocol"""
-        tier1 = ["lg_webos", "roku", "hisense_vidaa"]  # 3 seconds
+        tier1 = ["lg_webos", "roku", "hisense_vidaa", "sonos_upnp"]  # 3 seconds
         tier2 = ["sony_bravia", "vizio_smartcast", "philips_jointspace"]  # 5 seconds
 
         if protocol in tier1:
@@ -152,6 +152,8 @@ class TVStatusPoller:
                 return await self._poll_vizio(device)
             elif protocol == "philips_jointspace":
                 return await self._poll_philips(device)
+            elif protocol == "sonos_upnp":
+                return await self._poll_sonos(device)
             else:
                 return None
 
@@ -440,6 +442,69 @@ class TVStatusPoller:
 
         except Exception as e:
             logger.debug(f"Philips poll failed: {e}")
+            return None
+
+    async def _poll_sonos(self, device: VirtualDevice) -> Optional[Dict[str, Any]]:
+        """Poll Sonos speaker for status"""
+        try:
+            from soco import SoCo
+
+            # Connect to speaker
+            speaker = SoCo(device.ip_address)
+
+            # Get volume and mute status (run in executor since SoCo is sync)
+            volume = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: speaker.volume
+            )
+            mute = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: speaker.mute
+            )
+
+            # Get transport state
+            transport_info = await asyncio.get_event_loop().run_in_executor(
+                None,
+                speaker.get_current_transport_info
+            )
+            transport_state = transport_info.get("current_transport_state", "STOPPED")
+
+            # Get track info if playing
+            track_info = None
+            if transport_state in ["PLAYING", "PAUSED_PLAYBACK"]:
+                try:
+                    track_info = await asyncio.get_event_loop().run_in_executor(
+                        None,
+                        speaker.get_current_track_info
+                    )
+                except:
+                    pass
+
+            # Store track info in connection_config
+            if device.connection_config is None:
+                device.connection_config = {}
+
+            device.connection_config["transport_state"] = transport_state
+
+            if track_info:
+                device.connection_config["current_track"] = {
+                    "title": track_info.get("title"),
+                    "artist": track_info.get("artist"),
+                    "album": track_info.get("album"),
+                    "position": track_info.get("position"),
+                    "duration": track_info.get("duration")
+                }
+
+            return {
+                "power": "on",  # If we can connect, speaker is on
+                "volume": volume,
+                "muted": mute,
+                "input": None,  # Sonos doesn't have inputs
+                "app": track_info.get("title") if track_info else None,  # Store currently playing as "app"
+            }
+
+        except Exception as e:
+            logger.debug(f"Sonos poll failed: {e}")
             return None
 
     def _update_status_cache(self, device: VirtualDevice, status: Dict[str, Any], db: Session):

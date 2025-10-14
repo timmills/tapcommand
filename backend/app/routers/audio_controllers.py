@@ -14,6 +14,7 @@ from ..db.database import get_db
 from ..models.virtual_controller import VirtualController, VirtualDevice
 from ..services.aes70_discovery import AES70DiscoveryService, discover_and_create_audio_controller
 from ..services.plena_matrix_discovery import PlenaMatrixDiscoveryService, discover_and_create_plena_matrix_controller
+from ..services.sonos_discovery import discover_and_create_sonos_controller, discover_sonos_speakers_on_network, test_sonos_connection
 
 router = APIRouter(prefix="/api/audio", tags=["audio"])
 
@@ -22,7 +23,7 @@ router = APIRouter(prefix="/api/audio", tags=["audio"])
 class AudioControllerCreate(BaseModel):
     ip_address: str
     controller_name: str
-    protocol: str = "bosch_aes70"  # "bosch_aes70" or "bosch_plena_matrix"
+    protocol: str = "bosch_aes70"  # "bosch_aes70", "bosch_plena_matrix", or "sonos_upnp"
     port: Optional[int] = None  # Will default based on protocol
     total_zones: Optional[int] = None  # For Plena Matrix (default 4)
     venue_name: Optional[str] = None
@@ -81,22 +82,32 @@ async def discover_audio_controller(
     db: Session = Depends(get_db)
 ):
     """
-    Add an audio amplifier and discover zones
+    Add an audio amplifier/speaker and discover zones
 
     Supports:
     - Bosch Praesensa (AES70/OMNEO) - port 65000
     - Bosch Plena Matrix (UDP API) - port 12128
+    - Sonos (UPnP/SOAP) - port 1400
 
     This will:
-    1. Create a Virtual Controller for the amplifier
+    1. Create a Virtual Controller for the device
     2. Connect via appropriate protocol
-    3. Discover all configured zones
+    3. Discover all configured zones/speakers
     4. Create Virtual Devices for each zone
     """
 
     try:
         # Route to appropriate discovery service based on protocol
-        if controller_data.protocol == "bosch_plena_matrix":
+        if controller_data.protocol == "sonos_upnp":
+            # Sonos UPnP discovery
+            controller_id, num_devices = await discover_and_create_sonos_controller(
+                ip_address=controller_data.ip_address,
+                controller_name=controller_data.controller_name,
+                venue_name=controller_data.venue_name,
+                location=controller_data.location
+            )
+
+        elif controller_data.protocol == "bosch_plena_matrix":
             # Plena Matrix discovery
             port = controller_data.port or 12128
             total_zones = controller_data.total_zones or 4
@@ -888,3 +899,341 @@ async def get_active_preset(
         raise HTTPException(status_code=500, detail=f"Failed to get active preset: {str(e)}")
     finally:
         await executor.cleanup()
+
+
+# ==================== Sonos-Specific Endpoints ====================
+
+@router.get("/sonos/discover")
+async def discover_sonos_speakers(db: Session = Depends(get_db)):
+    """
+    Discover all Sonos speakers on the network via SSDP/mDNS
+
+    Returns list of discovered speakers with IP addresses and metadata.
+    """
+    try:
+        speakers = await discover_sonos_speakers_on_network()
+
+        return {
+            "success": True,
+            "total_found": len(speakers),
+            "speakers": speakers
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to discover Sonos speakers: {str(e)}")
+
+
+@router.get("/discoveries/unadopted")
+async def get_unadopted_audio_devices(db: Session = Depends(get_db)):
+    """
+    Get list of discovered audio devices that haven't been adopted yet.
+
+    Currently discovers Sonos speakers on the network and filters out
+    already-adopted devices.
+
+    Returns list of unadopted devices with their discovery information.
+    """
+    try:
+        # Get all discovered Sonos speakers
+        speakers = await discover_sonos_speakers_on_network()
+
+        # Get list of already-adopted IPs from VirtualController
+        adopted_ips = set()
+        controllers = db.query(VirtualController).filter(
+            VirtualController.controller_type == "audio",
+            VirtualController.protocol == "sonos_upnp"
+        ).all()
+
+        for controller in controllers:
+            config = controller.connection_config or {}
+            ip = config.get("ip_address")
+            if ip:
+                adopted_ips.add(ip)
+
+        # Filter out adopted speakers
+        unadopted = []
+        for speaker in speakers:
+            if speaker["ip_address"] not in adopted_ips:
+                unadopted.append({
+                    "ip_address": speaker["ip_address"],
+                    "device_name": speaker["zone_name"],
+                    "model_name": speaker["model_name"],
+                    "model_number": speaker.get("model_number"),
+                    "protocol": "sonos_upnp",
+                    "uid": speaker["uid"],
+                    "mac_address": speaker.get("mac_address"),
+                    "software_version": speaker.get("software_version"),
+                    "discovery_method": "ssdp_mdns"
+                })
+
+        return {
+            "success": True,
+            "total_found": len(unadopted),
+            "devices": unadopted
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to discover unadopted devices: {str(e)}")
+
+
+@router.post("/sonos/test-connection")
+async def test_sonos_speaker_connection(
+    ip_address: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Test connection to a Sonos speaker and retrieve basic info
+
+    Use this before adding a speaker to verify it's reachable.
+    """
+    try:
+        result = await test_sonos_connection(ip_address)
+
+        if result["success"]:
+            return result
+        else:
+            raise HTTPException(status_code=500, detail=result.get("error", "Connection test failed"))
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
+
+
+@router.post("/zones/{zone_id}/play")
+async def sonos_play(
+    zone_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Start playback on a Sonos speaker
+
+    Only applicable to Sonos speakers.
+    """
+    zone = db.query(VirtualDevice).get(zone_id)
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    controller = db.query(VirtualController).get(zone.controller_id)
+    if not controller:
+        raise HTTPException(status_code=404, detail="Controller not found")
+
+    # Only Sonos supports playback controls
+    if controller.protocol != "sonos_upnp":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Playback control not supported for protocol: {controller.protocol}"
+        )
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="play",
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued play command for {zone.device_name}",
+        "command_id": queue_entry.id
+    }
+
+
+@router.post("/zones/{zone_id}/pause")
+async def sonos_pause(
+    zone_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Pause playback on a Sonos speaker
+
+    Only applicable to Sonos speakers.
+    """
+    zone = db.query(VirtualDevice).get(zone_id)
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    controller = db.query(VirtualController).get(zone.controller_id)
+    if not controller:
+        raise HTTPException(status_code=404, detail="Controller not found")
+
+    if controller.protocol != "sonos_upnp":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Playback control not supported for protocol: {controller.protocol}"
+        )
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="pause",
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued pause command for {zone.device_name}",
+        "command_id": queue_entry.id
+    }
+
+
+@router.post("/zones/{zone_id}/stop")
+async def sonos_stop(
+    zone_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Stop playback on a Sonos speaker
+
+    Only applicable to Sonos speakers.
+    """
+    zone = db.query(VirtualDevice).get(zone_id)
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    controller = db.query(VirtualController).get(zone.controller_id)
+    if not controller:
+        raise HTTPException(status_code=404, detail="Controller not found")
+
+    if controller.protocol != "sonos_upnp":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Playback control not supported for protocol: {controller.protocol}"
+        )
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="stop",
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued stop command for {zone.device_name}",
+        "command_id": queue_entry.id
+    }
+
+
+@router.post("/zones/{zone_id}/next")
+async def sonos_next_track(
+    zone_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Skip to next track on a Sonos speaker
+
+    Only applicable to Sonos speakers.
+    """
+    zone = db.query(VirtualDevice).get(zone_id)
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    controller = db.query(VirtualController).get(zone.controller_id)
+    if not controller:
+        raise HTTPException(status_code=404, detail="Controller not found")
+
+    if controller.protocol != "sonos_upnp":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Playback control not supported for protocol: {controller.protocol}"
+        )
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="next",
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued next track command for {zone.device_name}",
+        "command_id": queue_entry.id
+    }
+
+
+@router.post("/zones/{zone_id}/previous")
+async def sonos_previous_track(
+    zone_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Go to previous track on a Sonos speaker
+
+    Only applicable to Sonos speakers.
+    """
+    zone = db.query(VirtualDevice).get(zone_id)
+    if not zone:
+        raise HTTPException(status_code=404, detail="Zone not found")
+
+    controller = db.query(VirtualController).get(zone.controller_id)
+    if not controller:
+        raise HTTPException(status_code=404, detail="Controller not found")
+
+    if controller.protocol != "sonos_upnp":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Playback control not supported for protocol: {controller.protocol}"
+        )
+
+    from ..models.command_queue import CommandQueue
+
+    queue_entry = CommandQueue(
+        hostname=controller.controller_id,
+        command="previous",
+        port=zone.port_number,
+        command_class="interactive",
+        status="pending",
+        priority=0,
+        max_attempts=3,
+        routing_method="queued"
+    )
+
+    db.add(queue_entry)
+    db.commit()
+    db.refresh(queue_entry)
+
+    return {
+        "success": True,
+        "message": f"Queued previous track command for {zone.device_name}",
+        "command_id": queue_entry.id
+    }

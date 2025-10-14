@@ -14,6 +14,35 @@ interface AmplifierInfo {
 }
 
 const amplifierData: Record<string, AmplifierInfo> = {
+  'sonos_upnp': {
+    name: 'Sonos Speakers',
+    protocol: 'sonos_upnp (UPnP/SOAP)',
+    port: '1400',
+    auth: 'None (local network)',
+    zoneSupport: '✅ Auto-Discovery',
+    setupTime: '1 minute',
+    icon: '🔊',
+    implementationStatus: 'implemented',
+    setupSteps: [
+      'Ensure Sonos speaker is on the same network',
+      'Click "Add" on discovered device or enter IP manually',
+      'System auto-discovers speaker via SSDP/mDNS',
+      'Speaker appears immediately as controllable zone'
+    ],
+    notes: [
+      '✅ UPnP/SOAP protocol (SoCo library)',
+      '✅ No authentication required (local network only)',
+      '✅ Auto-discovery via SSDP and mDNS',
+      '✅ Volume control (0-100)',
+      '✅ Mute/unmute support',
+      '✅ Playback control (play, pause, stop, next, previous)',
+      '✅ Now playing information (track, artist, album)',
+      '✅ Transport state monitoring',
+      '✅ Supports all Sonos speaker models',
+      '⚠️ Speakers always "on" (no power control)',
+      '📖 Consumer/commercial audio streaming platform'
+    ]
+  },
   'bosch_aes70': {
     name: 'Bosch Praesensa',
     protocol: 'bosch_aes70 (AES70/OCA)',
@@ -381,16 +410,16 @@ export const AmplifierInfoCards = ({ onSelectAmplifier: _onSelectAmplifier }: Am
       {/* Help Text */}
       <div className="rounded-lg border border-green-200 bg-green-50 p-3">
         <p className="text-xs text-green-900">
-          <strong>🎉 Ready to Use:</strong> <strong>Bosch Praesensa</strong> (AES70) and <strong>Bosch Plena Matrix</strong> (UDP) are fully implemented!
-          Select the appropriate protocol when adding your amplifier.
+          <strong>🎉 Ready to Use:</strong> <strong>Sonos Speakers</strong>, <strong>Bosch Praesensa</strong> (AES70), and <strong>Bosch Plena Matrix</strong> (UDP) are fully implemented!
+          Sonos speakers are auto-discovered, or select the appropriate protocol when adding amplifiers manually.
         </p>
       </div>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 p-3">
         <p className="text-xs text-blue-900">
-          <strong>💡 About AES70/OCA:</strong> AES70 (Open Control Architecture) is an industry-standard protocol
-          for professional audio control. It's completely open (no licensing fees), supports auto-discovery,
-          and is used by Bosch, d&b audiotechnik, and other professional audio brands.
+          <strong>💡 About Protocols:</strong> AES70 (Open Control Architecture) is an industry-standard protocol
+          for professional audio control. Sonos uses UPnP/SOAP for local network control. Both support auto-discovery
+          and require no authentication on your local network.
         </p>
       </div>
     </div>

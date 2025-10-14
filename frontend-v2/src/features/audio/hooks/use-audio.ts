@@ -6,6 +6,7 @@ const QUERY_KEYS = {
   controllers: ['audio', 'controllers'] as const,
   zones: (controllerId?: string) => ['audio', 'zones', controllerId] as const,
   presets: (controllerId: string) => ['audio', 'presets', controllerId] as const,
+  discoveredDevices: ['audio', 'discovered-devices'] as const,
 };
 
 // Fetch all audio controllers
@@ -267,5 +268,14 @@ export function useActivePreset(controllerId: string, enabled: boolean = true) {
     queryFn: () => audioApi.getActivePreset(controllerId),
     enabled: enabled && !!controllerId,
     refetchInterval: 30000, // Refetch every 30 seconds
+  });
+}
+
+// Fetch unadopted discovered audio devices
+export function useDiscoveredAudioDevices() {
+  return useQuery({
+    queryKey: QUERY_KEYS.discoveredDevices,
+    queryFn: audioApi.getDiscoveredDevices,
+    refetchInterval: 10000, // Refetch every 10 seconds
   });
 }

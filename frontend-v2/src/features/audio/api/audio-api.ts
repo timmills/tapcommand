@@ -38,6 +38,18 @@ export interface AudioController {
   };
 }
 
+export interface DiscoveredAudioDevice {
+  ip_address: string;
+  device_name: string;
+  model_name: string;
+  model_number?: string;
+  protocol: string;
+  uid: string;
+  mac_address?: string;
+  software_version?: string;
+  discovery_method: string;
+}
+
 export const audioApi = {
   // List all audio controllers with zones
   getControllers: async (): Promise<AudioController[]> => {
@@ -132,5 +144,11 @@ export const audioApi = {
   getActivePreset: async (controllerId: string): Promise<{ preset_number: number; preset_name: string }> => {
     const response = await apiClient.get(`/api/audio/controllers/${controllerId}/active-preset`);
     return response.data;
+  },
+
+  // Get unadopted discovered audio devices
+  getDiscoveredDevices: async (): Promise<DiscoveredAudioDevice[]> => {
+    const response = await apiClient.get('/api/audio/discoveries/unadopted');
+    return response.data.devices;
   },
 };

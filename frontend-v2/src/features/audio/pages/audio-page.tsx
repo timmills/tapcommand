@@ -1,12 +1,13 @@
 import { RefreshCw, Trash2, Speaker, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { useAudioControllers, useDeleteController, useRediscoverZones, useAddController } from '../hooks/use-audio';
+import { useAudioControllers, useDeleteController, useRediscoverZones, useAddController, useDiscoveredAudioDevices } from '../hooks/use-audio';
 import { ZoneCard } from '../components/zone-card';
 import { AmplifierInfoCards } from '../components/amplifier-info-cards';
 import { PresetButtons } from '../components/preset-buttons';
 
 export function AudioPage() {
   const { data: controllers, isLoading, isError, error } = useAudioControllers();
+  const { data: discoveredDevices, isLoading: isDiscovering } = useDiscoveredAudioDevices();
   const deleteController = useDeleteController();
   const rediscoverZones = useRediscoverZones();
   const addController = useAddController();
@@ -60,6 +61,21 @@ export function AudioPage() {
         setShowManualEntry(false);
       },
     });
+  };
+
+  const handleAdoptDiscovered = (device: any) => {
+    const payload: any = {
+      ip_address: device.ip_address,
+      controller_name: device.device_name,
+      protocol: device.protocol,
+    };
+
+    // Add model info if available
+    if (device.model_number) {
+      payload.model_number = device.model_number;
+    }
+
+    addController.mutate(payload);
   };
 
   return (
@@ -170,6 +186,51 @@ export function AudioPage() {
               Cancel
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Discovered Devices Section */}
+      {!isDiscovering && discoveredDevices && discoveredDevices.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-slate-900">Discovered Audio Devices</h3>
+          <p className="text-xs text-slate-500">
+            Found {discoveredDevices.length} unadopted audio device{discoveredDevices.length !== 1 ? 's' : ''} on your network
+          </p>
+          {discoveredDevices.map((device) => (
+            <div key={device.uid} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100">
+                    <Speaker className="h-6 w-6 text-brand-600" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-slate-900">{device.device_name}</h4>
+                    <p className="text-sm text-slate-500">
+                      {device.ip_address} • {device.model_name}
+                    </p>
+                    {device.software_version && (
+                      <p className="text-xs text-slate-400">
+                        Version: {device.software_version}
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
+                    {device.protocol === 'sonos_upnp' ? 'Sonos' : device.protocol}
+                  </span>
+                  <button
+                    onClick={() => handleAdoptDiscovered(device)}
+                    disabled={addController.isPending}
+                    className="inline-flex items-center gap-1 rounded-md bg-brand-500 px-3 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Plus className="h-4 w-4" />
+                    {addController.isPending ? 'Adding...' : 'Add'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

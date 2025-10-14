@@ -136,9 +136,9 @@ class CommandQueueProcessor:
             virtual_device = None  # Track if this is a virtual device with hybrid config
 
             # Check if it's a Virtual Controller (network TV or audio)
-            # Audio controllers can have prefixes: plm-, aud-, audio-
+            # Audio controllers can have prefixes: plm-, aud-, audio-, sonos-
             # Network TVs have prefix: nw-
-            if cmd.hostname.startswith(('nw-', 'aud-', 'audio-', 'plm-')):
+            if cmd.hostname.startswith(('nw-', 'aud-', 'audio-', 'plm-', 'sonos-')):
                 vc = db.query(VirtualController).filter(
                     VirtualController.controller_id == cmd.hostname
                 ).first()
