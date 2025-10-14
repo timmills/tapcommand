@@ -32,7 +32,7 @@ export async function fetchSchedules(params: ListSchedulesParams = {}): Promise<
   if (params.limit) searchParams.append('limit', params.limit.toString());
   if (params.offset) searchParams.append('offset', params.offset.toString());
 
-  const url = `${API_BASE}${searchParams.toString() ? `?${searchParams}` : ''}`;
+  const url = `${API_BASE}/${searchParams.toString() ? `?${searchParams}` : ''}`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -72,7 +72,7 @@ export async function fetchSchedule(id: number): Promise<Schedule> {
  * Create a new schedule
  */
 export async function createSchedule(data: CreateScheduleRequest): Promise<Schedule> {
-  const response = await fetch(API_BASE, {
+  const response = await fetch(`${API_BASE}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
