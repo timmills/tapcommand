@@ -26,8 +26,8 @@ export const RootLayout = () => {
   // Queue diagnostics needs full width for the wide table
   const isFullWidth = location.pathname === '/queue-diagnostics';
 
-  // Control page is full-screen with no chrome
-  const isControlPage = location.pathname === '/control';
+  // Control pages are full-screen with no chrome
+  const isControlPage = location.pathname === '/control-tv' || location.pathname === '/control-tv-old';
 
   if (isControlPage) {
     return (

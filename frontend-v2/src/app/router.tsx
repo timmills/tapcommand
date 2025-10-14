@@ -52,12 +52,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/control',
+    path: '/control-tv-old',
     element: <ControlLayout />,
     children: [{ index: true, element: <ControlPage /> }],
   },
   {
-    path: '/control-demo',
+    path: '/control-tv',
     element: <ControlDemoLayout />,
     children: [{ index: true, element: <ControlDemoPage /> }],
   },
