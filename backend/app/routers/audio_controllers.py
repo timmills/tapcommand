@@ -57,6 +57,7 @@ class AudioControllerResponse(BaseModel):
     is_online: bool
     total_zones: int
     zones: List[AudioZoneResponse]
+    connection_config: Optional[dict] = None
 
     class Config:
         from_attributes = True
@@ -178,7 +179,8 @@ async def discover_audio_controller(
             port=port,
             is_online=controller.is_online,
             total_zones=len(zones),
-            zones=zones
+            zones=zones,
+            connection_config=connection_config
         )
 
     except Exception as e:
@@ -229,7 +231,8 @@ async def list_audio_controllers(db: Session = Depends(get_db)):
             port=port,
             is_online=controller.is_online,
             total_zones=len(zones),
-            zones=zones
+            zones=zones,
+            connection_config=connection_config
         ))
 
     return result
@@ -641,7 +644,8 @@ async def set_master_volume(
     """
     Set master volume on all zones simultaneously
 
-    This sets the same volume level on all zones of the controller
+    This sets the same volume level on all zones of the controller.
+    NOTE: Not available for Plena Matrix (PLM-4Px2x) - use individual zone controls.
     """
 
     controller = db.query(VirtualController).filter(
@@ -651,6 +655,13 @@ async def set_master_volume(
 
     if not controller:
         raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # PLM-4Px2x does not have master volume - reject request
+    if controller.protocol == "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail="Master volume not supported for Plena Matrix (PLM-4Px2x). Use individual zone controls instead."
+        )
 
     # Queue master volume command
     from ..models.command_queue import CommandQueue
@@ -684,7 +695,11 @@ async def master_volume_up(
     controller_id: str,
     db: Session = Depends(get_db)
 ):
-    """Increase master volume on all zones by 5%"""
+    """
+    Increase master volume on all zones by 5%
+
+    NOTE: Not available for Plena Matrix (PLM-4Px2x) - use individual zone controls.
+    """
 
     controller = db.query(VirtualController).filter(
         VirtualController.controller_id == controller_id,
@@ -693,6 +708,13 @@ async def master_volume_up(
 
     if not controller:
         raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # PLM-4Px2x does not have master volume - reject request
+    if controller.protocol == "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail="Master volume not supported for Plena Matrix (PLM-4Px2x). Use individual zone controls instead."
+        )
 
     from ..models.command_queue import CommandQueue
 
@@ -723,7 +745,11 @@ async def master_volume_down(
     controller_id: str,
     db: Session = Depends(get_db)
 ):
-    """Decrease master volume on all zones by 5%"""
+    """
+    Decrease master volume on all zones by 5%
+
+    NOTE: Not available for Plena Matrix (PLM-4Px2x) - use individual zone controls.
+    """
 
     controller = db.query(VirtualController).filter(
         VirtualController.controller_id == controller_id,
@@ -732,6 +758,13 @@ async def master_volume_down(
 
     if not controller:
         raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # PLM-4Px2x does not have master volume - reject request
+    if controller.protocol == "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail="Master volume not supported for Plena Matrix (PLM-4Px2x). Use individual zone controls instead."
+        )
 
     from ..models.command_queue import CommandQueue
 
@@ -755,3 +788,103 @@ async def master_volume_down(
         "message": f"Queued master volume down for {controller.controller_name}",
         "command_id": queue_entry.id
     }
+
+
+@router.post("/controllers/{controller_id}/sync-volumes")
+async def sync_volumes_from_device(
+    controller_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Read actual volumes from device and sync database
+
+    Only applicable to Plena Matrix controllers.
+    Reads SYNC Type 102 from device and updates cached_volume_level and cached_mute_status.
+    """
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # Only Plena Matrix supports SYNC Type 102 reading
+    if controller.protocol != "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Volume sync not supported for protocol: {controller.protocol}"
+        )
+
+    # Call executor directly to sync volumes
+    from ..commands.executors.audio.bosch_plena_matrix import BoschPlenaMatrixExecutor
+
+    executor = BoschPlenaMatrixExecutor(db)
+
+    try:
+        result = await executor.sync_zone_volumes_from_device(controller)
+
+        if result.success:
+            return {
+                "success": True,
+                "message": result.message,
+                "volumes": result.data.get("volumes", {}),
+                "updated_zones": result.data.get("updated_zones", [])
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.message)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to sync volumes: {str(e)}")
+    finally:
+        await executor.cleanup()
+@router.get("/controllers/{controller_id}/active-preset")
+async def get_active_preset(
+    controller_id: str,
+    db: Session = Depends(get_db)
+):
+    """
+    Get currently active preset from controller
+
+    Only applicable to Plena Matrix controllers.
+    Reads GOBJ ID 10 to get active preset number.
+    """
+
+    controller = db.query(VirtualController).filter(
+        VirtualController.controller_id == controller_id,
+        VirtualController.controller_type == "audio"
+    ).first()
+
+    if not controller:
+        raise HTTPException(status_code=404, detail="Audio controller not found")
+
+    # Only Plena Matrix supports active preset reading
+    if controller.protocol != "bosch_plena_matrix":
+        raise HTTPException(
+            status_code=400,
+            detail=f"Active preset not supported for protocol: {controller.protocol}"
+        )
+
+    # Call executor directly to get active preset
+    from ..commands.executors.audio.bosch_plena_matrix import BoschPlenaMatrixExecutor
+
+    executor = BoschPlenaMatrixExecutor(db)
+
+    try:
+        result = await executor.get_active_preset(controller)
+
+        if result.success:
+            return {
+                "success": True,
+                "preset_number": result.data.get("preset_number"),
+                "preset_name": result.data.get("preset_name"),
+                "message": result.message
+            }
+        else:
+            raise HTTPException(status_code=500, detail=result.message)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get active preset: {str(e)}")
+    finally:
+        await executor.cleanup()

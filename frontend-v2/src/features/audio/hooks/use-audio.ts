@@ -9,11 +9,11 @@ const QUERY_KEYS = {
 };
 
 // Fetch all audio controllers
-export function useAudioControllers() {
+export function useAudioControllers(refetchInterval: number = 5000) {
   return useQuery({
     queryKey: QUERY_KEYS.controllers,
     queryFn: audioApi.getControllers,
-    refetchInterval: 5000, // Poll every 5 seconds for status updates
+    refetchInterval, // Customizable polling interval (default 5 seconds)
   });
 }
 
@@ -185,5 +185,87 @@ export function useRecallPreset() {
         description: error instanceof Error ? error.message : 'Unknown error',
       });
     },
+  });
+}
+
+// Master volume control (all zones)
+export function useSetMasterVolume() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ controllerId, volume }: { controllerId: string; volume: number }) =>
+      audioApi.setMasterVolume(controllerId, volume),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      queryClient.invalidateQueries({ queryKey: ['audio', 'zones'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to set master volume', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}
+
+export function useMasterVolumeUp() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (controllerId: string) => audioApi.masterVolumeUp(controllerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      queryClient.invalidateQueries({ queryKey: ['audio', 'zones'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to increase master volume', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}
+
+export function useMasterVolumeDown() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (controllerId: string) => audioApi.masterVolumeDown(controllerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      queryClient.invalidateQueries({ queryKey: ['audio', 'zones'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to decrease master volume', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}
+
+// Sync volumes from device (Plena Matrix only)
+export function useSyncVolumes() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (controllerId: string) => audioApi.syncVolumes(controllerId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.controllers });
+      queryClient.invalidateQueries({ queryKey: ['audio', 'zones'] });
+      toast.success('Volumes synced from device');
+    },
+    onError: (error) => {
+      toast.error('Failed to sync volumes', {
+        description: error instanceof Error ? error.message : 'Unknown error',
+      });
+    },
+  });
+}
+
+// Get active preset (Plena Matrix only)
+export function useActivePreset(controllerId: string, enabled: boolean = true) {
+  return useQuery({
+    queryKey: ['audio', 'active-preset', controllerId],
+    queryFn: () => audioApi.getActivePreset(controllerId),
+    enabled: enabled && !!controllerId,
+    refetchInterval: 30000, // Refetch every 30 seconds
   });
 }

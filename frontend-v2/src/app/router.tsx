@@ -20,6 +20,7 @@ import { UsersPage } from '../features/users/pages/users-page';
 import { LoginPage } from '../features/auth/pages/login-page';
 import { NetworkControllersPage } from '../features/network-controllers/pages/network-controllers-page';
 import { AudioPage } from '../features/audio/pages/audio-page';
+import { AudioControlDemoPage } from '../features/audio/pages/audio-control-demo';
 import { DocumentationPage } from '../features/documentation/pages/documentation-page';
 import { BackupsPage } from '../features/backups/pages/backups-page';
 import { OverviewPage } from '../features/overview/pages/overview-page';
@@ -59,6 +60,10 @@ export const router = createBrowserRouter([
     path: '/control-demo',
     element: <ControlDemoLayout />,
     children: [{ index: true, element: <ControlDemoPage /> }],
+  },
+  {
+    path: '/control-audio',
+    element: <AudioControlDemoPage />,
   },
   { path: '/login', element: <LoginPage /> },
   { path: '*', element: <Navigate to="/" replace /> },

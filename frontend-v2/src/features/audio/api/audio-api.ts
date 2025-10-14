@@ -32,6 +32,10 @@ export interface AudioController {
   is_online: boolean;
   total_zones: number;
   zones: AudioZone[];
+  connection_config?: {
+    presets?: AudioPreset[];
+    device_model?: string;
+  };
 }
 
 export const audioApi = {
@@ -104,5 +108,29 @@ export const audioApi = {
   // Recall a preset
   recallPreset: async (controllerId: string, presetNumber: number): Promise<void> => {
     await apiClient.post(`/api/audio/controllers/${controllerId}/preset`, { preset_number: presetNumber });
+  },
+
+  // Master volume control (all zones)
+  setMasterVolume: async (controllerId: string, volume: number): Promise<void> => {
+    await apiClient.post(`/api/audio/controllers/${controllerId}/volume`, { volume });
+  },
+
+  masterVolumeUp: async (controllerId: string): Promise<void> => {
+    await apiClient.post(`/api/audio/controllers/${controllerId}/volume/up`);
+  },
+
+  masterVolumeDown: async (controllerId: string): Promise<void> => {
+    await apiClient.post(`/api/audio/controllers/${controllerId}/volume/down`);
+  },
+
+  // Sync volumes from device (Plena Matrix only)
+  syncVolumes: async (controllerId: string): Promise<void> => {
+    await apiClient.post(`/api/audio/controllers/${controllerId}/sync-volumes`);
+  },
+
+  // Get active preset (Plena Matrix only)
+  getActivePreset: async (controllerId: string): Promise<{ preset_number: number; preset_name: string }> => {
+    const response = await apiClient.get(`/api/audio/controllers/${controllerId}/active-preset`);
+    return response.data;
   },
 };

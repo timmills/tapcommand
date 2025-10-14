@@ -95,13 +95,10 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
             if command.command == "recall_preset":
                 preset_number = command.parameters.get("preset_number", 1) if command.parameters else 1
                 return await self.recall_preset(vc, preset_number)
-            elif command.command == "set_master_volume":
-                volume = command.parameters.get("volume", 50) if command.parameters else 50
-                return await self.set_master_volume(vc, volume)
-            elif command.command == "master_volume_up":
-                return await self.master_volume_up(vc)
-            elif command.command == "master_volume_down":
-                return await self.master_volume_down(vc)
+            elif command.command == "get_active_preset":
+                return await self.get_active_preset(vc)
+            # NOTE: PLM-4Px2x has NO hardware master volume/mute
+            # Master volume commands removed - use individual zone controls only
 
             # Zone-level commands require a zone
             zone_number = command.parameters.get("zone_number", 1) if command.parameters else 1
@@ -124,6 +121,7 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
                 return await self._volume_down(vc, vd)
             elif command.command == "set_volume":
                 volume = command.parameters.get("volume", 50) if command.parameters else 50
+                logger.info(f"DEBUG: set_volume - parameters={command.parameters}, volume={volume}")
                 return await self._set_volume(vc, vd, volume)
             elif command.command == "mute":
                 return await self._set_mute(vc, vd, True)
@@ -244,13 +242,155 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
         response = await self._send_command(controller, self.CMD_PING)
         return response is not None
 
+    def _lut_index_to_db(self, lut_index: int) -> Optional[float]:
+        """
+        Convert DSP Volume LUT index to dB value
+
+        DSP Volume LUT Block format (2 bytes):
+        - Byte 1: LUT Index (0-249) where 0 = MUTE, 1-249 = -100.0dB to +24.0dB in 0.5dB steps
+        - Byte 2: Flags (0x00 = unmuted, 0x01 = muted)
+
+        Formula: dB = (lut_index - 1) * 0.5 - 100.0
+        """
+        if lut_index == 0:
+            return None  # Mute
+        return (lut_index - 1) * 0.5 - 100.0
+
+    def _db_to_lut_index(self, db_value: float) -> int:
+        """
+        Convert dB value to DSP Volume LUT index
+
+        Formula: lut_index = (dB + 100.0) / 0.5 + 1
+        Range: 1-249 (0 is reserved for MUTE)
+        """
+        lut_index = int((db_value + 100.0) / 0.5 + 1)
+        return max(1, min(249, lut_index))  # Clamp to valid range
+
+    def _db_to_percent(self, db_value: Optional[float], gain_range: List[float] = [-80.0, 10.0]) -> int:
+        """Convert dB to 0-100% scale"""
+        if db_value is None:
+            return 0
+        min_db, max_db = gain_range
+        return int(((db_value - min_db) / (max_db - min_db)) * 100)
+
+    async def read_zone_volumes(self, controller: VirtualController) -> Dict[int, Dict[str, Any]]:
+        """
+        Read actual volume levels and mute states from device using SYNC Type 102
+
+        SYNC Type 102 contains DSP parameters for all 4 zones.
+        Zone output levels are located at fixed offsets with 15-byte spacing:
+        - Zone 1 (BAR):     Offset 17 (bytes 17-18)
+        - Zone 2 (POKIES):  Offset 32 (bytes 32-33)
+        - Zone 3 (OUTSIDE): Offset 47 (bytes 47-48)
+        - Zone 4 (BISTRO):  Offset 62 (bytes 62-63)
+
+        Each output level is a 2-byte DSP Volume LUT Block:
+        - Byte 1: LUT Index (volume)
+        - Byte 2: Flags (mute state: 0x00=unmuted, 0x01=muted)
+
+        Returns:
+            Dict mapping zone_number (1-4) to {"volume_db", "volume_pct", "muted", "lut_index"}
+        """
+        # Send SYNC Type 102 command
+        response = await self._send_command(controller, b'SYNC', struct.pack('B', 102))
+
+        if not response or len(response) < 64:
+            logger.error(f"Failed to read SYNC Type 102 from {controller.controller_name}")
+            return {}
+
+        # Parse output levels at fixed offsets
+        zone_offsets = {
+            1: 17,  # BAR (Ch1)
+            2: 32,  # POKIES (Ch2)
+            3: 47,  # OUTSIDE (Ch3)
+            4: 62,  # BISTRO (Ch4)
+        }
+
+        volumes = {}
+        for zone_number, offset in zone_offsets.items():
+            if offset + 1 < len(response):
+                lut_index = response[offset]
+                flags = response[offset + 1]
+
+                db_value = self._lut_index_to_db(lut_index)
+                muted = (flags != 0x00)
+
+                if db_value is not None:
+                    volume_pct = self._db_to_percent(db_value)
+
+                    volumes[zone_number] = {
+                        "volume_db": round(db_value, 1),
+                        "volume_pct": volume_pct,
+                        "muted": muted,
+                        "lut_index": lut_index,
+                        "flags": flags
+                    }
+
+                    mute_str = " [MUTED]" if muted else ""
+                    logger.debug(f"Zone {zone_number}: {db_value:.1f}dB ({volume_pct}%){mute_str}")
+                else:
+                    # LUT index 0 = MUTE
+                    volumes[zone_number] = {
+                        "volume_db": -100.0,
+                        "volume_pct": 0,
+                        "muted": True,
+                        "lut_index": 0,
+                        "flags": flags
+                    }
+                    logger.debug(f"Zone {zone_number}: MUTED (LUT=0)")
+
+        return volumes
+
+    async def sync_zone_volumes_from_device(self, controller: VirtualController) -> ExecutionResult:
+        """
+        Read actual volumes from device and update database cache
+
+        This syncs the cached_volume_level and cached_mute_status in the database
+        with the actual state on the device.
+        """
+        volumes = await self.read_zone_volumes(controller)
+
+        if not volumes:
+            return ExecutionResult(
+                success=False,
+                message=f"Failed to read volumes from {controller.controller_name}"
+            )
+
+        # Update database for each zone
+        updated_zones = []
+        for zone_number, volume_data in volumes.items():
+            vd = self.db.query(VirtualDevice).filter(
+                VirtualDevice.controller_id == controller.id,
+                VirtualDevice.port_number == zone_number
+            ).first()
+
+            if vd:
+                vd.cached_volume_level = volume_data["volume_pct"]
+                vd.cached_mute_status = volume_data["muted"]
+                updated_zones.append(f"{vd.device_name}: {volume_data['volume_pct']}% ({volume_data['volume_db']}dB)")
+
+        self.db.commit()
+
+        logger.info(f"✓ Synced volumes from device: {', '.join(updated_zones)}")
+
+        return ExecutionResult(
+            success=True,
+            message=f"Synced {len(updated_zones)} zone volumes from device",
+            data={"volumes": volumes, "updated_zones": updated_zones}
+        )
+
     async def _set_volume(
         self,
         controller: VirtualController,
         zone: VirtualDevice,
         volume: int
     ) -> ExecutionResult:
-        """Set volume (0-100 scale) on zone using POBJ command"""
+        """
+        Set volume (0-100 scale) on zone using POBJ command
+
+        POBJ format:
+        [POBJ][IsRead:1][PresetNumber:1][PresetObjectID:2][NV:1][Data:2][Checksum:1]
+        """
 
         # Validate volume range
         if volume < 0 or volume > 100:
@@ -261,7 +401,6 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
 
         # Get zone configuration
         zone_config = zone.connection_config or {}
-        zone_index = zone_config.get("zone_index", zone.port_number - 1)
 
         # Convert 0-100 volume to dB
         # Plena Matrix typical range: -80dB to +10dB
@@ -269,40 +408,107 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
         min_db, max_db = gain_range
         db_value = min_db + (volume / 100.0) * (max_db - min_db)
 
-        # Build POBJ command to set preset volume
-        # Format per API manual: [Preset Index: 1][Block ID: 1][Block Data Length: 1][Block Data]
-        # For Volume LUT (Look-Up Table) block:
-        # Block ID = 0x02, Data = 4-byte float (dB value)
-        preset_index = zone_index  # Each zone maps to a preset
-        block_id = 0x02  # Volume LUT block
-        block_data = struct.pack('>f', db_value)  # 4-byte float dB value
-        block_length = len(block_data)
+        # Convert dB to LUT index
+        lut_index = self._db_to_lut_index(db_value)
 
-        data = struct.pack('>BBB', preset_index, block_id, block_length) + block_data
+        # Zone to POBJ Object ID mapping
+        zone_object_ids = {
+            1: 26,   # POBJ_AMPCH1_CB_OUTPUTLEVEL (BAR)
+            2: 52,   # POBJ_AMPCH2_CB_OUTPUTLEVEL (POKIES)
+            3: 78,   # POBJ_AMPCH3_CB_OUTPUTLEVEL (OUTSIDE)
+            4: 104   # POBJ_AMPCH4_CB_OUTPUTLEVEL (BISTRO)
+        }
 
-        response = await self._send_command(controller, self.CMD_POBJ, data)
+        preset_object_id = zone_object_ids[zone.port_number]
 
-        if response is None:
+        logger.info(
+            f"Setting {zone.device_name} to {volume}% ({db_value:.1f}dB, LUT={lut_index})"
+        )
+
+        # Build POBJ command with checksum
+        command_data = (
+            b'POBJ' +
+            struct.pack('B', 0x00) +              # IsRead = write
+            struct.pack('B', 0x00) +              # PresetNumber = live (0)
+            struct.pack('>H', preset_object_id) + # Object ID (2 bytes big-endian)
+            struct.pack('B', 0x00) +              # NV commit (RAM only)
+            struct.pack('BB', lut_index, 0x00) +  # Data: LUT index + flags (unmuted)
+            struct.pack('B', 0x00)                # Checksum
+        )
+
+        # Build UDP packet
+        sock = self._get_socket(controller)
+        seq = self._get_next_sequence(controller.controller_id)
+
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address")
+
+        if not ip_address:
             return ExecutionResult(
                 success=False,
-                message=f"Failed to set volume on {zone.device_name}"
+                message=f"No IP address configured for {controller.controller_name}"
             )
 
-        # Update cache
-        zone.cached_volume_level = volume
-        self.db.commit()
+        header = self._build_packet_header(seq, len(command_data))
+        packet = header + command_data
 
-        logger.info(f"✓ Set {zone.device_name} to {volume}% ({db_value:.1f}dB)")
+        try:
+            sock.sendto(packet, (ip_address, self.RECEIVE_PORT))
+            response, _ = sock.recvfrom(1024)
 
-        return ExecutionResult(
-            success=True,
-            message=f"Set {zone.device_name} to {volume}% ({db_value:.1f}dB)",
-            data={
-                "volume": volume,
-                "db_value": round(db_value, 1),
-                "zone": zone.device_name
-            }
-        )
+            if len(response) >= 14:
+                cmd = response[10:14]
+                resp_data = response[14:]
+
+                if cmd in [b'POBJ', b'ACKN']:
+                    # Wait briefly for device to apply change
+                    await asyncio.sleep(0.1)
+
+                    # Verify the change by reading back
+                    volumes = await self.read_zone_volumes(controller)
+                    actual_volume = volumes.get(zone.port_number, {}).get("volume_pct", volume)
+
+                    # Update cache with actual state
+                    zone.cached_volume_level = actual_volume
+                    self.db.commit()
+
+                    verify_str = "" if abs(actual_volume - volume) <= 2 else f" (device shows: {actual_volume}%)"
+                    logger.info(f"✓ Set {zone.device_name} to {volume}% ({db_value:.1f}dB){verify_str}")
+
+                    return ExecutionResult(
+                        success=True,
+                        message=f"Set {zone.device_name} to {volume}% ({db_value:.1f}dB)",
+                        data={
+                            "volume": actual_volume,
+                            "requested_volume": volume,
+                            "db_value": round(db_value, 1),
+                            "zone": zone.device_name
+                        }
+                    )
+                elif cmd == b'NACK':
+                    nack_code = struct.unpack('>I', resp_data[:4])[0] if len(resp_data) >= 4 else 0
+                    logger.error(f"NACK received: 0x{nack_code:08x}")
+                    return ExecutionResult(
+                        success=False,
+                        message=f"Device rejected volume change (NACK: 0x{nack_code:08x})"
+                    )
+
+            return ExecutionResult(
+                success=False,
+                message=f"No valid response from device"
+            )
+
+        except socket.timeout:
+            return ExecutionResult(
+                success=False,
+                message=f"Timeout waiting for response from {zone.device_name}"
+            )
+        except Exception as e:
+            logger.error(f"Volume set error: {e}")
+            return ExecutionResult(
+                success=False,
+                message=f"Failed to set volume: {str(e)}"
+            )
 
     async def _volume_up(
         self,
@@ -330,47 +536,128 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
         zone: VirtualDevice,
         mute: bool
     ) -> ExecutionResult:
-        """Mute/unmute zone using POBJ command"""
+        """
+        Mute/unmute zone using POBJ command
 
-        # Get zone configuration
-        zone_config = zone.connection_config or {}
-        zone_index = zone_config.get("zone_index", zone.port_number - 1)
+        IMPORTANT: Must preserve current volume LUT when muting.
+        First reads current volume via SYNC Type 102, then sends POBJ with
+        preserved LUT + mute flag.
 
-        # Build POBJ command to set mute state
-        # Format per API manual: [Preset Index: 1][Block ID: 1][Block Data Length: 1][Block Data]
-        # For Mute block:
-        # Block ID = 0x03, Data = 1 byte (0=unmuted, 1=muted)
-        preset_index = zone_index  # Each zone maps to a preset
-        block_id = 0x03  # Mute block
-        mute_value = 1 if mute else 0
-        block_data = struct.pack('B', mute_value)
-        block_length = len(block_data)
+        POBJ format:
+        [POBJ][IsRead:1][PresetNumber:1][PresetObjectID:2][NV:1][Data:2][Checksum:1]
+        """
 
-        data = struct.pack('>BBB', preset_index, block_id, block_length) + block_data
+        # Step 1: Read current volume to preserve LUT
+        volumes = await self.read_zone_volumes(controller)
 
-        response = await self._send_command(controller, self.CMD_POBJ, data)
-
-        if response is None:
+        if not volumes or zone.port_number not in volumes:
+            logger.error(f"Failed to read current volume for {zone.device_name}")
             return ExecutionResult(
                 success=False,
-                message=f"Failed to set mute on {zone.device_name}"
+                message=f"Failed to read current volume for {zone.device_name}"
             )
 
-        # Update cache
-        zone.cached_mute_status = mute
-        self.db.commit()
+        current_lut = volumes[zone.port_number]["lut_index"]
 
-        action = "Muted" if mute else "Unmuted"
-        logger.info(f"✓ {action} {zone.device_name}")
+        # Zone to POBJ Object ID mapping
+        zone_object_ids = {
+            1: 26,   # POBJ_AMPCH1_CB_OUTPUTLEVEL (BAR)
+            2: 52,   # POBJ_AMPCH2_CB_OUTPUTLEVEL (POKIES)
+            3: 78,   # POBJ_AMPCH3_CB_OUTPUTLEVEL (OUTSIDE)
+            4: 104   # POBJ_AMPCH4_CB_OUTPUTLEVEL (BISTRO)
+        }
 
-        return ExecutionResult(
-            success=True,
-            message=f"{action} {zone.device_name}",
-            data={
-                "muted": mute,
-                "zone": zone.device_name
-            }
+        preset_object_id = zone_object_ids[zone.port_number]
+        mute_flag = 0x01 if mute else 0x00
+
+        logger.info(
+            f"{'Muting' if mute else 'Unmuting'} {zone.device_name} (preserving LUT={current_lut})"
         )
+
+        # Build POBJ command with checksum
+        command_data = (
+            b'POBJ' +
+            struct.pack('B', 0x00) +              # IsRead = write
+            struct.pack('B', 0x00) +              # PresetNumber = live (0)
+            struct.pack('>H', preset_object_id) + # Object ID (2 bytes big-endian)
+            struct.pack('B', 0x00) +              # NV commit (RAM only)
+            struct.pack('BB', current_lut, mute_flag) +  # Data: LUT index + mute flag
+            struct.pack('B', 0x00)                # Checksum
+        )
+
+        # Build UDP packet
+        sock = self._get_socket(controller)
+        seq = self._get_next_sequence(controller.controller_id)
+
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address")
+
+        if not ip_address:
+            return ExecutionResult(
+                success=False,
+                message=f"No IP address configured for {controller.controller_name}"
+            )
+
+        header = self._build_packet_header(seq, len(command_data))
+        packet = header + command_data
+
+        try:
+            sock.sendto(packet, (ip_address, self.RECEIVE_PORT))
+            response, _ = sock.recvfrom(1024)
+
+            if len(response) >= 14:
+                cmd = response[10:14]
+                resp_data = response[14:]
+
+                if cmd in [b'POBJ', b'ACKN']:
+                    # Wait briefly for device to apply change
+                    await asyncio.sleep(0.1)
+
+                    # Verify the change by reading back
+                    volumes = await self.read_zone_volumes(controller)
+                    actual_mute = volumes.get(zone.port_number, {}).get("muted", mute)
+
+                    # Update cache with actual state
+                    zone.cached_mute_status = actual_mute
+                    self.db.commit()
+
+                    action = "Muted" if mute else "Unmuted"
+                    verify_str = "" if actual_mute == mute else f" (device shows: {'muted' if actual_mute else 'unmuted'})"
+                    logger.info(f"✓ {action} {zone.device_name}{verify_str}")
+
+                    return ExecutionResult(
+                        success=True,
+                        message=f"{action} {zone.device_name}",
+                        data={
+                            "muted": actual_mute,
+                            "requested_mute": mute,
+                            "zone": zone.device_name
+                        }
+                    )
+                elif cmd == b'NACK':
+                    nack_code = struct.unpack('>I', resp_data[:4])[0] if len(resp_data) >= 4 else 0
+                    logger.error(f"NACK received: 0x{nack_code:08x}")
+                    return ExecutionResult(
+                        success=False,
+                        message=f"Device rejected mute change (NACK: 0x{nack_code:08x})"
+                    )
+
+            return ExecutionResult(
+                success=False,
+                message=f"No valid response from device"
+            )
+
+        except socket.timeout:
+            return ExecutionResult(
+                success=False,
+                message=f"Timeout waiting for response from {zone.device_name}"
+            )
+        except Exception as e:
+            logger.error(f"Mute set error: {e}")
+            return ExecutionResult(
+                success=False,
+                message=f"Failed to set mute: {str(e)}"
+            )
 
     async def _toggle_mute(
         self,
@@ -381,26 +668,130 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
         current_mute = zone.cached_mute_status or False
         return await self._set_mute(controller, zone, not current_mute)
 
+    async def get_active_preset(
+        self,
+        controller: VirtualController
+    ) -> ExecutionResult:
+        """
+        Read the currently active preset using GOBJ ID 10
+
+        GOBJ_SYSTEM_CB_ACTIVEPRESET (Object ID 10):
+        Returns the number of the currently active preset.
+
+        Format:
+        [GOBJ][IsRead:1][ObjectID:2]
+
+        Returns:
+            ExecutionResult with preset_number in data
+        """
+        logger.info(f"Reading active preset from {controller.controller_name}")
+
+        # Build GOBJ command to read active preset (Object ID 10)
+        command_data = (
+            b'GOBJ' +
+            struct.pack('B', 0x01) +    # IsRead = read
+            struct.pack('<H', 10)       # Object ID 10 (little-endian)
+        )
+
+        # Build UDP packet
+        sock = self._get_socket(controller)
+        seq = self._get_next_sequence(controller.controller_id)
+
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address")
+
+        if not ip_address:
+            return ExecutionResult(
+                success=False,
+                message=f"No IP address configured for {controller.controller_name}"
+            )
+
+        header = self._build_packet_header(seq, len(command_data))
+        packet = header + command_data
+
+        try:
+            sock.sendto(packet, (ip_address, self.RECEIVE_PORT))
+            response, _ = sock.recvfrom(1024)
+
+            if len(response) >= 14:
+                cmd = response[10:14]
+                resp_data = response[14:]
+
+                if cmd == b'GOBJ' and len(resp_data) >= 1:
+                    active_preset = resp_data[0]
+
+                    # Get preset info from controller config
+                    connection_config = controller.connection_config or {}
+                    presets = connection_config.get("presets", [])
+
+                    preset_name = f"Preset {active_preset}"
+                    for preset in presets:
+                        if preset.get("preset_number") == active_preset:
+                            preset_name = preset.get("preset_name", preset_name)
+                            break
+
+                    logger.info(f"✓ Active preset: {preset_name} ({active_preset})")
+
+                    return ExecutionResult(
+                        success=True,
+                        message=f"Active preset: {preset_name}",
+                        data={
+                            "preset_number": active_preset,
+                            "preset_name": preset_name
+                        }
+                    )
+                elif cmd == b'NACK':
+                    nack_code = struct.unpack('>I', resp_data[:4])[0] if len(resp_data) >= 4 else 0
+                    logger.error(f"NACK received: 0x{nack_code:08x}")
+                    return ExecutionResult(
+                        success=False,
+                        message=f"Device rejected request (NACK: 0x{nack_code:08x})"
+                    )
+
+            return ExecutionResult(
+                success=False,
+                message=f"No valid response from device"
+            )
+
+        except socket.timeout:
+            return ExecutionResult(
+                success=False,
+                message=f"Timeout waiting for response from {controller.controller_name}"
+            )
+        except Exception as e:
+            logger.error(f"Get active preset error: {e}")
+            return ExecutionResult(
+                success=False,
+                message=f"Failed to get active preset: {str(e)}"
+            )
+
     async def recall_preset(
         self,
         controller: VirtualController,
         preset_number: int
     ) -> ExecutionResult:
         """
-        Recall a saved preset on the controller
+        Recall a saved preset on the controller using GOBJ ID 9
+
+        GOBJ_SYSTEM_CB_RECALLPRESET (Object ID 9):
+        Tells the PLENA Matrix to load all POBJ values stored in that preset
+        into the "Live" preset area.
+
+        Format:
+        [GOBJ][IsRead:1][ObjectID:2][Data:1][Checksum:1]
 
         Args:
             controller: Virtual controller (amplifier)
-            preset_number: Preset number (1-8 typically)
+            preset_number: Preset number (1-50)
 
         Returns:
             ExecutionResult with success/failure
         """
-        # Validate preset number
-        if preset_number < 1 or preset_number > 8:
+        # Validate preset number (1-50 per PLM-4Px2x spec)
+        if preset_number < 1 or preset_number > 50:
             return ExecutionResult(
                 success=False,
-                message=f"Preset number must be 1-8, got {preset_number}"
+                message=f"Preset number must be 1-50, got {preset_number}"
             )
 
         # Get preset info from controller config
@@ -421,137 +812,78 @@ class BoschPlenaMatrixExecutor(CommandExecutor):
                 message=f"Preset {preset_number} ({preset_info.get('preset_name', 'Unknown')}) is not active"
             )
 
-        # Build POBJ command to recall preset
-        # Format: [Preset Index: 1][Block ID: 1][Block Data Length: 1][Block Data]
-        # For Preset Recall block:
-        # Block ID = 0x01 (Preset Recall), Data = 1 byte (preset index)
-        preset_index = preset_number - 1  # Convert to 0-based index
-        block_id = 0x01  # Preset Recall block
-        block_data = struct.pack('B', preset_index)
-        block_length = len(block_data)
+        logger.info(f"Recalling preset {preset_number} on {controller.controller_name}")
 
-        data = struct.pack('>BBB', preset_index, block_id, block_length) + block_data
-
-        response = await self._send_command(controller, self.CMD_POBJ, data)
-
-        if response is None:
-            return ExecutionResult(
-                success=False,
-                message=f"Failed to recall preset {preset_number}"
-            )
-
-        preset_name = preset_info.get("preset_name", f"Preset {preset_number}") if preset_info else f"Preset {preset_number}"
-        logger.info(f"✓ Recalled preset: {preset_name}")
-
-        return ExecutionResult(
-            success=True,
-            message=f"Recalled preset: {preset_name}",
-            data={
-                "preset_number": preset_number,
-                "preset_name": preset_name
-            }
+        # Build GOBJ command to recall preset (Object ID 9)
+        command_data = (
+            b'GOBJ' +
+            struct.pack('B', 0x00) +              # IsRead = write
+            struct.pack('<H', 9) +                # Object ID 9 (little-endian)
+            struct.pack('B', preset_number) +     # Preset number to recall (1-50)
+            struct.pack('B', 0x00)                # Checksum
         )
 
-    async def set_master_volume(
-        self,
-        controller: VirtualController,
-        volume: int
-    ) -> ExecutionResult:
-        """
-        Set master volume on all zones simultaneously
+        # Build UDP packet
+        sock = self._get_socket(controller)
+        seq = self._get_next_sequence(controller.controller_id)
 
-        Args:
-            controller: Virtual controller (amplifier)
-            volume: Volume level 0-100
+        connection_config = controller.connection_config or {}
+        ip_address = connection_config.get("ip_address")
 
-        Returns:
-            ExecutionResult with success/failure
-        """
-        if volume < 0 or volume > 100:
+        if not ip_address:
             return ExecutionResult(
                 success=False,
-                message=f"Volume must be 0-100, got {volume}"
+                message=f"No IP address configured for {controller.controller_name}"
             )
 
-        # Get all zones for this controller
-        zones = self.db.query(VirtualDevice).filter(
-            VirtualDevice.controller_id == controller.id,
-            VirtualDevice.device_type == "audio_zone"
-        ).all()
+        header = self._build_packet_header(seq, len(command_data))
+        packet = header + command_data
 
-        if not zones:
+        try:
+            sock.sendto(packet, (ip_address, self.RECEIVE_PORT))
+            response, _ = sock.recvfrom(1024)
+
+            if len(response) >= 14:
+                cmd = response[10:14]
+                resp_data = response[14:]
+
+                if cmd in [b'GOBJ', b'ACKN']:
+                    preset_name = preset_info.get("preset_name", f"Preset {preset_number}") if preset_info else f"Preset {preset_number}"
+                    logger.info(f"✓ Recalled preset: {preset_name}")
+
+                    return ExecutionResult(
+                        success=True,
+                        message=f"Recalled preset: {preset_name}",
+                        data={
+                            "preset_number": preset_number,
+                            "preset_name": preset_name
+                        }
+                    )
+                elif cmd == b'NACK':
+                    nack_code = struct.unpack('>I', resp_data[:4])[0] if len(resp_data) >= 4 else 0
+                    logger.error(f"NACK received: 0x{nack_code:08x}")
+                    return ExecutionResult(
+                        success=False,
+                        message=f"Device rejected preset recall (NACK: 0x{nack_code:08x})"
+                    )
+
             return ExecutionResult(
                 success=False,
-                message=f"No zones found for controller {controller.controller_name}"
+                message=f"No valid response from device"
             )
 
-        # Set volume on each zone
-        success_count = 0
-        failed_zones = []
-
-        for zone in zones:
-            result = await self._set_volume(controller, zone, volume)
-            if result.success:
-                success_count += 1
-            else:
-                failed_zones.append(zone.device_name)
-
-        if failed_zones:
+        except socket.timeout:
             return ExecutionResult(
                 success=False,
-                message=f"Master volume partially set: {success_count}/{len(zones)} zones succeeded. Failed: {', '.join(failed_zones)}"
+                message=f"Timeout waiting for response from {controller.controller_name}"
             )
-
-        logger.info(f"✓ Set master volume to {volume}% on all {len(zones)} zones")
-
-        return ExecutionResult(
-            success=True,
-            message=f"Set master volume to {volume}% on all {len(zones)} zones",
-            data={
-                "volume": volume,
-                "zones_affected": len(zones)
-            }
-        )
-
-    async def master_volume_up(self, controller: VirtualController) -> ExecutionResult:
-        """Increase master volume on all zones by 5%"""
-
-        # Get first zone to determine current volume (as a reference)
-        first_zone = self.db.query(VirtualDevice).filter(
-            VirtualDevice.controller_id == controller.id,
-            VirtualDevice.device_type == "audio_zone"
-        ).first()
-
-        if not first_zone:
+        except Exception as e:
+            logger.error(f"Preset recall error: {e}")
             return ExecutionResult(
                 success=False,
-                message=f"No zones found for controller {controller.controller_name}"
+                message=f"Failed to recall preset: {str(e)}"
             )
 
-        current_volume = first_zone.cached_volume_level or 50
-        new_volume = min(100, current_volume + 5)
-
-        return await self.set_master_volume(controller, new_volume)
-
-    async def master_volume_down(self, controller: VirtualController) -> ExecutionResult:
-        """Decrease master volume on all zones by 5%"""
-
-        # Get first zone to determine current volume (as a reference)
-        first_zone = self.db.query(VirtualDevice).filter(
-            VirtualDevice.controller_id == controller.id,
-            VirtualDevice.device_type == "audio_zone"
-        ).first()
-
-        if not first_zone:
-            return ExecutionResult(
-                success=False,
-                message=f"No zones found for controller {controller.controller_name}"
-            )
-
-        current_volume = first_zone.cached_volume_level or 50
-        new_volume = max(0, current_volume - 5)
-
-        return await self.set_master_volume(controller, new_volume)
 
     async def cleanup(self):
         """Close all UDP sockets"""
