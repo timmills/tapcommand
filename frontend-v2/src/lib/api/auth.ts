@@ -97,6 +97,9 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+// Shared refresh promise to prevent concurrent refresh calls
+let refreshTokenPromise: Promise<TokenResponse> | null = null;
+
 // Add response interceptor to handle token refresh on 401
 apiClient.interceptors.response.use(
   (response) => response,
@@ -107,6 +110,7 @@ apiClient.interceptors.response.use(
     if (originalRequest.url?.includes('/auth/refresh')) {
       // Refresh token is invalid, clear everything and redirect to login
       tokenStorage.clearTokens();
+      refreshTokenPromise = null; // Clear the promise
       window.location.href = '/login';
       return Promise.reject(error);
     }
@@ -116,20 +120,36 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       const refreshToken = tokenStorage.getRefreshToken();
-      if (refreshToken) {
-        try {
-          const tokens = await authApi.refreshToken(refreshToken);
-          tokenStorage.setTokens(tokens.access_token, tokens.refresh_token);
+      if (!refreshToken) {
+        // No refresh token available, redirect to login
+        tokenStorage.clearTokens();
+        refreshTokenPromise = null;
+        window.location.href = '/login';
+        return Promise.reject(error);
+      }
 
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${tokens.access_token}`;
-          return apiClient(originalRequest);
-        } catch (refreshError) {
-          // Refresh failed, clear tokens and redirect to login
-          tokenStorage.clearTokens();
-          window.location.href = '/login';
-          return Promise.reject(refreshError);
+      try {
+        // If a refresh is already in progress, wait for it
+        // Otherwise, start a new refresh
+        if (!refreshTokenPromise) {
+          refreshTokenPromise = authApi.refreshToken(refreshToken);
         }
+
+        const tokens = await refreshTokenPromise;
+        tokenStorage.setTokens(tokens.access_token, tokens.refresh_token);
+
+        // Clear the promise for next time
+        refreshTokenPromise = null;
+
+        // Retry original request with new token
+        originalRequest.headers.Authorization = `Bearer ${tokens.access_token}`;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
+        // Refresh failed, clear tokens and redirect to login
+        refreshTokenPromise = null;
+        tokenStorage.clearTokens();
+        window.location.href = '/login';
+        return Promise.reject(refreshError);
       }
     }
 
