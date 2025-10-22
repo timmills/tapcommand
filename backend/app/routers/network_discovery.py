@@ -57,6 +57,8 @@ async def trigger_network_scan(
 
     This performs a scan immediately and returns results when complete.
     Auto-detects local subnet if not specified.
+
+    Note: For multi-subnet scanning, use POST /api/network/scan/multi-subnet
     """
     try:
         # Auto-detect subnet if not provided
@@ -83,6 +85,82 @@ async def trigger_network_scan(
 
     except Exception as e:
         logger.error(f"Failed to trigger scan: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to trigger scan: {str(e)}")
+
+
+class MultiSubnetScanRequest(BaseModel):
+    subnets: Optional[List[str]] = None  # If None, uses configured subnets
+    start: Optional[int] = 1
+    end: Optional[int] = 254
+
+
+@router.post("/scan/multi-subnet")
+async def trigger_multi_subnet_scan(
+    request: MultiSubnetScanRequest = MultiSubnetScanRequest(),
+    db: Session = Depends(get_db)
+):
+    """
+    Trigger immediate multi-subnet scan
+
+    Scans multiple subnets in parallel and merges results.
+    If no subnets specified, uses configured/auto-detected subnets.
+    """
+    try:
+        if request.subnets:
+            # Scan specified subnets
+            from ..utils.network_utils import validate_subnet
+
+            # Validate all subnets
+            for subnet in request.subnets:
+                if not validate_subnet(subnet):
+                    raise HTTPException(
+                        status_code=400,
+                        detail=f"Invalid subnet format: {subnet}. Expected format: '192.168.1' or '10.0.0'"
+                    )
+
+            logger.info(f"Manual multi-subnet scan triggered: {request.subnets}")
+
+            devices = await network_sweep_service.scan_multiple_subnets(
+                subnets=request.subnets,
+                start=request.start,
+                end=request.end,
+                db_session=db
+            )
+
+            subnet_info = request.subnets
+        else:
+            # Use configured/auto-detected subnets
+            logger.info("Manual scan triggered: using configured subnets")
+
+            devices = await network_sweep_service.scan_enabled_subnets(db_session=db)
+
+            # Get the list of scanned subnets for response
+            from ..services.settings_service import settings_service
+            from ..utils.network_utils import get_all_local_subnets
+
+            configured = settings_service.get_setting("network_scan_subnets")
+            if configured:
+                subnet_info = [
+                    item['subnet'] for item in configured
+                    if isinstance(item, dict) and item.get('enabled', True)
+                ]
+            else:
+                subnet_info = get_all_local_subnets()
+
+        return {
+            "success": True,
+            "message": f"Multi-subnet scan completed",
+            "devices_found": len(devices),
+            "subnets_scanned": subnet_info,
+            "subnet_count": len(subnet_info),
+            "range": f"{request.start}-{request.end}",
+            "note": "Scan cache has been updated. Use GET /api/network/scan-cache to retrieve results"
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to trigger multi-subnet scan: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to trigger scan: {str(e)}")
 
 

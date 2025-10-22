@@ -8,6 +8,7 @@ import asyncio
 import logging
 from datetime import datetime
 from pathlib import Path
+from typing import List
 import sys
 
 # Add parent directory to path for imports
@@ -28,8 +29,16 @@ last_scan_time = None
 last_scan_result = None
 
 
-async def perform_scheduled_scan(subnet: str = "192.168.101", start: int = 1, end: int = 254):
-    """Perform a network scan and update the database"""
+async def perform_scheduled_scan(subnets: List[str] = None, start: int = 1, end: int = 254):
+    """
+    Perform a network scan and update the database
+
+    Args:
+        subnets: List of subnets to scan (e.g., ["192.168.101", "10.0.0"])
+                 If None, uses configured/auto-detected subnets
+        start: Starting host number (default: 1)
+        end: Ending host number (default: 254)
+    """
     global scan_in_progress, last_scan_time, last_scan_result
 
     if scan_in_progress:
@@ -40,15 +49,23 @@ async def perform_scheduled_scan(subnet: str = "192.168.101", start: int = 1, en
     db = SessionLocal()
 
     try:
-        logger.info(f"🔍 Starting scheduled network scan: {subnet}.{start}-{end}")
         start_time = datetime.now()
 
-        devices = await network_sweep_service.scan_subnet(
-            subnet=subnet,
-            start=start,
-            end=end,
-            db_session=db
-        )
+        if subnets:
+            # Scan specific subnets
+            logger.info(f"🔍 Starting scheduled network scan across {len(subnets)} subnets: {subnets}")
+            devices = await network_sweep_service.scan_multiple_subnets(
+                subnets=subnets,
+                start=start,
+                end=end,
+                db_session=db
+            )
+            subnet_info = f"{len(subnets)} subnets: {', '.join(subnets)}"
+        else:
+            # Use configured/auto-detected subnets
+            logger.info("🔍 Starting scheduled network scan (auto-configured subnets)")
+            devices = await network_sweep_service.scan_enabled_subnets(db_session=db)
+            subnet_info = "auto-configured"
 
         elapsed = (datetime.now() - start_time).total_seconds()
 
@@ -57,7 +74,7 @@ async def perform_scheduled_scan(subnet: str = "192.168.101", start: int = 1, en
             "scan_time": start_time.isoformat(),
             "duration_seconds": elapsed,
             "devices_found": len(devices),
-            "subnet": subnet,
+            "subnets": subnet_info,
             "range": f"{start}-{end}"
         }
 
@@ -83,19 +100,30 @@ async def perform_scheduled_scan(subnet: str = "192.168.101", start: int = 1, en
         db.close()
 
 
-async def run_scheduled_scanner(interval_minutes: int = 10, subnet: str = "192.168.101"):
-    """Run network scanner on a schedule"""
+async def run_scheduled_scanner(interval_minutes: int = 10, subnets: List[str] = None):
+    """
+    Run network scanner on a schedule
+
+    Args:
+        interval_minutes: Minutes between scans (default: 10)
+        subnets: List of subnets to scan. If None, uses auto-configured subnets.
+    """
     logger.info(f"🔄 Starting scheduled network scanner (every {interval_minutes} minutes)")
-    logger.info(f"   Subnet: {subnet}")
+
+    if subnets:
+        logger.info(f"   Configured subnets: {', '.join(subnets)}")
+    else:
+        logger.info("   Using auto-configured subnets from database")
+
     logger.info(f"   Press Ctrl+C to stop")
 
     # Run initial scan immediately
-    await perform_scheduled_scan(subnet=subnet)
+    await perform_scheduled_scan(subnets=subnets)
 
     while True:
         try:
             await asyncio.sleep(interval_minutes * 60)
-            await perform_scheduled_scan(subnet=subnet)
+            await perform_scheduled_scan(subnets=subnets)
 
         except KeyboardInterrupt:
             logger.info("\n⏹️  Stopping scheduled scanner")
@@ -119,8 +147,18 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='Scheduled Network Scanner Service')
     parser.add_argument('--interval', type=int, default=10, help='Scan interval in minutes')
-    parser.add_argument('--subnet', default='192.168.101', help='Subnet to scan')
+    parser.add_argument('--subnets', type=str, help='Comma-separated list of subnets to scan (e.g., "192.168.101,10.0.0"). If not provided, uses auto-configured subnets.')
+    parser.add_argument('--subnet', type=str, help='DEPRECATED: Use --subnets instead. Single subnet for backward compatibility.')
 
     args = parser.parse_args()
 
-    asyncio.run(run_scheduled_scanner(interval_minutes=args.interval, subnet=args.subnet))
+    # Parse subnets
+    subnets = None
+    if args.subnets:
+        subnets = [s.strip() for s in args.subnets.split(',')]
+    elif args.subnet:
+        # Backward compatibility
+        logger.warning("--subnet is deprecated, use --subnets instead")
+        subnets = [args.subnet]
+
+    asyncio.run(run_scheduled_scanner(interval_minutes=args.interval, subnets=subnets))

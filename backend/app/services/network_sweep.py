@@ -388,6 +388,112 @@ class NetworkSweepService:
         logger.info(f"Found {len(brand_devices)} {brand} devices")
         return brand_devices
 
+    async def scan_multiple_subnets(
+        self,
+        subnets: List[str],
+        start: int = 1,
+        end: int = 254,
+        db_session = None
+    ) -> List[Dict]:
+        """
+        Scan multiple subnets in parallel and merge results
+
+        Args:
+            subnets: List of subnet prefixes (e.g., ["192.168.101", "10.0.0", "100.64.0"])
+            start: Starting host number
+            end: Ending host number
+            db_session: Database session for vendor lookup
+
+        Returns:
+            Combined list of discovered devices from all subnets
+        """
+        if not subnets:
+            logger.warning("No subnets provided for scanning")
+            return []
+
+        logger.info(f"Starting multi-subnet scan across {len(subnets)} subnets: {subnets}")
+
+        # Create tasks for parallel scanning
+        tasks = [
+            self.scan_subnet(subnet=subnet, start=start, end=end, db_session=db_session)
+            for subnet in subnets
+        ]
+
+        # Run all scans concurrently
+        try:
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+
+            # Merge results and handle exceptions
+            all_devices = []
+            for i, result in enumerate(results):
+                if isinstance(result, Exception):
+                    logger.error(f"Scan failed for subnet {subnets[i]}: {result}")
+                elif isinstance(result, list):
+                    all_devices.extend(result)
+                    logger.info(f"Subnet {subnets[i]} scan completed: {len(result)} devices")
+
+            logger.info(f"Multi-subnet scan complete: {len(all_devices)} total devices across {len(subnets)} subnets")
+            return all_devices
+
+        except Exception as e:
+            logger.error(f"Multi-subnet scan failed: {e}")
+            return []
+
+    async def scan_enabled_subnets(self, db_session = None) -> List[Dict]:
+        """
+        Scan all enabled subnets from configuration
+
+        Reads subnet configuration from database and scans only enabled subnets.
+        If no configuration exists, auto-detects subnets.
+
+        Args:
+            db_session: Database session for vendor lookup
+
+        Returns:
+            Combined list of discovered devices from all enabled subnets
+        """
+        from ..services.settings_service import settings_service
+        from ..utils.network_utils import get_all_local_subnets
+
+        # Get configured subnets from database
+        configured = settings_service.get_setting("network_scan_subnets")
+
+        if configured is None:
+            # No configuration - auto-detect and scan all
+            logger.info("No subnet configuration found, auto-detecting subnets...")
+            subnets = get_all_local_subnets()
+
+            # Save detected subnets to database for future use
+            settings_service.set_setting(
+                "network_scan_subnets",
+                [{"subnet": s, "enabled": True} for s in subnets],
+                description="Auto-detected subnets for network scanning",
+                setting_type="json",
+                is_public=False
+            )
+        else:
+            # Parse configured subnets and filter to enabled only
+            subnets = []
+
+            # Handle both old format (list of strings) and new format (list of dicts)
+            if isinstance(configured, list):
+                for item in configured:
+                    if isinstance(item, dict):
+                        if item.get('enabled', True):
+                            subnets.append(item['subnet'])
+                    else:
+                        # Old format - assume all enabled
+                        subnets.append(item)
+
+            logger.info(f"Using configured subnets: {subnets}")
+
+        if not subnets:
+            logger.warning("No enabled subnets found - skipping scan")
+            return []
+
+        # Scan all enabled subnets
+        return await self.scan_multiple_subnets(subnets=subnets, db_session=db_session)
+
 
 # Singleton instance
 network_sweep_service = NetworkSweepService()

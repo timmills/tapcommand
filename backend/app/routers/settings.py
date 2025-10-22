@@ -486,3 +486,278 @@ async def delete_application_setting(setting_key: str, db: Session = Depends(get
     db.commit()
 
     return {"message": f"Setting '{setting_key}' deleted successfully"}
+
+
+# ---------------------------------------------------------------------------
+# Network Scanning Subnet Configuration
+# ---------------------------------------------------------------------------
+
+class SubnetConfigRequest(BaseModel):
+    subnets: List[str]
+    enabled: Optional[List[bool]] = None  # Optional per-subnet enable/disable
+
+
+class SubnetInfo(BaseModel):
+    subnet: str
+    enabled: bool
+    interface: Optional[str] = None
+    ip: Optional[str] = None
+    cidr: Optional[str] = None
+    state: Optional[str] = None
+
+
+class SubnetConfigResponse(BaseModel):
+    configured_subnets: List[SubnetInfo]
+    detected_subnets: List[str]
+    auto_detect_enabled: bool
+
+
+@router.get("/network/subnets", response_model=SubnetConfigResponse)
+async def get_network_subnets(db: Session = Depends(get_db)):
+    """
+    Get configured and detected network subnets for scanning
+
+    Returns:
+        - configured_subnets: User-configured subnets with enable/disable state
+        - detected_subnets: Auto-detected subnets from network interfaces
+        - auto_detect_enabled: Whether auto-detection is enabled
+    """
+    from ..utils.network_utils import get_all_local_subnets, get_interface_info
+
+    # Get auto-detected subnets
+    detected_subnets = get_all_local_subnets()
+    interface_info = get_interface_info()
+
+    # Create interface lookup map
+    interface_map = {iface['subnet']: iface for iface in interface_info}
+
+    # Get configured subnets from database
+    configured = settings_service.get_setting("network_scan_subnets")
+    auto_detect = settings_service.get_setting("network_scan_auto_detect")
+
+    if auto_detect is None:
+        auto_detect = True  # Default to enabled
+
+    if configured is None:
+        # First run - initialize with detected subnets (all enabled)
+        configured_list = [
+            SubnetInfo(
+                subnet=subnet,
+                enabled=True,
+                interface=interface_map.get(subnet, {}).get('interface'),
+                ip=interface_map.get(subnet, {}).get('ip'),
+                cidr=interface_map.get(subnet, {}).get('cidr'),
+                state=interface_map.get(subnet, {}).get('state')
+            )
+            for subnet in detected_subnets
+        ]
+
+        # Save to database for next time
+        settings_service.set_setting(
+            "network_scan_subnets",
+            [{"subnet": s, "enabled": True} for s in detected_subnets],
+            description="Configured subnets for network scanning",
+            setting_type="json",
+            is_public=False
+        )
+    else:
+        # Parse configured subnets
+        configured_list = []
+
+        # Handle both old format (list of strings) and new format (list of dicts)
+        if isinstance(configured, list) and len(configured) > 0:
+            if isinstance(configured[0], str):
+                # Old format - convert to new format
+                configured = [{"subnet": s, "enabled": True} for s in configured]
+
+            for item in configured:
+                subnet = item.get('subnet') if isinstance(item, dict) else item
+                enabled = item.get('enabled', True) if isinstance(item, dict) else True
+
+                configured_list.append(SubnetInfo(
+                    subnet=subnet,
+                    enabled=enabled,
+                    interface=interface_map.get(subnet, {}).get('interface'),
+                    ip=interface_map.get(subnet, {}).get('ip'),
+                    cidr=interface_map.get(subnet, {}).get('cidr'),
+                    state=interface_map.get(subnet, {}).get('state')
+                ))
+
+    return SubnetConfigResponse(
+        configured_subnets=configured_list,
+        detected_subnets=detected_subnets,
+        auto_detect_enabled=auto_detect
+    )
+
+
+@router.post("/network/subnets", response_model=SubnetConfigResponse)
+async def update_network_subnets(
+    request: SubnetConfigRequest,
+    db: Session = Depends(get_db)
+):
+    """
+    Update network subnet configuration for scanning
+
+    Args:
+        request: List of subnets with optional enabled flags
+
+    Returns:
+        Updated configuration
+    """
+    from ..utils.network_utils import validate_subnet, get_all_local_subnets, get_interface_info
+
+    # Validate all subnets
+    for subnet in request.subnets:
+        if not validate_subnet(subnet):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid subnet format: {subnet}. Expected format: '192.168.1' or '10.0.0'"
+            )
+
+    # Build subnet config
+    if request.enabled and len(request.enabled) == len(request.subnets):
+        subnet_config = [
+            {"subnet": subnet, "enabled": enabled}
+            for subnet, enabled in zip(request.subnets, request.enabled)
+        ]
+    else:
+        # All enabled by default
+        subnet_config = [{"subnet": subnet, "enabled": True} for subnet in request.subnets]
+
+    # Save to database
+    settings_service.set_setting(
+        "network_scan_subnets",
+        subnet_config,
+        description="Configured subnets for network scanning",
+        setting_type="json",
+        is_public=False
+    )
+
+    # Return updated config
+    detected_subnets = get_all_local_subnets()
+    interface_info = get_interface_info()
+    interface_map = {iface['subnet']: iface for iface in interface_info}
+
+    configured_list = [
+        SubnetInfo(
+            subnet=item['subnet'],
+            enabled=item['enabled'],
+            interface=interface_map.get(item['subnet'], {}).get('interface'),
+            ip=interface_map.get(item['subnet'], {}).get('ip'),
+            cidr=interface_map.get(item['subnet'], {}).get('cidr'),
+            state=interface_map.get(item['subnet'], {}).get('state')
+        )
+        for item in subnet_config
+    ]
+
+    auto_detect = settings_service.get_setting("network_scan_auto_detect")
+    if auto_detect is None:
+        auto_detect = True
+
+    return SubnetConfigResponse(
+        configured_subnets=configured_list,
+        detected_subnets=detected_subnets,
+        auto_detect_enabled=auto_detect
+    )
+
+
+@router.post("/network/subnets/auto-detect")
+async def trigger_subnet_auto_detect(db: Session = Depends(get_db)):
+    """
+    Trigger auto-detection of network subnets and update configuration
+
+    Detects all active network interfaces and adds new subnets to config
+    (preserves existing subnet enable/disable states)
+    """
+    from ..utils.network_utils import get_all_local_subnets, get_interface_info
+
+    # Get currently configured subnets
+    configured = settings_service.get_setting("network_scan_subnets") or []
+
+    # Parse to dict for easy lookup
+    configured_map = {}
+    if isinstance(configured, list):
+        for item in configured:
+            if isinstance(item, dict):
+                configured_map[item['subnet']] = item['enabled']
+            else:
+                configured_map[item] = True
+
+    # Detect all subnets
+    detected_subnets = get_all_local_subnets()
+
+    # Merge: keep existing configs, add new ones as enabled
+    merged = {}
+    for subnet in detected_subnets:
+        if subnet in configured_map:
+            merged[subnet] = configured_map[subnet]  # Preserve existing state
+        else:
+            merged[subnet] = True  # New subnet - enable by default
+
+    # Convert back to list format
+    subnet_config = [
+        {"subnet": subnet, "enabled": enabled}
+        for subnet, enabled in merged.items()
+    ]
+
+    # Save to database
+    settings_service.set_setting(
+        "network_scan_subnets",
+        subnet_config,
+        description="Configured subnets for network scanning (auto-detected)",
+        setting_type="json",
+        is_public=False
+    )
+
+    # Return response
+    interface_info = get_interface_info()
+    interface_map = {iface['subnet']: iface for iface in interface_info}
+
+    configured_list = [
+        SubnetInfo(
+            subnet=item['subnet'],
+            enabled=item['enabled'],
+            interface=interface_map.get(item['subnet'], {}).get('interface'),
+            ip=interface_map.get(item['subnet'], {}).get('ip'),
+            cidr=interface_map.get(item['subnet'], {}).get('cidr'),
+            state=interface_map.get(item['subnet'], {}).get('state')
+        )
+        for item in subnet_config
+    ]
+
+    auto_detect = settings_service.get_setting("network_scan_auto_detect")
+    if auto_detect is None:
+        auto_detect = True
+
+    return {
+        "success": True,
+        "message": f"Auto-detected {len(detected_subnets)} subnets, merged with existing configuration",
+        "config": SubnetConfigResponse(
+            configured_subnets=configured_list,
+            detected_subnets=detected_subnets,
+            auto_detect_enabled=auto_detect
+        )
+    }
+
+
+@router.put("/network/subnets/auto-detect")
+async def set_subnet_auto_detect(enabled: bool = True, db: Session = Depends(get_db)):
+    """
+    Enable or disable automatic subnet detection
+
+    Args:
+        enabled: True to enable auto-detection, False to disable
+    """
+    settings_service.set_setting(
+        "network_scan_auto_detect",
+        enabled,
+        description="Enable automatic network subnet detection",
+        setting_type="boolean",
+        is_public=False
+    )
+
+    return {
+        "success": True,
+        "auto_detect_enabled": enabled,
+        "message": f"Auto-detection {'enabled' if enabled else 'disabled'}"
+    }

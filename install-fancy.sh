@@ -492,14 +492,25 @@ EOF
 
     fancy_success "Backend service created"
 
-    # Get local IP for network scanner
-    LOCAL_IP=$(hostname -I | awk '{print $1}')
-    SUBNET=$(echo $LOCAL_IP | cut -d'.' -f1-3)
+    # Auto-detect all local subnets for network scanner
+    fancy_info "Auto-detecting network subnets..."
 
-    fancy_info "Creating network scanner service..."
+    # Detect all subnets using ip addr
+    ALL_SUBNETS=$(ip addr show | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d'/' -f1 | awk -F. '{print $1"."$2"."$3}' | sort -u | tr '\n' ',' | sed 's/,$//')
+
+    if [[ -z "$ALL_SUBNETS" ]]; then
+        # Fallback to primary interface
+        LOCAL_IP=$(hostname -I | awk '{print $1}')
+        ALL_SUBNETS=$(echo $LOCAL_IP | cut -d'.' -f1-3)
+        fancy_warning "Could not auto-detect all subnets, using primary: $ALL_SUBNETS"
+    else
+        fancy_success "Detected subnets: $ALL_SUBNETS"
+    fi
+
+    fancy_info "Creating network scanner service (multi-subnet mode)..."
     sudo tee /etc/systemd/system/tapcommand-scanner.service > /dev/null << EOF
 [Unit]
-Description=TapCommand Network Scanner
+Description=TapCommand Network Scanner (Multi-Subnet)
 After=network.target tapcommand-backend.service
 
 [Service]
@@ -507,7 +518,7 @@ Type=simple
 User=$APP_USER
 WorkingDirectory=$INSTALL_DIR/backend
 Environment="PATH=$INSTALL_DIR/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-ExecStart=$INSTALL_DIR/venv/bin/python -m app.services.scheduled_network_scan --subnet $SUBNET --interval 10
+ExecStart=$INSTALL_DIR/venv/bin/python -m app.services.scheduled_network_scan --interval 10
 Restart=always
 RestartSec=30
 
@@ -515,7 +526,8 @@ RestartSec=30
 WantedBy=multi-user.target
 EOF
 
-    fancy_success "Network scanner service created (scanning $SUBNET.0/24 every 10 minutes)"
+    fancy_success "Network scanner service created (auto-configured multi-subnet scanning every 10 minutes)"
+    fancy_info "Scanner will use database-configured subnets (initially: $ALL_SUBNETS)"
     sudo systemctl daemon-reload
 }
 

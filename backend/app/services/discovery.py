@@ -186,7 +186,7 @@ class ESPHomeServiceListener(ServiceListener):
     def remove_service(self, zc: Zeroconf, type_: str, name: str) -> None:
         """Called when an ESPHome service is removed"""
         hostname = name.split('.')[0]
-        if hostname.startswith("ir-"):
+        if hostname.startswith("ir-") or hostname.startswith("irc-"):
             self.discovery_service._remove_device(hostname)
 
     def update_service(self, zc: Zeroconf, type_: str, name: str) -> None:

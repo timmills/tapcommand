@@ -257,9 +257,11 @@ esphome upload esphome/ir_capture_device_with_display.yaml --device 192.168.101.
 #### Option C: Create New Device
 ```bash
 # For a separate device with display
-# The YAML is already configured for device_name: ir-capture-display
+# The YAML is configured for device_name: irc (becomes irc-abc123)
 esphome run esphome/ir_capture_device_with_display.yaml
 ```
+
+**Note:** The device will automatically get a unique hostname like `irc-abc123` based on its MAC address. TapCommand will auto-discover it via mDNS - no manual IP configuration needed!
 
 ### Step 3: Verify Display Works
 
@@ -617,6 +619,11 @@ Adding an SSD1306 OLED display to your IR capture device is:
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** 2025-10-03
+**Document Version:** 1.1
+**Last Updated:** 2025-10-22
 **Compatible With:** ESPHome 2025.9.0+
+
+**Changelog v1.1:**
+- ✅ Updated for new `irc-*` hostname pattern
+- ✅ Added auto-discovery information
+- ✅ Removed hardcoded IP references
