@@ -200,7 +200,7 @@ class NetworkSweepService:
 
     async def scan_subnet(
         self,
-        subnet: str = "192.168.101",
+        subnet: Optional[str] = None,
         start: int = 1,
         end: int = 254,
         batch_size: int = 100,
@@ -220,6 +220,12 @@ class NetworkSweepService:
             List of discovered devices with MAC and vendor info
         """
         from ..models.network_discovery import NetworkScanCache
+        from ..utils.network_utils import get_default_subnet
+
+        # Auto-detect subnet if not provided
+        if subnet is None:
+            subnet = get_default_subnet()
+            logger.info(f"No subnet provided, auto-detected: {subnet}")
 
         scan_id = str(uuid.uuid4())
         logger.info(f"Starting network scan {scan_id} on {subnet}.{start}-{end}")
@@ -346,7 +352,7 @@ class NetworkSweepService:
         logger.info(f"Scan {scan_id} complete: {len(discovered_devices)} devices")
         return discovered_devices
 
-    async def scan_for_tvs(self, subnet: str = "192.168.101", db_session = None) -> List[Dict]:
+    async def scan_for_tvs(self, subnet: Optional[str] = None, db_session = None) -> List[Dict]:
         """
         Quick scan focused on TV brands
 
@@ -368,7 +374,7 @@ class NetworkSweepService:
     async def scan_for_brand(
         self,
         brand: str,
-        subnet: str = "192.168.101",
+        subnet: Optional[str] = None,
         db_session = None
     ) -> List[Dict]:
         """
