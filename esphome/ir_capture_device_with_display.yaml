@@ -1,9 +1,10 @@
 substitutions:
-  device_name: ir-capture-display
+  device_name: irc
   friendly_name: IR Capture Device with Display
 
 esphome:
   name: ${device_name}
+  name_add_mac_suffix: true
 
 esp32:
   board: esp32dev

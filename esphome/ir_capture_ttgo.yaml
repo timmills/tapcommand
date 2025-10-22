@@ -1,9 +1,10 @@
 substitutions:
-  device_name: ir-capture-ttgo
+  device_name: irc
   friendly_name: IR Capture TTGO
 
 esphome:
   name: ${device_name}
+  name_add_mac_suffix: true
 
 esp32:
   board: esp32dev
@@ -89,6 +90,17 @@ color:
     green: 0%
     blue: 0%
 
+# Global variables for capture feedback
+globals:
+  - id: last_capture_time
+    type: unsigned long
+    restore_value: no
+    initial_value: '0'
+  - id: capture_count
+    type: int
+    restore_value: no
+    initial_value: '0'
+
 # TTGO T-Display ST7789V 135x240 TFT
 display:
   - platform: st7789v
@@ -117,9 +129,20 @@ display:
         it.print(5, 40, id(font_medium), id(my_red), "WiFi: Connecting...");
       }
 
-      // IR Status
-      it.print(5, 85, id(font_medium), id(my_white), "IR Receiver: Ready");
-      it.print(5, 105, id(font_small), id(my_white), "Point remote & press");
+      // IR Status with capture feedback
+      unsigned long now = millis();
+      unsigned long time_since_capture = now - id(last_capture_time);
+
+      if (time_since_capture < 3000) {  // Show "CAPTURED!" for 3 seconds
+        // Flash green background
+        it.filled_rectangle(0, 80, 240, 55, id(my_green));
+        it.print(5, 85, id(font_large), id(my_black), "CODE CAPTURED!");
+        it.printf(5, 110, id(font_medium), id(my_black), "Total: %d", id(capture_count));
+      } else {
+        // Normal status
+        it.print(5, 85, id(font_medium), id(my_white), "IR Receiver: Ready");
+        it.printf(5, 105, id(font_small), id(my_white), "Codes: %d | Point & press", id(capture_count));
+      }
 
 # IR Receiver Configuration
 remote_receiver:
@@ -145,6 +168,10 @@ remote_receiver:
           }
           raw_data += "]";
           id(last_ir_code).publish_state(raw_data);
+
+          // Update capture feedback
+          id(last_capture_time) = millis();
+          id(capture_count) += 1;
 
 # IR Transmitter Configuration
 remote_transmitter:

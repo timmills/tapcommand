@@ -21,6 +21,12 @@ import {
   createCapturedRemote,
   completeSession,
   getLastCapturedCode,
+  getDeviceConfig,
+  getAvailableFirmwareConfigs,
+  compileFirmware,
+  downloadFirmware,
+  setManualIP,
+  clearManualIP,
 } from '../api/ir-capture-api';
 import type {
   CreateSessionRequest,
@@ -180,12 +186,52 @@ const SessionsView = ({
   onSelectSession,
   creating,
 }: SessionsViewProps) => {
+  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
+  const [showFirmware, setShowFirmware] = useState(false);
+  const [showDeviceConfig, setShowDeviceConfig] = useState(false);
+  const [manualIP, setManualIP] = useState('');
   const [formData, setFormData] = useState<CreateSessionRequest>({
     session_name: '',
     device_type: 'TV',
     brand: '',
     model: '',
+  });
+
+  // Query: Device configuration
+  const { data: deviceConfig } = useQuery({
+    queryKey: ['device-config'],
+    queryFn: getDeviceConfig,
+    refetchInterval: showDeviceConfig ? 5000 : false, // Refresh every 5 seconds when visible
+  });
+
+  // Query: Available firmware configs
+  const { data: firmwareConfigs } = useQuery({
+    queryKey: ['firmware-configs'],
+    queryFn: getAvailableFirmwareConfigs,
+    enabled: showFirmware,
+  });
+
+  // Mutation: Compile firmware
+  const compileMutation = useMutation({
+    mutationFn: (filename: string) => compileFirmware(filename, false),
+  });
+
+  // Mutation: Set manual IP
+  const setIPMutation = useMutation({
+    mutationFn: setManualIP,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['device-config'] });
+      setManualIP('');
+    },
+  });
+
+  // Mutation: Clear manual IP
+  const clearIPMutation = useMutation({
+    mutationFn: clearManualIP,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['device-config'] });
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -200,8 +246,20 @@ const SessionsView = ({
 
   return (
     <div className="space-y-6">
-      {/* Create Session Button */}
-      <div className="flex justify-end">
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowDeviceConfig(!showDeviceConfig)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+        >
+          {showDeviceConfig ? 'Hide' : 'Configure'} Device
+        </button>
+        <button
+          onClick={() => setShowFirmware(!showFirmware)}
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+        >
+          {showFirmware ? 'Hide' : 'Download'} Firmware
+        </button>
         <button
           onClick={() => setShowForm(true)}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
@@ -209,6 +267,204 @@ const SessionsView = ({
           New Capture Session
         </button>
       </div>
+
+      {/* Device Configuration Section */}
+      {showDeviceConfig && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">IR Capture Device Configuration</h3>
+
+          {/* Auto-Discovered Devices */}
+          <div className="mb-6">
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Auto-Discovered Devices</h4>
+            {deviceConfig?.discovered_devices && deviceConfig.discovered_devices.length > 0 ? (
+              <div className="space-y-2">
+                {deviceConfig.discovered_devices.map((device) => (
+                  <button
+                    key={device.hostname}
+                    onClick={() => setManualIP(device.ip_address)}
+                    className="w-full flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 hover:border-green-300 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                      <div>
+                        <div className="font-medium text-gray-900">{device.hostname}</div>
+                        <div className="text-sm text-gray-600">{device.ip_address}</div>
+                      </div>
+                    </div>
+                    <span className="text-xs px-2 py-1 bg-green-100 text-green-800 rounded font-medium">
+                      {deviceConfig.manual_ip ? 'Available' : 'Active'}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-4 px-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <p className="text-sm text-gray-600">
+                  No IR capture devices discovered via mDNS.
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Make sure your device is flashed with firmware using "irc-" hostname prefix.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Manual IP Configuration */}
+          <div>
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Manual IP Configuration</h4>
+
+            {deviceConfig?.manual_ip ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <div>
+                      <div className="font-medium text-gray-900">Manual IP Address</div>
+                      <div className="text-sm text-gray-600">{deviceConfig.manual_ip}</div>
+                    </div>
+                  </div>
+                  <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded font-medium">
+                    Active
+                  </span>
+                </div>
+                <button
+                  onClick={() => clearIPMutation.mutate()}
+                  disabled={clearIPMutation.isPending}
+                  className="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 disabled:opacity-50"
+                >
+                  {clearIPMutation.isPending ? 'Clearing...' : 'Clear Manual IP (Use Auto-Discovery)'}
+                </button>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (manualIP) {
+                    setIPMutation.mutate(manualIP);
+                  }
+                }}
+                className="space-y-3"
+              >
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Device IP Address
+                  </label>
+                  <input
+                    type="text"
+                    value={manualIP}
+                    onChange={(e) => setManualIP(e.target.value)}
+                    placeholder="e.g., 192.168.1.100"
+                    pattern="^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Only use manual IP if auto-discovery fails. The device will be tested before saving.
+                  </p>
+                </div>
+                <button
+                  type="submit"
+                  disabled={!manualIP || setIPMutation.isPending}
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {setIPMutation.isPending ? 'Testing & Saving...' : 'Set Manual IP'}
+                </button>
+              </form>
+            )}
+
+            {setIPMutation.isError && (
+              <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-800">
+                  <strong>Error:</strong> {String(setIPMutation.error)}
+                </p>
+              </div>
+            )}
+
+            {setIPMutation.isSuccess && (
+              <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800">
+                  <strong>Success!</strong> Manual IP address configured and verified.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Firmware Download Section */}
+      {showFirmware && (
+        <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Download Firmware</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Select an IR capture device configuration to download. Flash this firmware to your ESP32 device to turn it into an IR code capture device.
+          </p>
+
+          {firmwareConfigs?.configs && firmwareConfigs.configs.length > 0 ? (
+            <div className="grid gap-3">
+              {firmwareConfigs.configs.map((config) => (
+                <div
+                  key={config.filename}
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200"
+                >
+                  <div className="flex-1">
+                    <h4 className="font-medium text-gray-900">{config.friendly_name}</h4>
+                    <p className="text-sm text-gray-600 mt-1">{config.description}</p>
+                    <p className="text-xs text-gray-500 mt-1 font-mono">{config.filename}</p>
+                  </div>
+                  <div className="flex gap-2 ml-4">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await compileMutation.mutateAsync(config.filename);
+                          // After successful compilation, trigger download
+                          window.location.href = downloadFirmware(config.filename);
+                        } catch (error) {
+                          console.error('Compilation failed:', error);
+                        }
+                      }}
+                      disabled={compileMutation.isPending}
+                      className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {compileMutation.isPending ? 'Compiling...' : 'Compile & Download'}
+                    </button>
+                    <a
+                      href={downloadFirmware(config.filename)}
+                      download
+                      className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                    >
+                      Download
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              No firmware configurations found
+            </div>
+          )}
+
+          {compileMutation.isError && (
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-800">
+                <strong>Compilation failed:</strong> {String(compileMutation.error)}
+              </p>
+            </div>
+          )}
+
+          {compileMutation.isSuccess && compileMutation.data && (
+            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-800">
+                <strong>Success!</strong> {compileMutation.data.message}
+                {compileMutation.data.file_size && (
+                  <span className="ml-2">
+                    ({(compileMutation.data.file_size / 1024 / 1024).toFixed(2)} MB)
+                  </span>
+                )}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Create Session Form */}
       {showForm && (
@@ -410,6 +666,13 @@ const CaptureView = ({
     raw_data: '',
   });
 
+  // Query: Device config for auto-discovery info
+  const { data: deviceConfig } = useQuery({
+    queryKey: ['device-config'],
+    queryFn: getDeviceConfig,
+    refetchInterval: 10000, // Refresh every 10 seconds
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onAddCode(formData);
@@ -446,10 +709,33 @@ const CaptureView = ({
           <li>Name the button and add it to your session</li>
           <li>Repeat for all buttons you want to capture</li>
         </ol>
-        <div className="flex items-center gap-2 text-xs text-gray-600 bg-white bg-opacity-70 px-3 py-2 rounded">
-          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-          <span>ESP32 IR Capture Device @ 192.168.101.126</span>
-        </div>
+
+        {/* Device Discovery Status */}
+        {deviceConfig?.current_device ? (
+          <div className="flex items-center gap-2 text-xs text-gray-600 bg-white bg-opacity-70 px-3 py-2 rounded">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span>
+              {deviceConfig.current_device.hostname} @ {deviceConfig.current_device.ip_address}
+              {deviceConfig.using_auto_discovery && (
+                <span className="ml-2 text-green-700">(auto-discovered)</span>
+              )}
+            </span>
+          </div>
+        ) : deviceConfig?.discovered_devices && deviceConfig.discovered_devices.length > 0 ? (
+          <div className="flex items-center gap-2 text-xs text-gray-600 bg-white bg-opacity-70 px-3 py-2 rounded">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span>
+              {deviceConfig.discovered_devices[0].hostname} @ {deviceConfig.discovered_devices[0].ip_address}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 bg-opacity-70 px-3 py-2 rounded">
+            <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
+            <span>
+              No IR capture device discovered yet. Flash firmware with "irc" hostname to enable auto-discovery.
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Add Code Form */}

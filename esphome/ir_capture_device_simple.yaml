@@ -3,11 +3,12 @@
 # User manually copies codes from logs and pastes into web interface
 
 substitutions:
-  device_name: ir-capture
+  device_name: irc
   friendly_name: "IR Code Capture Device"
 
 esphome:
   name: ${device_name}
+  name_add_mac_suffix: true
   platform: ESP32
   board: esp32dev
   comment: "IR remote code capture device for TapCommand"

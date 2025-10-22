@@ -95,11 +95,62 @@ export const deleteRemote = async (remoteId: number): Promise<void> => {
   await apiClient.delete(`${BASE_URL}/remotes/${remoteId}`);
 };
 
+// ==================== DEVICE DISCOVERY ====================
+
+export interface DiscoveredDevice {
+  hostname: string;
+  ip_address: string;
+  port: number;
+  mac_address: string;
+  friendly_name: string;
+  discovered_at: string;
+}
+
+export interface DiscoveredDevicesResponse {
+  devices: DiscoveredDevice[];
+  count: number;
+}
+
+export interface DeviceConfig {
+  discovered_devices: Array<{
+    hostname: string;
+    ip_address: string;
+    friendly_name: string;
+  }>;
+  manual_ip: string | null;
+  using_auto_discovery: boolean;
+  current_device?: {
+    hostname: string;
+    ip_address: string;
+  };
+}
+
+export const getDiscoveredDevices = async (): Promise<DiscoveredDevicesResponse> => {
+  const response = await apiClient.get<DiscoveredDevicesResponse>(`${BASE_URL}/devices/discovered`);
+  return response.data;
+};
+
+export const getDeviceConfig = async (): Promise<DeviceConfig> => {
+  const response = await apiClient.get<DeviceConfig>(`${BASE_URL}/device/config`);
+  return response.data;
+};
+
+export const setManualIP = async (ip_address: string): Promise<{ success: boolean; message: string }> => {
+  const response = await apiClient.post(`${BASE_URL}/device/set-ip`, { ip_address });
+  return response.data;
+};
+
+export const clearManualIP = async (): Promise<{ success: boolean; message: string }> => {
+  const response = await apiClient.delete(`${BASE_URL}/device/manual-ip`);
+  return response.data;
+};
+
 // ==================== DEVICE INTEGRATION ====================
 
 export interface DeviceStatus {
   online: boolean;
   ip_address: string;
+  hostname?: string;
   wifi_signal?: { value: number; state: string };
   error?: string;
 }
@@ -118,4 +169,69 @@ export const getDeviceStatus = async (): Promise<DeviceStatus> => {
 export const getLastCapturedCode = async (): Promise<LastCodeResponse> => {
   const response = await apiClient.get<LastCodeResponse>(`${BASE_URL}/device/last-code`);
   return response.data;
+};
+
+// ==================== FIRMWARE COMPILATION & DOWNLOAD ====================
+
+export interface FirmwareConfig {
+  filename: string;
+  filepath: string;
+  friendly_name: string;
+  description: string;
+}
+
+export interface AvailableConfigsResponse {
+  success: boolean;
+  configs: FirmwareConfig[];
+  count: number;
+}
+
+export interface SecretsResponse {
+  success: boolean;
+  message: string;
+  path: string;
+  preview: string;
+}
+
+export interface CompileResponse {
+  success: boolean;
+  message: string;
+  binary_path?: string;
+  file_size?: number;
+  filename?: string;
+  error?: string;
+  stdout?: string;
+}
+
+export const getAvailableFirmwareConfigs = async (): Promise<AvailableConfigsResponse> => {
+  const response = await apiClient.get<AvailableConfigsResponse>(`${BASE_URL}/firmware/available-configs`);
+  return response.data;
+};
+
+export const generateSecrets = async (): Promise<SecretsResponse> => {
+  const response = await apiClient.get<SecretsResponse>(`${BASE_URL}/firmware/generate-secrets`);
+  return response.data;
+};
+
+export const compileFirmware = async (
+  config_filename: string,
+  clean_build: boolean = false
+): Promise<CompileResponse> => {
+  // Firmware compilation can take several minutes, so use extended timeout
+  const response = await apiClient.post<CompileResponse>(
+    `${BASE_URL}/firmware/compile`,
+    {
+      config_filename,
+      clean_build
+    },
+    {
+      timeout: 600000 // 10 minutes (matches backend timeout)
+    }
+  );
+  return response.data;
+};
+
+export const downloadFirmware = (config_filename: string): string => {
+  // Return download URL
+  return `${apiClient.defaults.baseURL}${BASE_URL}/firmware/download/${config_filename}`;
 };
